@@ -2,7 +2,17 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService, RegisterRequest } from '../../auth/auth.service';
 
+/**
+ * Register-Component für BFF-Pattern.
+ *
+ * ARCHITEKTUR:
+ * - Sendet Registrierungsdaten an Backend
+ * - Backend kommuniziert mit IdP (AWS Cognito / SAP IAS)
+ * - Keine direkte IdP-Kommunikation vom Frontend
+ * - Backend handhabt Verifikations-E-Mails etc.
+ */
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -13,6 +23,7 @@ import { Router, RouterModule } from '@angular/router';
 export class Register {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   selectedBackend: 'cognito' | 'sapias' = 'cognito';
   registerForm: FormGroup;
@@ -23,6 +34,7 @@ export class Register {
   constructor() {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
@@ -31,6 +43,9 @@ export class Register {
     }, { validators: this.passwordMatchValidator });
   }
 
+  /**
+   * Custom Validator: Passwort und Bestätigung müssen übereinstimmen.
+   */
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
@@ -42,7 +57,11 @@ export class Register {
     return null;
   }
 
-  async onRegister(): Promise<void> {
+  /**
+   * Registrierungs-Handler: Sendet Daten an Backend.
+   * Backend handhabt IdP-Kommunikation (AWS Cognito / SAP IAS).
+   */
+  onRegister(): void {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
       return;
@@ -52,42 +71,54 @@ export class Register {
     this.errorMessage = null;
     this.successMessage = null;
 
-    try {
-      const formData = this.registerForm.value;
+    const formData = this.registerForm.value;
 
-      if (this.selectedBackend === 'cognito') {
-        await this.registerWithCognito(formData);
-      } else {
-        await this.registerWithSapIas(formData);
+    const registerData: RegisterRequest = {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      backend: this.selectedBackend
+    };
+
+    this.authService.register(registerData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.successMessage = response.message ||
+            'Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail zur Verifikation.';
+
+          // Nach 3 Sekunden zur Login-Seite
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000);
+        } else {
+          this.errorMessage = response.message || 'Registrierung fehlgeschlagen.';
+          this.isLoading = false;
+        }
+      },
+      error: (error) => {
+        console.error('Registrierungs-Fehler:', error);
+        this.errorMessage = error.error?.message ||
+          'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
+        this.isLoading = false;
       }
-
-      this.successMessage = 'Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail.';
-
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 2000);
-
-    } catch (error: any) {
-      this.errorMessage = error.message || 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 
-  private async registerWithCognito(data: any): Promise<void> {
-    console.log('AWS Cognito Registrierung:', data);
-    await this.simulateApiCall(1500);
+  /**
+   * Backend-Wechsel für Vergleich.
+   */
+  onBackendChange(): void {
+    console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
+    const backendUrls = {
+      'cognito': 'http://localhost:8080',
+      'sapias': 'http://localhost:8081'
+    };
+    this.authService.setBackendUrl(backendUrls[this.selectedBackend]);
   }
 
-  private async registerWithSapIas(data: any): Promise<void> {
-    console.log('SAP IAS Registrierung:', data);
-    await this.simulateApiCall(1500);
-  }
-
-  private simulateApiCall(delay: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, delay));
-  }
-
+  /**
+   * Markiert alle Formular-Felder als "touched" für Validierung.
+   */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -98,6 +129,7 @@ export class Register {
       }
     });
   }
+
 
   switchBackend(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);

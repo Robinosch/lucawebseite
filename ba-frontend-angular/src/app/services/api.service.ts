@@ -1,74 +1,87 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { environment } from '../../environments/environment';
 
 /**
- * Zentraler API Service für Backend-Kommunikation.
- * Fügt automatisch das Access Token zu allen Requests hinzu.
+ * API Service für BFF-Pattern (Backend-for-Frontend).
+ *
+ * ARCHITEKTUR:
+ * - KEINE Token-Verwaltung im Frontend
+ * - Session über HTTP-only Cookies
+ * - Backend handhabt Token-Validierung
+ * - Backend proxied API-Calls zu geschützten Ressourcen
  */
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
 
-  // Backend-URL - kann über Environment-Variablen konfiguriert werden
-  private baseUrl = 'http://localhost:8080/api';
+  // Base URL für Backend-API (BFF)
+  private baseUrl = environment.apiUrl || 'http://localhost:8080';
 
   /**
-   * Setzt die Backend-URL (für Wechsel zwischen SAP CAP und Spring Boot Backend).
+   * Setzt die Backend-URL (für Wechsel zwischen Backends).
    */
   setBackendUrl(url: string): void {
     this.baseUrl = url;
   }
 
   /**
-   * Erstellt HTTP-Headers mit Authorization Token.
+   * Erstellt Standard HTTP-Headers (ohne Authorization Token).
+   * Session wird automatisch via HTTP-only Cookie mitgesendet.
    */
   private getHeaders(): HttpHeaders {
-    const token = this.authService.getAccessToken();
     return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Content-Type': 'application/json'
     });
   }
 
   /**
-   * GET Request an geschützten Endpunkt.
+   * GET Request an Backend.
+   *
+   * SICHERHEIT:
+   * - withCredentials: true sendet HTTP-only Cookie automatisch
+   * - Backend validiert Session und leitet Request an IdP/Business API weiter
    */
   get<T>(endpoint: string): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      withCredentials: true  // Wichtig für Cookie-basierte Auth
     });
   }
 
   /**
-   * POST Request an geschützten Endpunkt.
+   * POST Request an Backend.
    */
   post<T>(endpoint: string, data: any): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      withCredentials: true
     });
   }
 
   /**
-   * PUT Request an geschützten Endpunkt.
+   * PUT Request an Backend.
    */
   put<T>(endpoint: string, data: any): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      withCredentials: true
     });
   }
 
   /**
-   * DELETE Request an geschützten Endpunkt.
+   * DELETE Request an Backend.
    */
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      withCredentials: true
     });
   }
 }
+
+
 

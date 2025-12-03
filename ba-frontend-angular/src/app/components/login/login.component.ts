@@ -2,8 +2,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService, LoginRequest } from '../../auth/auth.service';
 
+/**
+ * Login-Component für BFF-Pattern.
+ *
+ * ARCHITEKTUR:
+ * - Traditionelle Username/Password-Eingabe
+ * - Backend handhabt OAuth2/OIDC-Kommunikation mit IdP
+ * - Frontend sendet nur Credentials an Backend
+ * - Session über HTTP-only Cookies
+ */
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -16,23 +25,77 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  // Form-Daten
+  username: string = '';
+  password: string = '';
   selectedBackend: 'cognito' | 'sapias' = 'cognito';
-  returnUrl: string = '/';
+
+  // UI-State
+  loading: boolean = false;
+  errorMessage: string = '';
+  returnUrl: string = '/dashboard';
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    // Return-URL aus Query-Params
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
 
+    // Wenn bereits authentifiziert, redirect
     if (this.authService.isAuthenticated()) {
       this.router.navigate([this.returnUrl]);
     }
   }
 
+  /**
+   * Login-Handler: Sendet Credentials an Backend.
+   * Backend handhabt OAuth2-Flow mit ausgewähltem IdP.
+   */
   login(): void {
-    this.authService.login();
+    // Validierung
+    if (!this.username || !this.password) {
+      this.errorMessage = 'Bitte geben Sie Benutzername und Passwort ein.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    const credentials: LoginRequest = {
+      username: this.username,
+      password: this.password,
+      backend: this.selectedBackend
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Erfolgreicher Login - Backend hat Session erstellt
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.errorMessage = response.message || 'Login fehlgeschlagen.';
+          this.loading = false;
+        }
+      },
+      error: (error) => {
+        console.error('Login-Fehler:', error);
+        this.errorMessage = error.error?.message || 'Authentifizierung fehlgeschlagen. Bitte prüfen Sie Ihre Zugangsdaten.';
+        this.loading = false;
+      }
+    });
   }
 
-  switchBackend(): void {
+  /**
+   * Backend-Wechsel für Vergleich (AWS Cognito vs. SAP IAS).
+   */
+  onBackendChange(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
+    // Optional: Backend-URL anpassen
+    const backendUrls = {
+      'cognito': 'http://localhost:8080',
+      'sapias': 'http://localhost:8081'
+    };
+    this.authService.setBackendUrl(backendUrls[this.selectedBackend]);
   }
 }
+
+
 
