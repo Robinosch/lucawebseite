@@ -1,0 +1,173 @@
+﻿<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1>Registrierung</h1>
+      <p class="subtitle">Erstellen Sie ein neues Konto</p>
+    </div>
+
+    <div class="backend-selector">
+      <label for="backend">Backend auswählen:</label>
+      <select
+        id="backend"
+        [(ngModel)]="selectedBackend"
+        (change)="switchBackend()"
+        [ngModelOptions]="{standalone: true}"
+        class="backend-select">
+        <option value="cognito">Spring Boot + AWS Cognito</option>
+        <option value="sapias">SAP CAP + SAP IAS</option>
+      </select>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        {{ successMessage }}
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Vorname</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            [class.invalid]="isFieldInvalid('firstName')"
+            placeholder="Max"
+          />
+          @if (getErrorMessage('firstName')) {
+            <span class="error-message">{{ getErrorMessage('firstName') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Nachname</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            [class.invalid]="isFieldInvalid('lastName')"
+            placeholder="Mustermann"
+          />
+          @if (getErrorMessage('lastName')) {
+            <span class="error-message">{{ getErrorMessage('lastName') }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-Mail-Adresse</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          [class.invalid]="isFieldInvalid('email')"
+          placeholder="max.mustermann@example.com"
+        />
+        @if (getErrorMessage('email')) {
+          <span class="error-message">{{ getErrorMessage('email') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          [class.invalid]="isFieldInvalid('password')"
+          placeholder="Mindestens 8 Zeichen"
+        />
+        @if (getErrorMessage('password')) {
+          <span class="error-message">{{ getErrorMessage('password') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Passwort bestätigen</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          [class.invalid]="isFieldInvalid('confirmPassword')"
+          placeholder="Passwort wiederholen"
+        />
+        @if (getErrorMessage('confirmPassword')) {
+          <span class="error-message">{{ getErrorMessage('confirmPassword') }}</span>
+        }
+      </div>
+
+      <div class="form-group-checkbox">
+        <input
+          type="checkbox"
+          id="acceptTerms"
+          formControlName="acceptTerms"
+        />
+        <label for="acceptTerms">
+          Ich akzeptiere die Nutzungsbedingungen und Datenschutzrichtlinien
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-register"
+        [disabled]="isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span>
+          Registrierung läuft...
+        } @else {
+          Jetzt registrieren
+        }
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>oder</span>
+    </div>
+
+    <a routerLink="/login" class="link-login">
+      Bereits ein Konto? Anmelden
+    </a>
+
+    <div class="implementation-note">
+      <h3>Implementierungs-Unterschiede (H6):</h3>
+      <div class="comparison">
+        <div class="comparison-item">
+          <h4>AWS Cognito</h4>
+          <ul>
+            <li>Manuelle UI-Implementierung</li>
+            <li>Custom Validierung erforderlich</li>
+            <li>SignUp API Integration</li>
+            <li>E-Mail-Verifikation konfigurieren</li>
+          </ul>
+        </div>
+        <div class="comparison-item">
+          <h4>SAP IAS</h4>
+          <ul>
+            <li>Self-Service Templates</li>
+            <li>Vorkonfigurierte Validierung</li>
+            <li>Standardisierte Flows</li>
+            <li>Automatische Verifikation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

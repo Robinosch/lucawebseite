@@ -1,0 +1,175 @@
+﻿<div class="orders-container">
+  <div class="orders-header">
+    <button (click)="goBack()" class="btn-back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Zurück zum Dashboard
+    </button>
+    <h1>Bestellungen</h1>
+    <p class="subtitle">Geschützter API-Endpunkt mit rollenbasierter Autorisierung</p>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      {{ error }}
+    </div>
+  }
+
+  <div class="authorization-info">
+    <h2>Autorisierungs-Vergleich (H1 & H2)</h2>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h3>
+          <span class="badge badge-sap">SAP CAP + IAS</span>
+          Deklarative Autorisierung
+        </h3>
+        <div class="code-example">
+          <pre><code>// CDS Modell (db/schema.cds)
+entity Orders @(restrict: [
+  &#123;
+    grant: 'READ',
+    to: 'OrderViewer'
+  &#125;,
+  &#123;
+    grant: ['CREATE', 'UPDATE'],
+    to: 'OrderManager'
+  &#125;
+]) &#123;
+  key ID : UUID;
+  customer : String;
+  total : Decimal;
+&#125;</code></pre>
+        </div>
+        <ul class="benefits">
+          <li>✓ Zentrale Definition im CDS-Modell</li>
+          <li>✓ Keine Code-Änderungen bei Rollen-Updates</li>
+          <li>✓ Automatische Token-Validierung</li>
+          <li>✓ Geringeres Risiko für Implementierungsfehler</li>
+        </ul>
+      </div>
+
+      <div class="comparison-card">
+        <h3>
+          <span class="badge badge-aws">Spring Boot + Cognito</span>
+          Imperative Autorisierung
+        </h3>
+        <div class="code-example">
+          <pre><code>// Java Controller
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController &#123;
+
+  @GetMapping
+  @PreAuthorize("hasAuthority('OrderViewer')")
+  public List&lt;Order&gt; getOrders() &#123;
+    // Token-Validierung & JWKS-URI
+    return orderService.findAll();
+  &#125;
+
+  @PostMapping
+  @PreAuthorize("hasAuthority('OrderManager')")
+  public Order createOrder(@RequestBody Order order) &#123;
+    return orderService.save(order);
+  &#125;
+&#125;</code></pre>
+        </div>
+        <ul class="benefits">
+          <li>⚠ Annotationen in jeder Service-Methode</li>
+          <li>⚠ Manuelle JWKS-URI Konfiguration</li>
+          <li>⚠ Code-Änderungen bei Rollen-Updates</li>
+          <li>⚠ Höheres Risiko für vergessene Checks</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner-large"></div>
+      <p>Lade Bestellungen...</p>
+    </div>
+  } @else {
+    <div class="orders-table-container">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Bestellnummer</th>
+            <th>Kunde</th>
+            <th>Produkt</th>
+            <th>Betrag</th>
+            <th>Status</th>
+            <th>Datum</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (orders.length === 0) {
+            <tr class="no-data">
+              <td colspan="6">
+                <div class="no-data-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                  <p>Keine Bestellungen vorhanden</p>
+                  <button (click)="loadMockOrders()" class="btn-load-mock">
+                    Mock-Daten laden (für Demo)
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (order of orders; track order.id) {
+              <tr>
+                <td><strong>{{ order.id }}</strong></td>
+                <td>{{ order.customerName }}</td>
+                <td>{{ order.product }}</td>
+                <td class="amount">{{ order.amount | currency:'EUR' }}</td>
+                <td>
+                  <span [class]="'status-badge ' + getStatusClass(order.status)">
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td>{{ order.date | date:'dd.MM.yyyy' }}</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <div class="security-note">
+    <h3>Token-Validierung (H5)</h3>
+    <div class="security-grid">
+      <div class="security-item">
+        <h4>SAP CAP</h4>
+        <p><strong>Automatisch durch Framework:</strong></p>
+        <ul>
+          <li>JWKS automatisch abgerufen</li>
+          <li>Signatur-Validierung eingebaut</li>
+          <li>Scope-Prüfung deklarativ</li>
+          <li>Kein manueller Code erforderlich</li>
+        </ul>
+      </div>
+      <div class="security-item">
+        <h4>Spring Boot</h4>
+        <p><strong>Manuelle Konfiguration:</strong></p>
+        <ul>
+          <li>JWKS-URI in application.yml</li>
+          <li>SecurityConfig erforderlich</li>
+          <li>JwtDecoder manuell konfigurieren</li>
+          <li>Höheres Fehlerrisiko</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+

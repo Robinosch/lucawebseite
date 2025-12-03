@@ -1,0 +1,70 @@
+﻿<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Anmeldung</h1>
+      <p class="subtitle">Vergleichsstudie: SAP CAP vs. Spring Boot Authentication</p>
+    </div>
+
+    <div class="backend-selector">
+      <label for="backend">Backend auswählen:</label>
+      <select
+        id="backend"
+        [(ngModel)]="selectedBackend"
+        (change)="switchBackend()"
+        class="backend-select">
+        <option value="cognito">Spring Boot + AWS Cognito</option>
+        <option value="sapias">SAP CAP + SAP IAS</option>
+      </select>
+    </div>
+
+    <div class="login-info">
+      <div class="info-box">
+        <h3>Aktuelles Backend:</h3>
+        <p class="backend-name">
+          @if (selectedBackend === 'cognito') {
+            <span class="badge badge-aws">AWS Cognito</span>
+          } @else {
+            <span class="badge badge-sap">SAP IAS</span>
+          }
+        </p>
+      </div>
+
+      <div class="info-box">
+        <h3>Authentifizierungsflow:</h3>
+        <p>OAuth2 / OpenID Connect (OIDC)</p>
+        <p class="tech-detail">Authorization Code Flow mit PKCE</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      (click)="login()"
+      class="btn-login">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+        <polyline points="10 17 15 12 10 7"></polyline>
+        <line x1="15" y1="12" x2="3" y2="12"></line>
+      </svg>
+      Mit {{ selectedBackend === 'cognito' ? 'AWS Cognito' : 'SAP IAS' }} anmelden
+    </button>
+
+    <div class="divider">
+      <span>oder</span>
+    </div>
+
+    <a routerLink="/register" class="link-register">
+      Noch kein Konto? Registrieren Sie sich
+    </a>
+
+    <div class="study-note">
+      <p><strong>Hinweis zur Studie:</strong></p>
+      <p>Diese Anwendung vergleicht zwei Authentication-Architekturen:</p>
+      <ul>
+        <li>Imperative Autorisierung (Spring Security + AWS Cognito)</li>
+        <li>Deklarative Autorisierung (SAP CAP + SAP IAS)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
