@@ -181,21 +181,6 @@
         }
       </div>
 
-      <div class="form-group-checkbox">
-        <input
-          type="checkbox"
-          id="acceptTerms"
-          formControlName="acceptTerms"
-          class="checkbox-input"
-        />
-        <label for="acceptTerms" class="checkbox-label">
-          Ich akzeptiere die <a href="#" class="link-inline">Nutzungsbedingungen</a> und <a href="#" class="link-inline">Datenschutzrichtlinien</a>
-        </label>
-      </div>
-      @if (registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched) {
-        <span class="error-message">Sie müssen die Bedingungen akzeptieren</span>
-      }
-
       <button
         type="submit"
         class="btn-register"

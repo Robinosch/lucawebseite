@@ -10,8 +10,6 @@ import { AuthService, RegisterRequest } from '../../auth/auth.service';
  * ARCHITEKTUR:
  * - Sendet Registrierungsdaten an Backend
  * - Backend kommuniziert mit IdP (AWS Cognito / SAP IAS)
- * - Keine direkte IdP-Kommunikation vom Frontend
- * - Backend handhabt Verifikations-E-Mails etc.
  */
 @Component({
   selector: 'app-register',
@@ -39,7 +37,6 @@ export class Register {
       confirmPassword: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      acceptTerms: [false, [Validators.requiredTrue]]
     }, { validators: this.passwordMatchValidator });
   }
 
@@ -86,7 +83,6 @@ export class Register {
           this.successMessage = response.message ||
             'Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail zur Verifikation.';
 
-          // Nach 3 Sekunden zur Login-Seite
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 3000);

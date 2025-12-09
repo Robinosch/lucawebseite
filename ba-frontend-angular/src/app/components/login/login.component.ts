@@ -8,10 +8,9 @@ import { AuthService, LoginRequest } from '../../auth/auth.service';
  * Login-Component für BFF-Pattern.
  *
  * ARCHITEKTUR:
- * - Traditionelle Username/Password-Eingabe
+ * - Username/Password-Eingabe
  * - Backend handhabt OAuth2/OIDC-Kommunikation mit IdP
  * - Frontend sendet nur Credentials an Backend
- * - Session über HTTP-only Cookies
  */
 @Component({
   selector: 'app-login',
@@ -25,21 +24,17 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  // Form-Daten
   username: string = '';
   password: string = '';
   selectedBackend: 'cognito' | 'sapias' = 'cognito';
 
-  // UI-State
   loading: boolean = false;
   errorMessage: string = '';
   returnUrl: string = '/dashboard';
 
   ngOnInit(): void {
-    // Return-URL aus Query-Params
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
 
-    // Wenn bereits authentifiziert, redirect
     if (this.authService.isAuthenticated()) {
       this.router.navigate([this.returnUrl]);
     }
@@ -50,7 +45,6 @@ export class LoginComponent implements OnInit {
    * Backend handhabt OAuth2-Flow mit ausgewähltem IdP.
    */
   login(): void {
-    // Validierung
     if (!this.username || !this.password) {
       this.errorMessage = 'Bitte geben Sie Benutzername und Passwort ein.';
       return;
@@ -68,7 +62,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if (response.success) {
-          // Erfolgreicher Login - Backend hat Session erstellt
           this.router.navigate([this.returnUrl]);
         } else {
           this.errorMessage = response.message || 'Login fehlgeschlagen.';
@@ -88,7 +81,6 @@ export class LoginComponent implements OnInit {
    */
   onBackendChange(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
-    // Optional: Backend-URL anpassen
     const backendUrls = {
       'cognito': 'http://localhost:8080',
       'sapias': 'http://localhost:8081'
