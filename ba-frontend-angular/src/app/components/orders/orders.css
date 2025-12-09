@@ -5,7 +5,7 @@
 }
 
 .orders-header {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto 2rem;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .alert {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto 2rem;
   padding: 1rem;
   border-radius: 8px;
@@ -59,7 +59,7 @@
 }
 
 .authorization-info {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto 2rem;
   background: white;
   border-radius: 12px;
@@ -150,7 +150,7 @@
 }
 
 .loading-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   background: white;
   border-radius: 12px;
@@ -174,7 +174,7 @@
 }
 
 .orders-table-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto 2rem;
   background: white;
   border-radius: 12px;
@@ -285,7 +285,7 @@
 }
 
 .security-note {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   background: white;
   border-radius: 12px;

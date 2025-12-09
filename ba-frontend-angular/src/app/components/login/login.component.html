@@ -1,12 +1,10 @@
 ﻿<div class="login-container">
   <div class="login-card">
-    <!-- Header -->
     <div class="login-header">
       <h1>🔐 Anmeldung</h1>
       <p class="subtitle">Vergleichsstudie: SAP CAP vs. Spring Boot Authentication</p>
     </div>
 
-    <!-- Backend-Auswahl -->
     <div class="backend-selector">
       <label for="backend" class="label-main">Backend-System auswählen:</label>
       <select
@@ -22,7 +20,6 @@
       </p>
     </div>
 
-    <!-- Info-Boxen -->
     <div class="login-info">
       <div class="info-box">
         <div class="info-icon">🎯</div>
@@ -30,9 +27,9 @@
           <h3>Aktuelles Backend:</h3>
           <p class="backend-name">
             @if (selectedBackend === 'cognito') {
-              <span class="badge badge-aws">AWS Cognito</span>
+              <span class="badge badge-aws">Spring Boot + AWS SDK</span>
             } @else {
-              <span class="badge badge-sap">SAP IAS</span>
+              <span class="badge badge-sap">SAP CAP</span>
             }
           </p>
         </div>
@@ -43,14 +40,11 @@
         <div class="info-content">
           <h3>Authentifizierungsflow:</h3>
           <p>OAuth2 / OpenID Connect (OIDC)</p>
-          <p class="tech-detail">Backend-for-Frontend Pattern</p>
         </div>
       </div>
     </div>
 
-    <!-- Login-Formular -->
     <form (ngSubmit)="login()" class="login-form">
-      <!-- Fehlermeldung -->
       @if (errorMessage) {
         <div class="alert alert-error">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -62,7 +56,6 @@
         </div>
       }
 
-      <!-- Benutzername -->
       <div class="form-group">
         <label for="username" class="form-label">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -83,7 +76,6 @@
           autocomplete="username">
       </div>
 
-      <!-- Passwort -->
       <div class="form-group">
         <label for="password" class="form-label">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -104,7 +96,6 @@
           autocomplete="current-password">
       </div>
 
-      <!-- Login-Button -->
       <button
         type="submit"
         [disabled]="loading || !username || !password"
@@ -123,12 +114,10 @@
       </button>
     </form>
 
-    <!-- Divider -->
     <div class="divider">
       <span>oder</span>
     </div>
 
-    <!-- Registrierungs-Link -->
     <a routerLink="/register" class="link-register">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -136,25 +125,8 @@
         <line x1="20" y1="8" x2="20" y2="14"></line>
         <line x1="23" y1="11" x2="17" y2="11"></line>
       </svg>
-      Noch kein Konto? Jetzt registrieren
+      Registrieren
     </a>
-
-    <!-- Studien-Hinweis -->
-    <div class="study-note">
-      <div class="study-icon">📊</div>
-      <div class="study-content">
-        <p><strong>Hinweis zur Vergleichsstudie:</strong></p>
-        <p>Diese Anwendung vergleicht zwei Authentication-Architekturen:</p>
-        <ul>
-          <li><strong>Imperativ:</strong> Spring Security + AWS Cognito (Annotationen im Code)</li>
-          <li><strong>Deklarativ:</strong> SAP CAP + SAP IAS (CDS-Modell basiert)</li>
-        </ul>
-        <p class="study-detail">
-          <strong>BFF-Pattern:</strong> Das Frontend sendet nur Credentials. Das Backend handhabt
-          die komplette OAuth2/OIDC-Kommunikation mit dem Identity Provider.
-        </p>
-      </div>
-    </div>
   </div>
 </div>
 
