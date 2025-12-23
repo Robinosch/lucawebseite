@@ -1,0 +1,256 @@
+/* verify-email.component.css */
+
+.verify-email-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 40px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.info-text {
+  margin-bottom: 25px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.info-text strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Backend Badge */
+.backend-info {
+  margin-bottom: 30px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-cognito {
+  background-color: #ff9900;
+  color: white;
+}
+
+.badge-sapias {
+  background-color: #0070f2;
+  color: white;
+}
+
+/* Code Input */
+.code-input-group {
+  margin-bottom: 30px;
+}
+
+.code-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.code-digit {
+  width: 55px;
+  height: 55px;
+  font-size: 24px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background: white;
+}
+
+.code-digit:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  transform: scale(1.05);
+}
+
+.code-digit:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Messages */
+.error-message,
+.success-message {
+  margin-bottom: 20px;
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+}
+
+.error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+}
+
+.success-message {
+  color: #388e3c;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+/* Verify Button */
+.verify-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.verify-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  transform: translateY(-2px);
+}
+
+.verify-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.7;
+}
+
+/* Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Resend Code */
+.resend-text {
+  font-size: 14px;
+  color: #666;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.resend-link {
+  background: none;
+  border: none;
+  color: #2196F3;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.resend-link:hover:not(:disabled) {
+  color: #0b7dda;
+}
+
+.resend-link:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Back to Login */
+.back-to-login {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.link {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .verify-email-container {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .code-digit {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .code-inputs {
+    gap: 8px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+}
+

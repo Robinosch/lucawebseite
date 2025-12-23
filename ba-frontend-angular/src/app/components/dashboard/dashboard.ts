@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService, UserProfile } from '../../auth/auth.service';
+import { ApiService, UserProfile } from '../../services/api.service';
 
 /**
  * Dashboard-Component für BFF-Pattern.
@@ -19,7 +19,7 @@ import { AuthService, UserProfile } from '../../auth/auth.service';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  private authService = inject(AuthService);
+  private apiService = inject(ApiService);
   private router = inject(Router);
 
   userProfile: UserProfile | null = null;
@@ -27,12 +27,12 @@ export class Dashboard implements OnInit {
 
   ngOnInit(): void {
     // Subscribe zu User-Profil vom Backend
-    this.authService.userProfile$.subscribe(profile => {
+    this.apiService.userProfile$.subscribe(profile => {
       this.userProfile = profile;
     });
 
     // Subscribe zu Auth-Status
-    this.authService.isAuthenticated$.subscribe(isAuth => {
+    this.apiService.isAuthenticated$.subscribe(isAuth => {
       this.isAuthenticated = isAuth;
     });
   }
@@ -41,7 +41,7 @@ export class Dashboard implements OnInit {
    * Logout: Backend invalidiert Session.
    */
   logout(): void {
-    this.authService.logout().subscribe({
+    this.apiService.logout().subscribe({
       next: () => {
         // Navigation wird vom AuthService gehandhabt
       },

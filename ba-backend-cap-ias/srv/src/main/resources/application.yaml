@@ -1,21 +1,140 @@
+# SAP CAP + SAP IAS Backend Configuration
+# Bachelor Thesis: Comparing SAP CAP vs. AWS Cognito
+
 ---
 spring:
   config.activate.on-profile: default
+  application:
+    name: sap-cap-backend-ias
+
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:capdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
   sql.init.platform: h2
+
+  # CRITICAL for H5: SAP IAS Token Validation
+  # NOTE: This is MINIMAL configuration compared to AWS Cognito!
+  # - No manual JWKS URI configuration in code
+  # - No manual JWT processor setup
+  # - Framework handles EVERYTHING automatically via Service Binding
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${IAS_ISSUER_URI:https://your-ias-domain.accounts.ondemand.com/oauth2/certs}
-          jwk-set-uri: ${IAS_JWKS_URI:https://your-ias-domain.accounts.ondemand.com/oauth2/certs}
+          # These will be automatically populated via Service Binding in SAP BTP
+          # For local testing, you can set them here:
+          issuer-uri: ${IAS_ISSUER_URI:https://your-tenant.accounts.ondemand.com}
+          jwk-set-uri: ${IAS_JWKS_URI:https://your-tenant.accounts.ondemand.com/oauth2/certs}
+
+# SAP CAP Configuration
 cds:
-  data-source.auto-config.enabled: false
+  # H5: Automatic Security Handling
+  # The framework automatically:
+  # - Fetches JWKS from SAP IAS
+  # - Validates JWT signatures
+  # - Checks token expiration
+  # - Extracts claims
+  # NO manual code needed!
   security:
+    enabled: true
+    # mock-user is for local testing without SAP IAS
+    # Set to false in production
+    mock:
+      enabled: ${MOCK_SECURITY:false}
+
+  # OData V4 Configuration
+  odata:
+    v4:
+      enabled: true
+      endpoint:
+        path: /odata/v4
+
+  # Data Source Configuration
+  data-source:
+    auto-config:
+      enabled: false
+
+  # SQL Configuration
+  sql:
+    supportedLocales:
+      - en
+      - de
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# Logging Configuration for Hypothesis Testing
+logging:
+  level:
+    root: INFO
+    customer.ba_backend_cap_ias: DEBUG
+    com.sap.cds: DEBUG
+    com.sap.cloud.security: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+
+# Metrics for Case Study
+metrics:
+  security:
+    lines-of-code:
+      enabled: true
+  time-to-first-token:
+    enabled: true
+  coupling:
     enabled: true
 
 ---
-# test profile can disable security for local tests
+# Test Profile - Disables security for local unit tests
 spring:
   config.activate.on-profile: test
+
 cds:
-  security.enabled: false
+  security:
+    enabled: false
+    mock:
+      enabled: true
+
+logging:
+  level:
+    customer.ba_backend_cap_ias: TRACE
+
+---
+# Production Profile - Full SAP IAS Integration
+spring:
+  config.activate.on-profile: cloud
+
+cds:
+  security:
+    enabled: true
+    mock:
+      enabled: false
+    # Service Binding automatically provides:
+    # - IAS tenant URL
+    # - JWKS endpoint
+    # - Client ID and Secret
+    # - All necessary OAuth2 configuration
+    #
+    # H3a, H6: NO manual configuration needed!
+    # vs. AWS Cognito: Requires manual application.properties setup
+
+logging:
+  level:
+    root: WARN
+    customer.ba_backend_cap_ias: INFO

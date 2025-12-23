@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService, RegisterRequest } from '../../auth/auth.service';
+import { ApiService, RegisterRequest } from '../../services/api.service';
 
 /**
  * Register-Component für BFF-Pattern.
@@ -21,7 +21,7 @@ import { AuthService, RegisterRequest } from '../../auth/auth.service';
 export class Register {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private apiService = inject(ApiService);
 
   selectedBackend: 'cognito' | 'sapias' = 'cognito';
   registerForm: FormGroup;
@@ -69,30 +69,53 @@ export class Register {
     this.successMessage = null;
 
     const formData = this.registerForm.value;
+    const registrationStartTime = performance.now();
+    // H6 Metrik: Start der Registrierung
+    console.log(`[CASE_STUDY_METRIC] REGISTRATION_STARTED: backend=${this.selectedBackend}, username=${formData.username}, email=${formData.email}, timestamp=${new Date().toISOString()}`);
 
     const registerData: RegisterRequest = {
+      familyName: formData.lastName,
+      givenName: formData.firstName,
       username: formData.username,
       email: formData.email,
       password: formData.password,
       backend: this.selectedBackend
     };
 
-    this.authService.register(registerData).subscribe({
+    this.apiService.register(registerData).subscribe({
       next: (response) => {
-        if (response.success) {
-          this.successMessage = response.message ||
-            'Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail zur Verifikation.';
+        const registrationDuration = performance.now() - registrationStartTime;
 
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000);
-        } else {
-          this.errorMessage = response.message || 'Registrierung fehlgeschlagen.';
-          this.isLoading = false;
-        }
+        console.log(`[CASE_STUDY_METRIC] REGISTRATION_SUCCESS: backend=${this.selectedBackend}, duration_ms=${registrationDuration.toFixed(2)}, email=${formData.email}, timestamp=${new Date().toISOString()}`);
+
+        this.successMessage = response.message ||
+          'Registrierung erfolgreich! Du wirst zur Email-Verifizierung weitergeleitet...';
+
+        localStorage.setItem('pending_verification_email', formData.email);
+        localStorage.setItem('pending_verification_username', formData.username);
+        localStorage.setItem('pending_verification_backend', this.selectedBackend);
+        localStorage.setItem('registration_timestamp', registrationStartTime.toString());
+
+        console.log('[DEBUG] Weiterleitung zu /verify-email mit email:', formData.email);
+
+        this.isLoading = false;
+        this.router.navigate(['/verify-email'], {
+          queryParams: {
+            email: formData.email,
+            username: formData.username
+          }
+        }).then(success => {
+          console.log('[DEBUG] Navigation erfolgreich:', success);
+        }).catch(err => {
+          console.error('[DEBUG] Navigation fehlgeschlagen:', err);
+        });
       },
       error: (error) => {
+        const registrationDuration = performance.now() - registrationStartTime;
         console.error('Registrierungs-Fehler:', error);
+
+        console.log(`[CASE_STUDY_METRIC] REGISTRATION_FAILED: backend=${this.selectedBackend}, duration_ms=${registrationDuration.toFixed(2)}, error=${error.error?.message || error.message}, timestamp=${new Date().toISOString()}`);
+
         this.errorMessage = error.error?.message ||
           'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
         this.isLoading = false;
@@ -106,10 +129,10 @@ export class Register {
   onBackendChange(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
     const backendUrls = {
-      'cognito': 'http://localhost:8080',
-      'sapias': 'http://localhost:8081'
+      'cognito': 'http://localhost:8081/api',
+      'sapias': 'http://localhost:8080/api'
     };
-    this.authService.setBackendUrl(backendUrls[this.selectedBackend]);
+    this.apiService.setBackendUrl(backendUrls[this.selectedBackend]);
   }
 
   /**

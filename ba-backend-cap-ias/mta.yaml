@@ -1,0 +1,71 @@
+_schema-version: '3.1'
+ID: ba-backend-cap-ias
+version: 1.0.0
+description: "SAP CAP Backend for Bachelor Thesis - SAP IAS Integration"
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install
+        - npx cds build --production
+
+modules:
+  # --------------------- SERVER MODULE ------------------------
+  - name: ba-backend-cap-ias-srv
+  # ------------------------------------------------------------
+    type: java
+    path: srv
+    parameters:
+      buildpack: sap_java_buildpack
+      memory: 1024M
+      disk-quota: 512M
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests
+      build-result: target/*-exec.jar
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      # Bind to XSUAA service for SAP IAS integration
+      - name: ba-backend-cap-ias-xsuaa
+      # Bind to destination service (optional)
+      - name: ba-backend-cap-ias-destination
+        parameters:
+          optional: true
+
+resources:
+  # --------------------- XSUAA SERVICE --------------------
+  # This is the UAA service that integrates with SAP IAS
+  # H5: Automatic JWT token validation via this binding!
+  # --------------------------------------------------------
+  - name: ba-backend-cap-ias-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: ba-backend-cap-ias-${org}-${space}
+        tenant-mode: dedicated
+        description: Bachelor Thesis SAP CAP Backend - XSUAA Service
+
+  # --------------------- DESTINATION SERVICE (Optional) ----
+  - name: ba-backend-cap-ias-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
+        version: 1.0.0
+

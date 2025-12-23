@@ -1,0 +1,25 @@
+package fh.babackendspringcognito.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * DTO for login request.
+ * Used for hypothesis H3a - Time-to-First-Token measurement.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class LoginRequest {
+
+    @NotBlank(message = "Username is required")
+    private String username;
+
+    @NotBlank(message = "Password is required")
+    private String password;
+}
+

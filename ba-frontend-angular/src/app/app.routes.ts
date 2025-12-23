@@ -16,6 +16,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/register/register').then(m => m.Register)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'verify-email',
+    loadComponent: () => import('./components/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
+  },
+  {
     path: 'callback',
     loadComponent: () => import('./components/callback/callback').then(m => m.Callback)
   },
