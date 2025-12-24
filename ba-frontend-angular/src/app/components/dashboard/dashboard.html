@@ -1,4 +1,4 @@
-﻿<div class="dashboard-container">
+﻿﻿<div class="dashboard-container">
   <nav class="navbar">
     <div class="navbar-content">
       <div class="navbar-brand">
@@ -24,11 +24,9 @@
       @if (userProfile) {
         <p class="user-info">
           Angemeldet als: <strong>{{ userProfile.username || userProfile.email }}</strong>
-          @if (userProfile.backend) {
-            <span class="backend-badge" [class.badge-aws]="userProfile.backend === 'cognito'" [class.badge-sap]="userProfile.backend === 'sapias'">
-              {{ userProfile.backend === 'cognito' ? '🔷 AWS Cognito' : '🔶 SAP IAS' }}
+            <span class="backend-badge" [class.badge-aws]="isCognitoBackend" [class.badge-sap]="!isCognitoBackend">
+              {{ isCognitoBackend ? '🔷 AWS Cognito' : '🔶 SAP IAS' }}
             </span>
-          }
         </p>
       }
     </div>
@@ -64,7 +62,26 @@
                     }
                   </span>
                 </li>
+              } @else {
+                <li>
+                  <span class="detail-label">🔑 Rollen:</span>
+                  <span class="detail-value no-roles">Keine Rollen zugewiesen</span>
+                </li>
               }
+              <li>
+                <span class="detail-label">🔐 Token:</span>
+                <span class="detail-value token-display">{{ getTruncatedToken() }}</span>
+              </li>
+              <li>
+                <span class="detail-label">🏢 Backend:</span>
+                <span class="detail-value">
+                  @if (isCognitoBackend) {
+                    <span class="backend-badge badge-aws">🔷 AWS Cognito</span>
+                  } @else {
+                    <span class="backend-badge badge-sap">🔶 SAP IAS</span>
+                  }
+                </span>
+              </li>
             </ul>
           } @else {
             <p class="no-data">Keine Benutzerdaten verfügbar</p>
@@ -72,30 +89,6 @@
         </div>
       </div>
 
-      <!-- BFF Pattern Info Card -->
-      <div class="info-card highlight-card">
-        <div class="info-card-icon" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-        </div>
-        <div class="info-card-content">
-          <h3>🔒 BFF-Pattern (Backend-for-Frontend)</h3>
-          <ul class="security-details">
-            <li>✅ <strong>Keine Token im Frontend</strong></li>
-            <li>✅ <strong>HTTP-only Cookies</strong> für Session</li>
-            <li>✅ <strong>Backend validiert</strong> alle Tokens</li>
-            <li>✅ <strong>CSRF-Schutz</strong> aktiviert</li>
-            <li>✅ <strong>XSS-sicher:</strong> Kein Token-Storage</li>
-          </ul>
-          <p class="security-note">
-            <strong>Sicherheitsvorteil:</strong> Tokens sind für JavaScript nicht zugreifbar.
-          </p>
-        </div>
-      </div>
-
-      <!-- Protected API Card -->
       <div class="info-card action-card" (click)="navigateToOrders()">
         <div class="info-card-icon" style="background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,13 +98,59 @@
           </svg>
         </div>
         <div class="info-card-content">
-          <h3>📦 Geschützte API</h3>
+          <h3>📦 Geschützte API - Bestellungen</h3>
           <p>Zugriff auf rollenbasierte Endpunkte</p>
-          <ul class="api-features">
-            <li>🔐 Backend validiert Session</li>
-            <li>🎯 Rollenbasierte Autorisierung</li>
-            <li>📊 Prüfung von H1 und H2</li>
-          </ul>
+
+          <div class="permissions-grid">
+            <div class="permission-item" [class.permission-granted]="canViewOrders" [class.permission-denied]="!canViewOrders">
+              @if (canViewOrders) {
+                <span class="permission-icon">✅</span>
+              } @else {
+                <span class="permission-icon">❌</span>
+              }
+              <span class="permission-text">
+                <strong>Bestellungen anzeigen</strong><br>
+                <small>@PreAuthorize("isAuthenticated()")</small>
+              </span>
+            </div>
+
+            <div class="permission-item" [class.permission-granted]="hasRole('MANAGER')" [class.permission-denied]="!hasRole('MANAGER')">
+              @if (hasRole('MANAGER')) {
+                <span class="permission-icon">✅</span>
+              } @else {
+                <span class="permission-icon">❌</span>
+              }
+              <span class="permission-text">
+                <strong>Bestellung nach ID</strong><br>
+                <small>@PreAuthorize("hasRole('MANAGER')")</small>
+              </span>
+            </div>
+
+            <div class="permission-item" [class.permission-granted]="canCreateOrders" [class.permission-denied]="!canCreateOrders">
+              @if (canCreateOrders) {
+                <span class="permission-icon">✅</span>
+              } @else {
+                <span class="permission-icon">❌</span>
+              }
+              <span class="permission-text">
+                <strong>Bestellung erstellen</strong><br>
+                <small>@PreAuthorize("hasRole('ADMIN')")</small>
+              </span>
+            </div>
+
+            <div class="permission-item" [class.permission-granted]="canDeleteOrders" [class.permission-denied]="!canDeleteOrders">
+              @if (canDeleteOrders) {
+                <span class="permission-icon">✅</span>
+              } @else {
+                <span class="permission-icon">❌</span>
+              }
+              <span class="permission-text">
+                <strong>Bestellung löschen</strong><br>
+                <small>@PreAuthorize("hasRole('ADMIN')")</small>
+              </span>
+            </div>
+          </div>
+
           <button class="btn-action">
             Bestellungen anzeigen
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -121,36 +160,6 @@
         </div>
       </div>
 
-      <!-- Hypothesis Card -->
-      <div class="info-card">
-        <div class="info-card-icon" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-          </svg>
-        </div>
-        <div class="info-card-content">
-          <h3>📊 Hypothesen-Prüfung</h3>
-          <ul class="hypothesis-list">
-            <li>
-              <span class="hypothesis-tag">H1</span>
-              <span>Deklarativ vs. Imperativ (Security)</span>
-            </li>
-            <li>
-              <span class="hypothesis-tag">H2</span>
-              <span>Maintainability (Code-Änderungen)</span>
-            </li>
-            <li>
-              <span class="hypothesis-tag">H5</span>
-              <span>Token-Validierung (Automatisch vs. Manuell)</span>
-            </li>
-            <li>
-              <span class="hypothesis-tag">H6</span>
-              <span>Registrierungs-Flow (Templates vs. Custom)</span>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
 
     <!-- Architecture Section -->

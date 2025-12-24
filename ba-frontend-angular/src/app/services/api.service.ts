@@ -34,13 +34,17 @@ export interface UserProfile {
   username: string;
   email: string;
   roles: string[];
-  backend: string;
 }
 
 export interface AuthResponse {
   success: boolean;
   message?: string;
   user?: UserProfile;
+  accessToken?: string;
+  idToken?: string;
+  refreshToken?: string;
+  expiresIn?: number;
+  tokenType?: string;
 }
 
 @Injectable({
@@ -53,6 +57,9 @@ export class ApiService {
   // Base URL für Backend-API (BFF)
   private apiUrl = environment.apiUrl || 'http://localhost:8081/api';
 
+  // Token Storage (in-memory für diese Session)
+  private accessToken: string | null = null;
+
   // Observables für reaktive Komponenten
   private isAuthenticatedSubject$ = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject$.asObservable();
@@ -61,18 +68,34 @@ export class ApiService {
   public userProfile$: Observable<UserProfile | null> = this.userProfileSubject$.asObservable();
 
   constructor() {
-    // Prüfe Session beim Start
-    this.checkSession();
+    // Token aus localStorage wiederherstellen (falls vorhanden)
+    const storedToken = localStorage.getItem('accessToken');
+    if (storedToken) {
+      this.accessToken = storedToken;
+      this.isAuthenticatedSubject$.next(true);
+
+      // User Profile wiederherstellen
+      const storedUser = localStorage.getItem('userProfile');
+      if (storedUser) {
+        this.userProfileSubject$.next(JSON.parse(storedUser));
+      }
+    }
   }
 
   /**
-   * Erstellt Standard HTTP-Headers (ohne Authorization Token).
-   * Session wird automatisch via HTTP-only Cookie mitgesendet.
+   * Erstellt HTTP-Headers mit Authorization Token (falls vorhanden).
    */
   private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
+    const headers: { [key: string]: string } = {
       'Content-Type': 'application/json'
-    });
+    };
+
+    // JWT Token im Authorization Header mitsenden (falls vorhanden)
+    if (this.accessToken) {
+      headers['Authorization'] = `Bearer ${this.accessToken}`;
+    }
+
+    return new HttpHeaders(headers);
   }
 
   /**
@@ -120,49 +143,46 @@ export class ApiService {
   // ==========================================
 
   /**
-   * Prüft, ob eine gültige Session existiert (via Backend).
-   * Backend validiert HTTP-only Cookie.
-   */
-  checkSession(): void {
-    this.http.get<AuthResponse>(`${this.apiUrl}/auth/session`, { withCredentials: true })
-      .pipe(
-        tap(response => {
-          if (response.success && response.user) {
-            this.isAuthenticatedSubject$.next(true);
-            this.userProfileSubject$.next(response.user);
-          } else {
-            this.isAuthenticatedSubject$.next(false);
-            this.userProfileSubject$.next(null);
-          }
-        }),
-        catchError(() => {
-          this.isAuthenticatedSubject$.next(false);
-          this.userProfileSubject$.next(null);
-          return throwError(() => new Error('Session check failed'));
-        })
-      )
-      .subscribe();
-  }
-
-  /**
    * Login mit Username/Password.
-   * Backend handhabt OAuth2-Flow mit IdP und setzt HTTP-only Cookie.
+   * Backend handhabt OAuth2-Flow mit IdP und gibt JWT-Token zurück.
    */
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials, {
       withCredentials: true
     }).pipe(
       tap(response => {
-        if (response.success && response.user) {
-          this.isAuthenticatedSubject$.next(true);
+        if (response.success && response.accessToken) {
+          // Token speichern
+          this.accessToken = response.accessToken;
+          localStorage.setItem('accessToken', response.accessToken);
+
+          // User Profile speichern
           if (response.user) {
             this.userProfileSubject$.next(response.user);
+            localStorage.setItem('userProfile', JSON.stringify(response.user));
           }
+
+          // Optional: Refresh Token speichern
+          if (response.refreshToken) {
+            localStorage.setItem('refreshToken', response.refreshToken);
+          }
+
+          this.isAuthenticatedSubject$.next(true);
+
+          console.log('[DEBUG] Token gespeichert:', {
+            hasAccessToken: !!this.accessToken,
+            username: response.user?.username,
+            roles: response.user?.roles
+          });
         }
       }),
       catchError(error => {
         this.isAuthenticatedSubject$.next(false);
         this.userProfileSubject$.next(null);
+        this.accessToken = null;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('refreshToken');
         return throwError(() => error);
       })
     );
@@ -244,7 +264,7 @@ export class ApiService {
    * SAP IAS: Link per E-Mail
    */
   requestPasswordReset(email: string, username?: string): Observable<AuthResponse> {
-    return this.post<AuthResponse>('/auth/forgot-password', { email, username });
+    return this.post<AuthResponse>(`${this.apiUrl}/auth/forgot-password`, { email, username });
   }
 
   /**
@@ -255,7 +275,7 @@ export class ApiService {
    * @param newPassword - Neues Passwort
    */
   confirmPasswordReset(email: string, code: string, newPassword: string): Observable<AuthResponse> {
-    return this.post<AuthResponse>('/auth/confirm-password-reset', {
+    return this.post<AuthResponse>(`${this.apiUrl}/auth/confirm-password-reset`, {
       email,
       verificationCode: code,
       newPassword
@@ -263,19 +283,30 @@ export class ApiService {
   }
 
   /**
-   * Logout: Backend invalidiert Session und HTTP-only Cookie.
+   * Logout: Backend invalidiert Session und lokal werden Token gelöscht.
    */
   logout(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/auth/logout`, {}, {
       withCredentials: true
     }).pipe(
       tap(() => {
+        // Token und User Profile löschen
+        this.accessToken = null;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('refreshToken');
+
         this.isAuthenticatedSubject$.next(false);
         this.userProfileSubject$.next(null);
         this.router.navigate(['/login']);
       }),
       catchError(error => {
         // Auch bei Fehler lokal ausloggen
+        this.accessToken = null;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('refreshToken');
+
         this.isAuthenticatedSubject$.next(false);
         this.userProfileSubject$.next(null);
         this.router.navigate(['/login']);
@@ -298,11 +329,55 @@ export class ApiService {
     return this.userProfileSubject$.value;
   }
 
+  // ==========================================
+  // ORDER MANAGEMENT METHODS (Protected Resources)
+  // ==========================================
+
+  /**
+   * Holt alle Bestellungen.
+   * Backend: GET /api/orders
+   * Authorization: Authenticated users only
+   */
+  getAllOrders(): Observable<any[]> {
+    return this.get<any[]>('/orders');
+  }
+
+  /**
+   * Holt eine spezifische Bestellung nach ID.
+   * Backend: GET /api/orders/{id}
+   * Authorization: MANAGER role required
+   */
+  getOrderById(id: string): Observable<any> {
+    return this.get<any>(`/orders/${id}`);
+  }
+
+  /**
+   * Erstellt eine neue Bestellung.
+   * Backend: POST /api/orders
+   * Authorization: ADMIN role required
+   */
+  createOrder(order: any): Observable<any> {
+    return this.post<any>('/orders', order);
+  }
+
+  /**
+   * Löscht eine Bestellung.
+   * Backend: DELETE /api/orders/{id}
+   * Authorization: ADMIN role required
+   */
+  deleteOrder(id: string): Observable<void> {
+    return this.delete<void>(`/orders/${id}`);
+  }
+
   /**
    * Setzt die Backend-URL (für Wechsel zwischen Backends).
    */
   setBackendUrl(url: string): void {
     this.apiUrl = url;
+  }
+
+  isCognitoBackend(): boolean {
+    return this.apiUrl.includes('8081');
   }
 }
 

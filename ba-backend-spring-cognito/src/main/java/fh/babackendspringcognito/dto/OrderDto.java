@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 @Builder
 public class OrderDto {
 
-    @NotBlank(message = "Customer ID is required")
-    private String customerId;
+    @NotBlank(message = "Customer is required")
+    private String customer;
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be positive")

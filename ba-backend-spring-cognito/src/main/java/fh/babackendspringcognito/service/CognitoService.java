@@ -144,6 +144,7 @@ public class CognitoService {
             // Parse ID Token to extract user info and roles
             String[] roles = new String[0];
             String email = request.getUsername();
+            String username = request.getUsername();
             try {
                 JWTClaimsSet claims = validateToken(result.idToken());
                 List<String> cognitoGroups = claims.getStringListClaim("cognito:groups");
@@ -152,6 +153,9 @@ public class CognitoService {
                 }
                 if (claims.getClaim("email") != null) {
                     email = claims.getStringClaim("email");
+                }
+                if (claims.getClaim("cognito:username") != null) {
+                    username = claims.getStringClaim("cognito:username");
                 }
             } catch (Exception e) {
                 log.warn("Could not parse ID token for user info: {}", e.getMessage());
@@ -166,7 +170,7 @@ public class CognitoService {
                     .tokenType(result.tokenType())
                     .username(request.getUsername())
                     .user(AuthResponse.UserInfo.builder()
-                            .username(request.getUsername())
+                            .username(username)
                             .email(email)
                             .roles(roles)
                             .build())
@@ -191,10 +195,13 @@ public class CognitoService {
      * Validation steps:
      * 1. Fetch JWKS from Cognito endpoint
      * 2. Parse and verify JWT signature (RS256)
-     * 3. Validate claims: iss, aud, exp
+     * 3. Validate claims: iss, exp (and optionally aud for ID tokens)
      * 4. Extract user information and roles
      *
-     * Lines of Code for this method: ~50 lines
+     * Access Tokens (for API calls) do NOT contain 'aud' claim!
+     * Only ID Tokens contain 'aud' (audience) claim with Client ID.
+     *
+     * Lines of Code for this method: ~60 lines
      */
     public JWTClaimsSet validateToken(String token) {
         long startTime = System.currentTimeMillis();
@@ -202,33 +209,62 @@ public class CognitoService {
 
         try {
             ConfigurableJWTProcessor<SecurityContext> processor = getJwtProcessor();
-
             JWTClaimsSet claims = processor.process(token, null);
 
+            log.debug("JWT_CLAIMS_PARSED: Successfully parsed token claims");
+            log.debug("JWT_CLAIMS_ISSUER: {}", claims.getIssuer());
+            log.debug("JWT_CLAIMS_AUDIENCE: {}", claims.getAudience());
+            log.debug("JWT_CLAIMS_SUBJECT: {}", claims.getSubject());
+            log.debug("JWT_CLAIMS_EXPIRATION: {}", claims.getExpirationTime());
+            log.debug("JWT_CLAIMS_TOKEN_USE: {}", claims.getStringClaim("token_use"));
+
+            // Validate issuer (MANDATORY for both Access Token and ID Token)
             String issuer = claims.getIssuer();
             String expectedIssuer = cognitoProperties.getCognito().getIssuerUri();
-
             if (!expectedIssuer.equals(issuer)) {
                 log.error("JWT_VALIDATION_ERROR: Invalid issuer. Expected: {}, Got: {}", expectedIssuer, issuer);
                 throw new InvalidTokenException("Invalid token issuer");
             }
 
+            // Validate expiration (MANDATORY)
             Instant expirationTime = claims.getExpirationTime().toInstant();
             if (expirationTime.isBefore(Instant.now())) {
                 log.error("JWT_VALIDATION_ERROR: Token expired at {}", expirationTime);
                 throw new TokenExpiredException("Token has expired");
             }
 
-            String audience = claims.getAudience().get(0);
-            String expectedAudience = cognitoProperties.getCognito().getClientId();
+            // Validate token_use claim (optional, but good practice)
+            String tokenUse = claims.getStringClaim("token_use");
+            if (tokenUse != null) {
+                log.debug("JWT_TOKEN_USE: {}", tokenUse);
 
-            if (!expectedAudience.equals(audience)) {
-                log.error("JWT_VALIDATION_ERROR: Invalid audience. Expected: {}, Got: {}", expectedAudience, audience);
-                throw new InvalidTokenException("Invalid token audience");
+                // ID Token validation: requires 'aud' claim
+                if ("id".equals(tokenUse)) {
+                    if (claims.getAudience() == null || claims.getAudience().isEmpty()) {
+                        log.error("JWT_VALIDATION_ERROR: ID Token missing audience claim");
+                        throw new InvalidTokenException("ID Token must contain audience claim");
+                    }
+                    String audience = claims.getAudience().get(0);
+                    String expectedAudience = cognitoProperties.getCognito().getClientId();
+                    if (!expectedAudience.equals(audience)) {
+                        log.error("JWT_VALIDATION_ERROR: Invalid audience. Expected: {}, Got: {}", expectedAudience, audience);
+                        throw new InvalidTokenException("Invalid token audience");
+                    }
+                    log.debug("JWT_VALIDATION: ID Token audience validated: {}", audience);
+                }
+
+                // Access Token validation: 'aud' claim is OPTIONAL or may contain different value
+                if ("access".equals(tokenUse)) {
+                    log.debug("JWT_VALIDATION: Access Token detected, audience validation skipped (not required for Access Tokens)");
+                    // Access Tokens are validated by signature + issuer + expiration only
+                }
+            } else {
+                // If token_use claim is missing, skip audience validation
+                log.debug("JWT_VALIDATION: token_use claim not found, skipping audience validation");
             }
 
             long duration = System.currentTimeMillis() - startTime;
-            log.debug("JWT_VALIDATION_SUCCESS: Token validated successfully in {}ms", duration);
+            log.info("JWT_VALIDATION_SUCCESS: Token validated successfully in {}ms, token_use={}", duration, tokenUse);
 
             metricsService.recordTokenValidation(duration);
 
@@ -236,8 +272,15 @@ public class CognitoService {
 
         } catch (TokenExpiredException | InvalidTokenException e) {
             throw e;
+        } catch (com.nimbusds.jose.proc.BadJOSEException e) {
+            log.error("JWT_VALIDATION_ERROR: Bad JOSE signature - {}", e.getMessage(), e);
+            throw new InvalidTokenException("Invalid token signature: " + e.getMessage(), e);
+        } catch (java.text.ParseException e) {
+            log.error("JWT_VALIDATION_ERROR: Token parsing failed - {}", e.getMessage(), e);
+            throw new InvalidTokenException("Token parsing failed: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("JWT_VALIDATION_ERROR: Token validation failed - {}", e.getMessage(), e);
+            log.error("JWT_VALIDATION_ERROR_TYPE: {}", e.getClass().getName());
             throw new InvalidTokenException("Token validation failed: " + e.getMessage(), e);
         }
     }
@@ -291,23 +334,21 @@ public class CognitoService {
     private ConfigurableJWTProcessor<SecurityContext> getJwtProcessor() {
         if (jwtProcessor == null) {
             try {
-                // Create JWKS source from Cognito endpoint
                 String jwksUrl = cognitoProperties.getCognito().getJwksUri();
-                log.debug("JWKS_FETCH: Fetching public keys from {}", jwksUrl);
+                log.info("JWKS_FETCH: Fetching public keys from {}", jwksUrl);
 
                 JWKSource<SecurityContext> keySource = new RemoteJWKSet<>(new URL(jwksUrl));
 
-                // Configure JWT processor with RS256 algorithm
                 ConfigurableJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>();
                 processor.setJWSKeySelector(new JWSVerificationKeySelector<>(JWSAlgorithm.RS256, keySource));
 
                 jwtProcessor = processor;
 
-                log.info("JWKS_INITIALIZED: JWT processor initialized with JWKS from {}", jwksUrl);
+                log.info("JWKS_INITIALIZED: JWT processor initialized successfully with JWKS from {}", jwksUrl);
 
             } catch (Exception e) {
                 log.error("JWKS_ERROR: Failed to initialize JWT processor - {}", e.getMessage(), e);
-                throw new RuntimeException("Failed to initialize JWT processor", e);
+                throw new RuntimeException("Failed to initialize JWT processor: " + e.getMessage(), e);
             }
         }
         return jwtProcessor;

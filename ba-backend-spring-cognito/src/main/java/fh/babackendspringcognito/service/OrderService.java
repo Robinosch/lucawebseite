@@ -36,10 +36,10 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(OrderDto orderDto, String createdBy) {
-        log.info("Creating order for customer: {}, createdBy: {}", orderDto.getCustomerId(), createdBy);
+        log.info("Creating order for customer: {}, createdBy: {}", orderDto.getCustomer(), createdBy);
 
         Order order = Order.builder()
-                .customerId(orderDto.getCustomerId())
+                .customerId(orderDto.getCustomer())
                 .amount(orderDto.getAmount())
                 .status(orderDto.getStatus())
                 .createdBy(createdBy)

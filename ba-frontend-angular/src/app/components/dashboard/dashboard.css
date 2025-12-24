@@ -99,7 +99,77 @@
 .backend-badge.badge-aws {
   background: linear-gradient(135deg, #ff9900 0%, #ff7700 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(255, 153, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(255, 153, 0, 0.3);
+}
+
+.backend-badge.badge-sap {
+  background: linear-gradient(135deg, #0070f2 0%, #0055b8 100%);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 112, 242, 0.3);
+}
+
+/* Token Display */
+.token-display {
+  font-family: 'Courier New', monospace;
+  background: #f7fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.no-roles {
+  color: #e53e3e;
+  font-style: italic;
+}
+
+/* Permissions Grid */
+.permissions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s;
+}
+
+.permission-item.permission-granted {
+  background: #f0fff4;
+  border-color: #48bb78;
+}
+
+.permission-item.permission-denied {
+  background: #fff5f5;
+  border-color: #fc8181;
+  opacity: 0.7;
+}
+
+.permission-icon {
+  font-size: 1.25rem;
+}
+
+.permission-text {
+  flex: 1;
+}
+
+.permission-text strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.125rem;
+}
+
+.permission-text small {
+  font-size: 0.75rem;
+  color: #718096;
+  font-family: 'Courier New', monospace;
 }
 
 .backend-badge.badge-sap {
@@ -108,7 +178,6 @@
   box-shadow: 0 2px 8px rgba(0, 102, 179, 0.3);
 }
 
-/* Info Grid */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
