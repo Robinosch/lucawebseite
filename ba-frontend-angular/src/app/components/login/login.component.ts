@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
     const backendUrls = {
       'cognito': 'http://localhost:8081/api',
-      'sapias': 'http://localhost:8080/api'
+      'sapias': 'http://localhost:8080' // SAP CAP Backend
     };
     this.apiService.setBackendUrl(backendUrls[this.selectedBackend]);
   }

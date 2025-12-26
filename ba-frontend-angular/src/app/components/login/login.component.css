@@ -459,3 +459,54 @@
   }
 }
 
+.mock-users-info {
+  background: linear-gradient(135deg, #e6f3ff 0%, #f0f7ff 100%);
+  border: 1px solid #b3d9ff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.mock-users-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: #0066b3;
+  font-size: 0.95rem;
+}
+
+.mock-users-info ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: #2d3748;
+}
+
+.mock-users-info li {
+  margin: 0.375rem 0;
+  font-family: 'Courier New', monospace;
+}
+
+.cloud-note {
+  margin: 0.75rem 0 0 0;
+  padding: 0.625rem;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #4a5568;
+}
+
+/* SAP IAS Note */
+.sap-ias-note {
+  background: #f0f7ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.sap-ias-note p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #0066b3;
+}
+

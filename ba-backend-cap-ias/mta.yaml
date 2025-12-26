@@ -1,7 +1,7 @@
 _schema-version: '3.1'
 ID: ba-backend-cap-ias
 version: 1.0.0
-description: "SAP CAP Backend for Bachelor Thesis - SAP IAS Integration"
+description: "SAP CAP Backend + Angular Frontend for Bachelor Thesis - SAP IAS Integration"
 parameters:
   enable-parallel-deployments: true
 
@@ -19,7 +19,7 @@ modules:
     type: java
     path: srv
     parameters:
-      buildpack: sap_java_buildpack
+      buildpack: sap_java_buildpack_jakarta
       memory: 1024M
       disk-quota: 512M
     properties:
@@ -36,18 +36,55 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      # Bind to XSUAA service for SAP IAS integration
       - name: ba-backend-cap-ias-xsuaa
-      # Bind to destination service (optional)
       - name: ba-backend-cap-ias-destination
-        parameters:
-          optional: true
+
+  # --------------------- APP ROUTER (Angular + Auth) ----------
+  - name: ba-backend-cap-ias-approuter
+  # ------------------------------------------------------------
+    type: nodejs
+    path: approuter
+    parameters:
+      buildpack: nodejs_buildpack
+      disk-quota: 256M
+      memory: 256M
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+      requires:
+        - name: ba-frontend-angular
+          artifacts:
+            - dist/ba-frontend-angular/browser/*
+          target-path: resources
+    requires:
+      - name: ba-backend-cap-ias-xsuaa
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+    provides:
+      - name: app-url
+        properties:
+          url: ${default-url}
+
+  # --------------------- FRONTEND BUILD -----------------------
+  - name: ba-frontend-angular
+  # ------------------------------------------------------------
+    type: html5
+    path: ../ba-frontend-angular
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - npm run build -- --configuration=production
+      build-result: dist/ba-frontend-angular/browser
+      supported-platforms: []
 
 resources:
   # --------------------- XSUAA SERVICE --------------------
-  # This is the UAA service that integrates with SAP IAS
-  # H5: Automatic JWT token validation via this binding!
-  # --------------------------------------------------------
   - name: ba-backend-cap-ias-xsuaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -58,14 +95,31 @@ resources:
         xsappname: ba-backend-cap-ias-${org}-${space}
         tenant-mode: dedicated
         description: Bachelor Thesis SAP CAP Backend - XSUAA Service
+        oauth2-configuration:
+          redirect-uris:
+            - https://*.cfapps.eu10.hana.ondemand.com/**
+            - https://*.hana.ondemand.com/**
 
-  # --------------------- DESTINATION SERVICE (Optional) ----
+
+  # --------------------- DESTINATION SERVICE --------------
   - name: ba-backend-cap-ias-destination
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
       service: destination
       service-plan: lite
       config:
         HTML5Runtime_enabled: true
         version: 1.0.0
+        init_data:
+          instance:
+            existing_destinations_policy: update
+            destinations:
+              - Name: srv-api
+                URL: ~{srv-api/srv-url}
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                HTML5.ForwardAuthToken: true
 

@@ -1,4 +1,4 @@
-﻿<div class="login-container">
+﻿﻿<div class="login-container">
   <div class="login-card">
     <div class="login-header">
       <h1>🔐 Anmeldung</h1>
@@ -29,7 +29,7 @@
             @if (selectedBackend === 'cognito') {
               <span class="badge badge-aws">Spring Boot + AWS SDK</span>
             } @else {
-              <span class="badge badge-sap">SAP CAP</span>
+              <span class="badge badge-sap">SAP CAP (Basic Auth lokal)</span>
             }
           </p>
         </div>
@@ -39,10 +39,29 @@
         <div class="info-icon">🔒</div>
         <div class="info-content">
           <h3>Authentifizierungsflow:</h3>
-          <p>OAuth2 / OpenID Connect (OIDC)</p>
+          @if (selectedBackend === 'cognito') {
+            <p>OAuth2 / OpenID Connect (OIDC)</p>
+          } @else {
+            <p>Basic Auth (lokal) / SAP IAS (Cloud)</p>
+          }
         </div>
       </div>
     </div>
+
+    <!-- SAP CAP Mock Users Info -->
+    @if (selectedBackend === 'sapias') {
+      <div class="mock-users-info">
+        <h4>📋 Verfügbare Test-Benutzer (lokal):</h4>
+        <ul>
+          <li><strong>admin&#64;test.com</strong> / admin123 (Admin-Rolle)</li>
+          <li><strong>manager&#64;test.com</strong> / manager123 (Manager-Rolle)</li>
+          <li><strong>user&#64;test.com</strong> / user123 (User-Rolle)</li>
+        </ul>
+        <p class="cloud-note">
+          ☁️ <strong>In der Cloud:</strong> Login erfolgt automatisch über SAP IAS
+        </p>
+      </div>
+    }
 
     <form (ngSubmit)="login()" class="login-form">
       @if (errorMessage) {
@@ -69,7 +88,7 @@
           id="username"
           name="username"
           [(ngModel)]="username"
-          placeholder="max.mustermann@example.com"
+          [placeholder]="selectedBackend === 'sapias' ? 'admin@test.com' : 'max.mustermann@example.com'"
           class="form-input"
           [disabled]="loading"
           required
@@ -89,7 +108,7 @@
           id="password"
           name="password"
           [(ngModel)]="password"
-          placeholder="••••••••"
+          [placeholder]="selectedBackend === 'sapias' ? 'admin123' : '••••••••'"
           class="form-input"
           [disabled]="loading"
           required
@@ -109,7 +128,11 @@
             <polyline points="10 17 15 12 10 7"></polyline>
             <line x1="15" y1="12" x2="3" y2="12"></line>
           </svg>
-          Mit {{ selectedBackend === 'cognito' ? 'AWS Cognito' : 'SAP IAS' }} anmelden
+          @if (selectedBackend === 'cognito') {
+            Mit AWS Cognito anmelden
+          } @else {
+            Mit SAP CAP anmelden
+          }
         }
       </button>
     </form>
@@ -120,19 +143,25 @@
       </a>
     </div>
 
-    <div class="divider">
-      <span>oder</span>
-    </div>
+    @if (selectedBackend === 'cognito') {
+      <div class="divider">
+        <span>oder</span>
+      </div>
 
-    <a routerLink="/register" class="link-register">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="8.5" cy="7" r="4"></circle>
-        <line x1="20" y1="8" x2="20" y2="14"></line>
-        <line x1="23" y1="11" x2="17" y2="11"></line>
-      </svg>
-      Registrieren
-    </a>
+      <a routerLink="/register" class="link-register">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        Registrieren
+      </a>
+    } @else {
+      <div class="sap-ias-note">
+        <p>📝 <strong>Hinweis:</strong> Bei SAP IAS erfolgt die Benutzerregistrierung über die SAP IAS Admin Console.</p>
+      </div>
+    }
   </div>
 </div>
 

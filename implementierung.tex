@@ -1,0 +1,551 @@
+\chapter{Konzeption und Implementierung der Vergleichsszenarien}
+\label{ch:implementierung}
+
+Im Folgenden wird die praktische Durchführung der Case Study dokumentiert. Dazu werden die Bewertungskriterien erarbeitet und definiert und darauf aufbauend die Hypothesen aufgebaut des Evaluationsrahmen in Abschnitt \ref{sec:evaluationsrahmen}. Des Weiteren wird die Grundanwendung und der technologische Aufbau in Abschnitt \ref{sec:grundanwendung} dokumentiert. Im Abschnitt \ref{sec:frontend} wird der Aufbau des Frontend beschrieben. Folgend werden im Abschnitt \ref{sec:spring_backend} und \ref{sec:sap_backend} die Implementierung des jeweiligen Backends dokumentiert.
+\newline
+Basierend auf dem in Abschnitt \ref{sec:hypothesen} definierten Hypothesen werden zwei prototypische Referenzarchitekturen implementiert. Ziel ist es, eine empirische Datengrundlage zu schaffen, um insbesondere die Unterschiede in der Sicherheitsarchitektur (Token-Validierung, Autorisierungslogik) und der Developer Experience (Setup, Registrierungs-Flows) zu identifizieren.
+
+Die Implementierung isoliert die sicherheitskritischen Komponenten vom Rest der Geschäftslogik, um Störfaktoren zu minimieren. Dabei stehen die Metriken Konfigurationsaufwand ("Time-to-First-Token"), Implementierungskomplexität ("Lines of Code") und der Grad der Automatisierung im Fokus.
+
+
+\section{Ableitung des Evaluationsrahmens und der Bewertungskriterien}
+\label{sec:evaluationsrahmen}
+
+Um den Vergleich zwischen \ac{AWS} Cognito und \ac{SAP IAS} im Rahmen der Case Study nach \citep{Kitchenham1995} systematisch durchzuführen, werden objektive Bewertungskriterien definiert. Diese Kriterien werden unter anderem aus zwei etablierten Industriestandards abgeleitet, nämlich den \ac{OWASP} Cloud-Native Application Security Top 10 zur Identifikation von Risiken\footnote{\ref{fn:owaspcloudnative}} und der ISO/IEC 25010\footnote{\url{https://iso25000.com/en/iso-25000-standards/iso-25010}, aufgerufen am 23.11.2025} zur Klassifizierung von Softwarequalitätsmerkmalen.
+
+\subsection{Vergleichsszenarios}
+
+Dabei werden zwei spezifische Implementierungsszenarien untersucht:
+
+\begin{enumerate}
+    \item \textbf{SAP CAP mit SAP IAS:} Verwendung des SAP-Ökosystems mit deklarativer Sicherheitskonfiguration und automatischer Autorisierungsdurchsetzung auf Datenbankebene.
+    
+    \item \textbf{Spring Boot mit AWS Cognito:} Verwendung von Spring Boot und Spring Security mit imperativer Autorisierungskonfiguration.
+\end{enumerate}
+
+Dieser Vergleich ermöglicht es, nicht nur die funktionalen Unterschiede der \ac{IdP} zu messen, sondern auch die Auswirkungen des Framework-Ansatzes auf die praktische Sicherheit, Wartbarkeit und Developer Experience zu bewerten.
+
+
+\subsection{Bedrohungsanalyse im Kontext von Cloud-Identitätsanbietern}
+\label{sec:bedrohung}
+
+Die Analyse der aktuellen Bedrohungslage zeigt, dass Sicherheitsrisiken in der Cloud häufig nicht auf Protokollschwächen basieren, sondern wie diese implementiert und konfiguriert werden \citep{Dietrich2018}. Die \ac{OWASP} zeigt zudem in der \textit{Cloud-Native Application Security Top 10} spezifische Risiken, die für auch das \ac{IAM} wichtig sind\footnote{\ref{fn:owaspcloudnative}}.
+
+\begin{itemize}
+    \item \textbf{Insecure Cloud Configuration (\ac{OWASP} CNAS-1):} Dies ist das aktuell größte Risiko in Cloud-Umgebungen. Im Kontext von \ac{IAM} bedeutet dies, dass die Sicherheit eines Systems oft davon abhängt, wie die Standardkonfigurationen gegen menschliche Fehler schützen. Ein zu hoher Grad an Flexibilität ohne Sicherheitsleitplanken kann die Wahrscheinlichkeit von Fehlkonfigurationen erhöhen \citep{Dietrich2018}. Daher ist auch relevant, wie das Framework Entwickler durch Standardeinstellungen schützt.
+    
+    \item \textbf{Improper Authentication \& Authorization (\ac{OWASP} CNAS-3):} Fehler in der Validierung von Identitäten entstehen häufig durch komplexe Implementierungen in der Anwendungslogik. Daher ist zu untersuchen, ob die Frameworks Mechanismen bereitstellen, die diese Komplexität durch Abstraktion verringern.
+\end{itemize}
+
+\subsection{Definition der Bewertungskriterien}
+\label{sec:bewertungskriterien}
+
+Um eine Vergleichbarkeit zwischen den beiden Ökosystemen herzustellen, werden messbare Bewertungskriterien definiert. Diese orientieren sich am Qualitätsmodell der ISO/IEC 25010 und berücksichtigen die Sicherheitsrisiken aus den \ac{OWASP} Cloud-Native Application Security Top 10.
+\newline
+Die Bewertungskriterien werden unter anderem aus den Anforderungen, die bei der praktischen Evaluation von \ac{IdP} relevant sind, abgeleitet. Aus der Bedrohungsanalyse in Abschnitt \ref{sec:bedrohung} wird deutlich, dass Sicherheitsrisiken in der Cloud häufig nicht durch Protokollmängel entstehen, sondern durch Implementierungsfehler und Fehlkonfigurationen \citep{Dietrich2018}. Daher muss eine \ac{IdP} nicht nur funktional korrekt sein, sondern auch durch das Design und die Frameworkintegration Entwickler vor häufigen Fehlern bewahren \citep{Green2016}. Daher wird das Kriterium \textbf{Sicherheit} mit den Unterkriterien Vertraulichkeit, Integrität und Zurechenbarkeit gewählt, da diese direkt die OWASP-Risiken \textit{Insecure Cloud Configuration} (CNAS-1) und \textit{Improper Authentication \& Authorization} (CNAS-3) adressieren \citep{OWASP2025}.
+
+Aus der technologischen Integration im Abschnitt \ref{sec:tech_frameworks} wird zudem angedeutet, dass unterschiedliche Framework-Paradigmen (deklarativ vs. imperativ) Auswirkungen auf die Implementierungserfahrung haben. Daher wird \textbf{Developer Experience} als Kriterium herangezogen, das sowohl die initiale Lernkurve (Erlernbarkeit) als auch operative Aspekte (Analysierbarkeit) berücksichtigt \citep{Myers2016}. Ein hoher Implementierungsaufwand erhöht nicht nur die Kosten, sondern auch das Fehlerrisiko, weshalb dieses Kriterium für die Gesamtbewertung entscheidend ist \citep{Green2016}.
+
+Außerdem laufen Identitätsverwaltungssysteme über lange Zeiträume im Betrieb und zudem können die Anforderungen sich ändern, daher ist \textbf{Wartbarkeit} auch ein weiteres Kriterium zur Bewertung. Die Modularität der Autorisierungslogik und deren Wiederverwendbarkeit über mehrere Anwendungen hinweg beeinflussen direkt die Betriebskosten und die Stabilität des Systems bei Änderungen \citep{Myers2016}.
+
+Die verbleibenden Kriterien (\textbf{Zuverlässigkeit}, \textbf{Übertragbarkeit} und \textbf{Interoperabilität}) adressieren die identifizierte Multi-Cloud-Realität \citep{Ali2025}. Die Zuverlässigkeit ist fundamental für Systeme, die als zentraler Authentifizierungspunkt fungieren. Übertragbarkeit und Interoperabilität sind zudem auch essentiell zur Vermeidung von \textit{Vendor Lock-in} und zur Integration in Unternehmenslandschaften \citep{Zhuravel2024}. Ein Vendor Lock-in bedeutet, dass z.B. ein Kunde an einen Dienstleister gebunden ist und nicht mehr einfach wechseln kann.
+
+
+\subsubsection{Sicherheit}
+
+Sicherheit wird als die Fähigkeit des Systems verstanden, Risiken durch Fehlkonfigurationen und manuelle Implementierungsfehler zu minimieren. Gemäß \ac{OWASP} ist dies oft wichtiger als die reine Protokollstärke, da die meisten Sicherheitsvorfälle auf menschliche Fehler bei der Konfiguration zurückgehen \citep{Dietrich2018}.
+
+\begin{itemize}
+    \item \textbf{Vertraulichkeit:} Sensible Daten wie Client Secrets, User Attributes und personenbezogene Informationen müssen vor unberechtigtem Zugriff geschützt sein. Dies gilt sowohl für Speicherung als auch für Übertragung von Authentifizierungsdaten.
+    
+    \item \textbf{Integrität:} Das System muss die Authentizität und Integrität von Authentifizierungsdaten gewährleisten. Wichtig dabei ist, ob das Framework die Validierung automatisch durchführt oder manuelle Implementierung erforderlich ist.
+    
+    \item \textbf{Zurechenbarkeit:} Administrative Änderungen an der \ac{IdP}-Konfiguration müssen aufgezeichnet werden. Dadurch wird eine Ursachenforschung ermöglicht im Schadensfall.
+
+    \item \textbf{Recovery-Mechanismen:} Können Benutzer sich selbst wiederherstellen 
+    (Password-Vergessen-Flow) oder ist Admin-Intervention notwendig? Außerdem wie gut sind Fehlerszenarien (z.B. Passwort vergessen) implementiert? Erfordern diese manuelle 
+    Implementierung oder sind sie standardisiert?
+\end{itemize}
+
+\subsubsection{Developer Experience}
+
+Dieses Kriterium beschreibt, wie einfach Entwickler die \ac{IdP} in ihre Anwendung integrieren können. Es kombiniert Erlernbarkeit und die Qualität von Fehlerdiagnose.
+
+\begin{itemize}
+    \item \textbf{Erlenbarkeit:} Der initiale Aufwand, um eine funktionsfähige und sichere Authentifizierung zu implementieren, gemessen als \textit{Time-to-First-Token}. Die Konfigurationskomplexität wirkt sich direkt auf die Dauer dieser Phase aus. Hohe Komplexität führt oft zu nicht optimalen Lösungen, die Sicherheitslücken ermöglichen.
+    
+    \item \textbf{Analysierbarkeit:} Die Qualität von Fehlermeldungen, Logging-Mechanismen und Dokumentation bei Authentifizierungsfehlern. Dies ist besonders in der Betriebsphase der Anwendung wichtig für Problemdiagnosen.
+\end{itemize}
+
+\subsubsection{Wartbarkeit}
+
+Cloud-Sicherheitsrichtlinien und Geschäftsanforderungen können sich ändern. Daher wird bewertet, wie leicht sich Autorisierungsregeln anpassen lassen, ohne die Stabilität zu gefährden.
+
+\begin{itemize}
+    \item \textbf{Modularität:} Der Aufwand, um Änderungen an der Autorisierungslogik vorzunehmen (z.\,B. neue Rollen, neue Scopes, neue Richtlinien). Ein hohes Maß an Modularität reduziert das Fehlerrisiko bei Wartungsarbeiten.
+    
+    \item \textbf{Wiederverwendbarkeit:} Die Fähigkeit, denselben \ac{IdP} und Autorisierungskonfiguration für mehrere Anwendungen zu nutzen. Dies ist besonders in Unternehmensumgebungen mit mehreren Systemen relevant.
+\end{itemize}
+
+\subsubsection{Zuverlässigkeit}
+
+Der \ac{IdP} stellt einen zentralen Einstiegspunkt dar. Seine Zuverlässigkeit ist entscheidend für die Gesamtsystemverfügbarkeit.
+
+\begin{itemize}
+    \item \textbf{Verfügbarkeit:} Der Authentifizierungsdienst muss erreichbar sein, wenn benötigt.
+    
+    \item \textbf{Fehlertoleranz:} Das Verhalten der Anwendung, wenn der \ac{IdP} temporär nicht erreichbar, durch z.B. Caching.
+\end{itemize}
+
+\subsubsection{Übertragbarkeit}
+
+Multi-Cloud-Strategien erfordern die Vermeidung von Vendor Lock-in. Damit \ac{IdP} u. a. austauschbar bleiben oder man diese leicht anpassen kann.
+
+\begin{itemize}
+    \item \textbf{Austauschbarkeit:} Wie leicht kann der \ac{IdP} ausgetauscht werden? Entscheidend ist, ob die Implementierung standardisierte Protokolle (\ac{OIDC}/\ac{SAML}) nutzt oder eigene Implementierungen. Zudem bestimmt der Koppelungsgrad zwischen Applikationscode und Framework die Metrik.
+    
+    \item \textbf{Anpassungsfähigkeit:} Die Fähigkeit des Systems, sich an neue technische oder organisatorische Anforderungen anzupassen, ohne Neuimplementierung.
+\end{itemize}
+
+\subsubsection{Interoperabilität}
+
+In Unternehmenslandschaften muss der \ac{IdP} mit bestehenden Infrastrukturen zusammenarbeiten.
+
+\begin{itemize}
+    \item \textbf{Föderationsunterstützung:} Die Fähigkeit, externe \ac{IdP} über standardisierte Protokolle, wie \ac{SAML} oder \ac{OIDC} anzubinden und als zentraler Identity Hub zu fungieren.
+    
+    \item \textbf{Standardkonformität:} Der Grad der Konformität mit offenen Standards gewährleistet langfristige Interoperabilität.
+\end{itemize}
+
+\subsection{Hypothesenbildung für die Case Study}
+\label{sec:hypothesen}
+
+Basierend auf den definierten Bewertungskriterien, der Bedrohungsanalyse und der Analyse der technologischen Integration werden folgende Hypothesen aufgestellt und in der Fallstudie getestet. Nach den Prinzipien der evaluativen Case Study nach \citep{Kitchenham1995} werden alle Hypothesen unter kontrollierten Bedingungen getestet, um andere Faktoren, wie z.B. Netzwerkleistung auszuschließen und eine faire Vergleichbarkeit zwischen \ac{AWS} Cognito und \ac{SAP CAP} mit \ac{SAP IAS} zu gewährleisten.
+
+\begin{enumerate}
+    \item[$H_1$] \textbf{Security:} Der deklarative Sicherheitsansatz von \ac{SAP CAP} reduziert die Anzahl notwendiger Autorisierungs-Code-Zeilen gegenüber dem imperativen Spring Security Ansatz mit \ac{AWS} Cognito. Dies senkt das Risiko für Implementierungsfehler wie \textit{Improper Authorization} (\ac{OWASP} CNAS-3).
+    
+    \item[$H_2$] \textbf{Maintainability:} Änderungen an der Autorisierungslogik (neue Rollen, Scopes, Richtlinien) erfordern im \ac{SAP CAP} mit \ac{SAP IAS} Ökosystem weniger Änderungen am Quellcode der Geschäftslogik als im Spring Boot mit \ac{AWS} Cognito Ökosystem, da die Autorisierungsregeln zentral im \ac{CDS}-Modell definiert werden.
+    
+    \item[$H_{3a}$] \textbf{Developer Experience:} \ac{SAP CAP} benötigt weniger Code und Konfiguration für Token-Validierung und \ac{JWT}-Handling als Spring Boot mit \ac{AWS} Cognito.
+
+    \item[$H_{3b}$] \textbf{Developer Experience -- Unternehmensintegration:} Bei der Anbindung einer bestehenden Unternehmensidentität (mit externem \ac{IdP}) ist der Konfigurationsaufwand mit \ac{SAP CAP}/\ac{SAP IAS} in der Cloud geringer als mit Spring Boot mit \ac{AWS} Cognito in der Cloud.
+    
+    \item[$H_4$] \textbf{Portability:} Der Koppelungsgrad zwischen Applikationscode und Framework ist bei Spring Boot mit \ac{AWS} Cognito aufgrund der verteilten Spring Security Annotationen in den Service-Methoden höher als bei \ac{SAP CAP}/\ac{SAP IAS}, wo Autorisierungsregeln zentral im \ac{CDS}-Modell definiert sind.
+
+    \item[$H_5$] \textbf{Security -- Token-Validierung:} Die Anzahl der Code-Zeilen für die \ac{JWT}-Token-Validierung ist bei \ac{SAP CAP} geringer als bei Spring Boot mit \ac{AWS} Cognito, da \ac{SAP CAP} die Validierung automatisch durch das Framework durchführt.
+
+    \item[$H_6$] \textbf{Developer Experience -- Benutzer-Onboarding:} Die programmatische Benutzerregistrierung über \ac{AWS} Cognito erfordert mehr Backend-Code als die Konfiguration des Self-Service-Portals in \ac{SAP IAS}, wobei beide Ansätze unterschiedliche Paradigmen (Code vs. Konfiguration) repräsentieren.
+
+    \item[$H_7$] \textbf{Security -- Recovery-Mechanismen:} \ac{SAP IAS} stellt mehr integrierte Sicherheitsmechanismen (Rate-Limiting, automatische Token-Expiration) für den Passwort-Reset-Flow bereit als die manuelle Implementierung bei \ac{AWS} Cognito mit Spring Boot.
+\end{enumerate}
+
+
+Die Hypothesen beschreiben zwei zentrale Ebenen des \ac{IAM}, nämlich die \textbf{Autorisierungsschicht} (H1, H2, H4, H5, H7) und die \textbf{Developer Experience} (H3a, H3b, H6). 
+
+H1 und H2 testen die Kernunterscheidung zwischen deklarativen und imperativen Sicherheitsparadigmen, die das zentrale Differenzierungsmerkmal zwischen \ac{SAP CAP} und Spring Boot darstellt. H4 adressiert das Risiko von Vendor Lock-in durch unterschiedliche Kopplungsmuster.
+
+H5 ist wichtig, da die automatische Token-Validierung durch \ac{SAP CAP} einen strukturellen Sicherheitsvorteil darstellt, der Implementierungsfehler (z.B. fehlende oder falsche Signaturverifizierung) verhindert. Dies ist insbesondere im Kontext des \ac{OWASP} Risikos ``\textit{Improper Authentication \& Authorization}'' zentral.
+
+H3a und H3b messen die praktische Developer Experience in unterschiedlichen Szenarien. H3a misst die Code-Komplexität von Token-Mechanismen unter kontrollierten lokalen Bedingungen, während H3b die Unternehmensintegration in der Cloud-Umgebungen validiert. H6 vergleicht den Aufwand für Benutzer-Onboarding zwischen den unterschiedlichen Paradigmen. H7 untersucht die integrierten Sicherheitsmechanismen für Recovery-Flows.
+
+
+\subsubsection{Messbarkeiten der Hypothesen}
+
+Die folgenden Hypothesen werden durch Metriken gemessen, 
+um ihre Überprüfbarkeit sicherzustellen. Jede Hypothese wird anhand von messbaren Kriterien evaluiert, die während der Implementierungsphase erfasst werden.
+Die Hypothesen H1 bis H7 wurden formuliert, um Unterschiede zwischen den 
+Frameworks zu messen und nicht von verschiedenen Entwickler-Kompetenzen abhängig 
+zu sein. Alle Messungen basieren daher auf Metriken wie Code-Zeilen, 
+Anzahl von Dateien und Fehlerquellen-Analyse, die unabhängig von der Entwickler-Kompetenz sind.
+
+\textbf{H1 – Sicherheit der Autorisierungslogik:} Die zyklomatische Komplexität 
+der Autorisierungsschicht wird mittels statischer Code-Analyse gemessen. Dies 
+umfasst die Anzahl unabhängiger Pfade durch Token-Validierung und rollenbasierte 
+Zugriffskontrolle. Zusätzlich wird die Anzahl explizit geschriebener Codezeilen 
+für Autorisierung quantifiziert. Für \ac{SAP CAP} werden alle \texttt{@restrict}-Annotationen 
+im \ac{CDS}-Modell gezählt. Für Spring Boot werden 
+alle \texttt{@PreAuthorize}-Annotationen über Controller und Services gezählt.
+
+\textbf{H2 – Code-Änderungen und Wartbarkeit:} Durch das Hinzufügen einer neuen 
+Rolle wird gemessen, wie viele Dateien und Methoden angepasst werden müssen. 
+Dies zeigt die Streuung der Autorisierungslogik über den Quellcode. Zusätzlich 
+wird die Änderung der zyklomatischen Komplexität erfasst.
+
+\textbf{H3a – Token-Validierung und JWT-Handling:} Die Anzahl der Code- und Konfigurationszeilen 
+für Token-Validierung und \ac{JWT}-Handling wird gemessen, um die Implementierungs-Komplexität 
+zu identifizieren. Für \ac{SAP CAP} werden die Konfigurationszeilen in \texttt{cds.json gezählt}. Für Spring Boot wird die \texttt{application.yaml}, Config-Zeilen und SecurityConfig-Klassen gezählt. Zusätzlich wird die Anzahl möglicher Fehlerquellen dokumentiert.
+
+\textbf{H3b – Unternehmensintegration:} Der 
+Konfigurationsaufwand bei der Anbindung eines externen \ac{IdP} wird erfasst 
+durch die Messung von erforderlichen Konfigurationsschritten und Codezeilen 
+in einer Cloud-Umgebung (\ac{SAP BTP} für \ac{SAP CAP}, 
+\ac{AWS} für Spring Boot). Die Messung erfolgt unter standardisierten Bedingungen, 
+um sicherzustellen, dass die Ergebnisse auf Framework-Design-Unterschiede 
+zurückzuführen sind.
+
+\textbf{H4 – Vendor-Abhängigkeit:} Die Anzahl von Dateien mit Framework- und 
+\ac{IdP}-spezifischen Importen wird gezählt. Dies quantifiziert den Grad der 
+Kopplung an den jeweiligen \ac{IdP}. Für \ac{SAP CAP} werden Dateien mit @sap 
+spezifischen Imports gezählt. Für Spring Boot werden Dateien mit \texttt{org.springframework.security} Imports gezählt.
+
+\textbf{H5 – Token-Validierung:} Es wird gemessen, ob die Signaturverifizierung 
+automatisch oder manuell erfolgt. Erfasst werden die erforderlichen Konfigurationsschritte 
+und Codezeilen für sichere Token-Validierung. Für \ac{SAP CAP} werden Code-Zeilen 
+für manuelle Token-Validierung gezählt. 
+Für Spring Boot werden Konfigurationszeilen, SecurityConfig und Custom JWT Converter gezählt.
+Weil \ac{SAP IAS} ein Cloud-only Service ist, wird die automatische Token-Validierung durch \ac{SAP CAP} erst beim Deployment auf die \ac{SAP BTP} vollständig messbar. Lokal wird der Mock-Modus verwendet, der die Framework-Architektur demonstriert.
+
+\textbf{H6 – Benutzerregistrierung:} \ac{SAP IAS} bietet keine direkte programmatische Benutzerregistrierung über eine Backend-\ac{API}, dadurch werden unterschiedliche Metriken erfasst:
+\begin{itemize}
+    \item Für Spring Boot mit \ac{AWS} Cognito: Code-Zeilen für \ac{SDK}-gesteuerte Registrierung, E-Mail-Verifizierung und Fehlerbehandlung.
+    \item Für \ac{SAP CAP} mit \ac{SAP IAS}: Anzahl der Konfigurationsschritte in der \ac{SAP IAS}-Konsole für Self-Service-Registrierung oder administrative Benutzererstellung.
+\end{itemize}
+Diese unterschiedlichen Paradigmen (Code vs. Konfiguration) sind ein zentraler Vergleichspunkt der Case Study.
+
+\textbf{H7 – Passwort-Reset:}
+Der Passwort-Vergessen-Flow wird verglichen. Gemessen wird:
+\begin{itemize}
+    \item Für Spring Boot mit \ac{AWS} Cognito: Code-Zeilen für den Code-basierten Reset-Flow (forgot-password, confirm-password-reset Endpunkte).
+    \item Für \ac{SAP CAP} mit \ac{SAP IAS}: Konfigurationsschritte für den Link-basierten Reset (automatisch durch \ac{SAP IAS} bereitgestellt).
+\end{itemize}
+Zusätzlich wird dokumentiert, ob Sicherheitsmechanismen wie Rate-Limiting nativ integriert sind.
+
+\subsubsection{Testumgebungen und Messkontext}
+
+Da \ac{SAP IAS} ausschließlich als Cloud-Service verfügbar ist, werden die Hypothesen in unterschiedlichen Umgebungen gemessen:
+
+\begin{itemize}
+    \item \textbf{Lokale Messung (Mock-Modus für \ac{SAP CAP}):} Die Hypothesen $H_1$, $H_2$, $H_3a$ und $H_4$ messen Framework-inhärente Eigenschaften wie Code-Struktur, Autorisierungslogik und Vendor-Kopplung. Diese sind unabhängig davon, ob ein echter \ac{IdP} oder ein Mock verwendet wird, da sie die statische Code-Analyse betreffen.
+
+    \item \textbf{Cloud-Messung (\ac{SAP BTP} für \ac{SAP CAP}, \ac{AWS} für Spring Boot):} Die Hypothesen $H_5$, $H_{3b}$, $H_6$ und $H_7$ erfordern eine echte \ac{IdP}-Integration, um die vollständige Funktionalität zu validieren. Für \ac{SAP CAP} erfolgt die Messung nach Deployment auf \ac{SAP BTP} mit Service-Binding zu \ac{SAP IAS}.
+
+    \item \textbf{Spring Boot mit \ac{AWS} Cognito:} Kann sowohl lokal als auch in der Cloud gegen den echten \ac{AWS} Cognito Service gemessen werden, da das \ac{AWS} \ac{SDK} eine direkte Verbindung ermöglicht.
+\end{itemize}
+
+Die Metriken werden während der Implementierung erfasst und in
+einer Tabelle dokumentiert, um einen direkten Vergleich zwischen 
+\ac{AWS} Cognito mit Spring Boot und \ac{SAP IAS} mit \ac{SAP CAP} 
+zu ermöglichen.
+
+\section{Definition der Grundanwendung}
+\label{sec:grundanwendung}
+Um die Vergleichbarkeit der beiden \ac{IdP}-Lösungen zu gewährleisten, wird eine Web-Anwendung in beiden Ökosystemen genutzt und entwickelt. Die Architektur folgt einer strikten Trennung von Frontend und Backend.
+
+\subsection{Funktionale Anforderungen und Vergleichspunkte}
+Die Anwendung setzt dabei Anforderungen um, die für die Prüfung der Hypothesen $H_1$ bis $H_6$ benötigt werden:
+\begin{itemize}
+    \item \textbf{Benutzerregistrierung ($H_6$):} Ein neuer Benutzer muss sich registrieren können. Dabei wird untersucht, ob standardisierte Templates genutzt werden können oder eine manuelle Implementierung des Flows erforderlich ist.
+    \item \textbf{Recovery-Mechanismus ($H_7$):} Der Benutzer muss den Passwort-Vergessen-Flow benutzen können, um sich bei einem vergessen Passwort eine E-Mail mit dem weiterem Vorgehen schicken lassen zu können. 
+    \item \textbf{Benutzer-Verwaltung ($H_3a$)}: 
+    Ein Benutzer soll sich anmelden können. Die Löschung von 
+    Benutzern direkt im \ac{IdP} wird nicht verglichen, da es keine wichtige Vergleichsmöglichkeit zwischen \ac{AWS} Cognito und 
+    \ac{SAP IAS} gibt. Denn Benutzer werden von Admins über z.B. Weboberflächen in der \ac{IdP}
+    gelöscht (AWS Cognito oder SAP Admin-Panel), nicht durch die Anwendung.
+    \item \textbf{Authentifizierung und Token-Validierung ($H_5$):} Der Login-Prozess muss ein valides \ac{JWT} liefern. Kritisch ist hierbei die backend-seitige Prüfung der Signatur gegen das \ac{JWKS}, um Manipulationen auszuschließen.
+    \item \textbf{Geschützter API-Zugriff ($H_1, H_2$):} Ein Backend-Endpunkt (z. B. \texttt{/api/orders}) wird rollenbasiert abgesichert, um den Unterschied zwischen imperativer und deklarativer Autorisierung zu messen.
+
+\end{itemize}
+
+\subsection{Technologischer Aufbau}
+Das Frontend dient primär als Kontrollvariable, um isoliert die Backend-Unterschiede messen zu können. Die Frontend-Komplexität ist gering gehalten, damit sich die Ergebnisse der Case Study auf die Backend-seitige Implementierung von Authentifizierung und Autorisierung fokussieren.
+\textbf{Angular}\footnote{\url{https://angular.io/}, aufgerufen am 02.12.2025} 
+ist ein von Google entwickeltes Framework zur Erstellung von Single-Page-Webanwendungen 
+und wird in dieser Fallstudie als Plattform für einen standardisierten \ac{OIDC}-Client 
+verwendet. Die Wahl von Angular als konstante Frontend-Komponente dient dazu, 
+Frontend-spezifische Unterschiede als Einflussfaktor auszuschließen und die 
+Messbarkeit der Backend Unterschiede zu zeigen. Um Frontend-spezifische Unterschiede auszuschließen, wird das Frontend nach dem Backend-for-Frontend Pattern konzipiert.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1.\textwidth]{figures/bffarchitektur.drawio.pdf}
+  \caption{Entwickelte Architektur anhand des Backend-for-Frontend Pattern}
+  \label{fig:bffarch}
+\end{figure}
+
+Das Diagramm \ref{fig:bffarch} zeigt die Architektur, die in der Entwicklung umgesetzt wird. Dabei benutzt der Nutzer nur das Frontend, welches als HTTP-Client fungiert. Die Anfragen werden dann an das jeweilige Backend weitergeleitet. Die Backends rufen jeweils den gewählten \ac{IdP} auf. Somit passiert die gesamte Logik im Backend.
+Dies ermöglicht es, die Unterschiede bei der Implementierung zwischen 
+\ac{AWS} Cognito und \ac{SAP IAS} isoliert zu messen.
+Die Verwendung von Angular als konstante Frontend-Komponente dient der 
+systematischen Kontrolle von Variablen, wie Authentifizierungs-Flow, Token-Handling, 
+Benutzerführung und API-Kommunikation sind identisch in beiden Szenarien. 
+Dies stellt sicher, dass gemessene Unterschiede ausschließlich auf Backend-seitige 
+Implementierungen von \ac{AWS} Cognito und \ac{SAP IAS} zurückgehen und nicht 
+durch Frontend-Designentscheidungen beeinflusst werden.
+
+\begin{itemize}
+    \item \textbf{Frontend (Konstante):} Eine \textbf{Angular}-Anwendung (aktuelle Version), die als generischer \ac{OIDC}-Client agiert. Sie übernimmt die Benutzerführung und leitet Tokens an das Backend weiter.
+    \item \textbf{Backend (Variable):} Es werden zwei separate Backends implementiert, ein Spring Boot Backend mit (\ac{AWS} SDK) und ein Backend basierend auf \ac{SAP CAP} Framework.
+\end{itemize}
+
+\section{Angular Frontend}
+\label{sec:frontend}
+
+Das Frontend basiert auf dem Angular-Framework als konstante Komponente zur Umsetzung eines standardisierten \ac{OIDC}-Clients. Dadurch wird sichergestellt, dass Frontend-spezifische Unterschiede als Einflussfaktor ausgeschlossen werden und die Messbarkeit der Backend-Unterschiede gegeben ist. Die Architektur folgt dabei dem Backend-for-Frontend Pattern, wobei der Nutzer nur das Frontend als HTTP-Client nutzt und Anfragen an die jeweiligen Backends weitergeleitet werden.
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1.\textwidth]{figures/frontend-login.png}
+  \caption{Screenshot der Login-Seite mit Backend Auswahl}
+  \label{fig:frontend-login}
+\end{figure}
+
+Abbildung \ref{fig:frontend-login} zeigt die Login Oberfläche als Beispiel. Dabei gibt es oberhalb eine Auswahl-Box, die die Wahl zwischen den zwei Backends ermöglicht und außerdem wird angezeigt, welches Backend aktuell genutzt wird. Darunter sind zwei Input-Felder für die Eingabe des Benutzernamens und des Passworts angeordnet. Unterhalb befinden sich zwei Buttons, einer führt den Authentifizerungsflow durch und der zweite Button wechselt zur Registrierungsoberfläche.
+
+\subsubsection{Implementierte Funktionalitäten}
+
+Neben der Login-Seite wurden folgende Komponente und Services für das Frontend entwickelt:
+
+\begin{itemize}
+    \item \textbf{Registrierungs-Komponente:} Analog zur Login-Seite gibt es eine Registrierungsseite, auf der neue Nutzer sich registrieren können. Dazu ist auch die Backend-Auswahl verfügbar, um die Registrierung an das gewählte Backend weiterzuleiten.
+    \item \textbf{Dashboard-Komponente:} Nach erfolgreicher Authentifizierung wird der Nutzer automatisch auf ein Dashboard weitergeleitet, das einen Überblick über seine Informationen und verfügbaren Funktionen bietet.
+    \item \textbf{Geschützte Ressourcenseite:} Nach erfolgreichem Login können Nutzer auf geschützte Ressourcen zugreifen. Im Frontend wird dies exemplarisch durch eine Order-Seite gezeigt, die nur authentifizierten Nutzern mit entsprechenden Berechtigungen/festgelegte Rollen aufrufbar ist.
+    \item \textbf{Callback-Komponente:} Eine Callback-Komponente verarbeitet die Rückkehr vom Authorization Server nach erfolgreichem Login und leitet den Nutzer automatisch auf das Dashboard um.
+    \item \textbf{Passwort-Vergessen-Komponente:} Eine Seite, wo der Nutzer seine E-Mail eintragen kann und anschließend das Ergebnis von der zugesendeten E-Mail, um den Flow abzuschließen.
+    \item \textbf{Service-Methoden für Backend-Kommunikation:} Zudem wurden Service-Methoden definiert, um die HTTP-Kommunikation mit den Backend zu ermöglichen.
+\end{itemize}
+
+\subsubsection{Authentifizierungsflow}
+
+Der Authentifizierungsflow erfolgt nach dem Standard-\ac{OIDC} Authorization Code Flow. Dabei wählt der Nutzer sein Backend, füllt seine Anmeldedaten ein und klickt auf Login. Das Frontend leitet die Anfrage an das Backend weiter, das wiederum den konfigurierten \ac{IdP} (\ac{AWS} Cognito oder \ac{SAP IAS}) aufruft. Der \ac{IdP} authentifiziert den Nutzer und gibt einen Authorization Code zurück. Das Backend tauscht diesen Code gegen ein \ac{JWT} aus und gibt dieses an das Frontend zurück. Das Frontend speichert das Token lokal und nutzt es für alle weiteren API-Anfragen. Dadurch wird gewährleistet, dass die gesamte Sicherheitslogik im Backend verbleibt und Frontend-Designentscheidungen die Backend-Unterschiede nicht beeinflussen.
+
+Die Service-Methoden abstrahieren dabei die jeweiligen API-Endpunkte und verwalten zentral das Token-Handling, wodurch sich die Anwendungslogik nicht um Backend-spezifische Unterschiede kümmern muss. Diese Entkopplung ermöglicht es, dass beide Backend-Implementierungen von derselben Frontend-Anwendung genutzt werden können, ohne dass Codenanpassungen im Frontend selbst notwendig sind.
+
+
+\section{Spring Boot mit AWS SDK Backend und AWS Cognito}
+\label{sec:spring_backend}
+
+Im Folgenden wird die Integration von \ac{AWS} Cognito unter Verwendung des Spring Boot Frameworks dokumentiert. Dabei liegt der Fokus auf der Architektur, der Konfiguration sowie den zentralen Komponenten für Authentifizierung und Autorisierung. Die Implementierung nutzt das \ac{AWS} \ac{SDK} für Java in Kombination mit Spring Security.
+
+\subsection{Architektur und Projektstruktur}
+
+Das Spring Boot Backend folgt einer klassischen Schichtenarchitektur mit Trennung von Controller-, Service- und Konfigurationsschichten. Die Projektstruktur ist dabei wie folgt implementiert:
+
+\begin{itemize}
+    \item \textbf{controller}: Enthält die REST-Controller für Authentifizierung (\texttt{AuthController}) und Geschäftslogik (\texttt{OrderController})
+    \item \textbf{service}: Beinhaltet den \texttt{CognitoService} für die Kommunikation mit \ac{AWS} Cognito sowie den \texttt{OrderService} für die Geschäftslogik
+    \item \textbf{security}: Enthält den \texttt{JwtAuthenticationFilter} für die manuelle Token-Validierung
+    \item \textbf{config}: Umfasst die \texttt{SecurityConfig} für Spring Security und die \texttt{AwsCognitoProperties} für die Konfiguration
+    \item \textbf{dto}, \textbf{model}, \textbf{exception}: Unterstützende Klassen für Datenübertragung, Entitäten und Fehlerbehandlung
+\end{itemize}
+
+Diese Struktur entspricht dem imperativen Programmiermodell, bei dem Sicherheitsregeln und Geschäftslogik sind im Code implementiert.
+
+\subsection{AWS Cognito User Pool Einrichtung}
+
+Bevor die Spring Boot Anwendung konfiguriert werden kann, wird zunächst ein User Pool in \ac{AWS} erstellt und konfiguriert. Der User Pool dient als \ac{IdP} für die Anwendung.
+
+Die Einrichtung umfasst mehrere Konfigurationsschritte. Zunächst wird ein neuer User Pool mit einem eindeutigen Namen erstellt. Dabei werden die Passwort-Richtlinien festgelegt (Mindestlänge, Zahlen, usw.). Für diese Implementierung wird eine Mindestlänge von 8 Zeichen mit allen Zeichenklassen gewählt, da die Anwendung nur lokal läuft, im produktiv Einsatz wäre die gewählte Passwort-Richtlinie nicht sicher.
+
+Anschließend wird ein App Client innerhalb des User Pools erstellt. Abbildung \ref{fig:cognito_appclient} zeigt die Konfiguration des App Clients in \ac{AWS}. Der App Client definiert, welche Authentifizierungs-Flows die Anwendung nutzen darf. Für diese Implementierung wurden u. a. folgende Einstellungen vorgenommen:
+\begin{itemize}
+    \item \textbf{Client ID und Client Secret:} Generierte Credentials für die sichere Kommunikation zwischen Backend und Cognito
+    \item \textbf{Auth Flow:} \texttt{ALLOW\_USER\_PASSWORD\_AUTH} für den direkten Passwort-basierten Login
+    \item \textbf{Token-Gültigkeit:} Access Token 1 Stunde, Refresh Token 5 Tage
+    \item \textbf{E-Mail-Verifizierung:} Aktiviert mit automatischem Versand eines 6-stelligen Codes
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.1\textwidth]{figures/userpool.png}
+    \caption{Konfiguration des App Clients in AWS Cognito}
+    \label{fig:cognito_appclient}
+\end{figure}
+
+Die im App Client generierten Werte (User Pool ID, Client ID, Client Secret) werden anschließend in der \texttt{application.properties} des Spring Boot Backends hinterlegt.
+
+\subsection{Konfiguration und Einrichtung}
+
+Die Konfiguration erfolgt primär über die \texttt{application.properties}-Datei, in der alle \ac{AWS} Cognito-spezifischen Parameter definiert werden. Dies umfasst die User Pool ID, Client ID, Client Secret sowie die \ac{JWKS}-\ac{URI} für die Token-Validierung. Abbildung \ref{fig:spring_properties} zeigt die wesentlichen Konfigurationsparameter.
+
+\begin{figure}[h]
+\begin{verbatim}
+# AWS Cognito Configuration
+aws.region=eu-central-1
+aws.cognito.userPoolId=eu-central-1_QuhDIcGXQ
+aws.cognito.clientId=2p1c8sb12boir1dkid42sfc5bh
+aws.cognito.clientSecret=***
+aws.cognito.jwksUri=https://cognito-idp.${aws.region}.amazonaws.com/
+    ${aws.cognito.userPoolId}/.well-known/jwks.json
+aws.cognito.issuerUri=https://cognito-idp.${aws.region}.amazonaws.com/
+    ${aws.cognito.userPoolId}
+
+# Spring Security OAuth2 Resource Server Configuration
+spring.security.oauth2.resourceserver.jwt.issuer-uri=${aws.cognito.issuerUri}
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri=${aws.cognito.jwksUri}
+\end{verbatim}
+\caption{Konfiguration der AWS Cognito Parameter in \texttt{application.properties}}
+\label{fig:spring_properties}
+\end{figure}
+
+Wie in Abbildung \ref{fig:spring_properties} gezeigt, müssen sowohl die \ac{AWS}-spezifischen Parameter als auch die Spring Security OAuth2-Konfiguration definiert werden. Die \texttt{issuer-uri} und \texttt{jwk-set-uri} werden dabei aus den \ac{AWS} Cognito-Parametern abgeleitet, um die \ac{JWT}-Validierung zu ermöglichen.
+
+Zusätzlich werden die Konfigurationsparameter über eine Properties-Klasse (\texttt{AwsCognitoProperties}) in die Anwendung geladen, was die Wiederverwendung in verschiedenen Services ermöglicht.
+
+\subsection{Security-Konfiguration}
+
+Die Sicherheitskonfiguration erfolgt über die Klasse \texttt{SecurityConfig}, die Spring Security für die \textit{stateless} \ac{JWT}-basierte Authentifizierung konfiguriert. Stateless Applikationen speichern keine Nutzerdaten serverseitig, stattdessen werden alle benötigten Informationen bei jeder Anfrage erneut mitgesendet\footnote{\url{https://www.redhat.com/en/topics/cloud-native-apps/stateful-vs-stateless}, aufgerufen am 25.12.2025}. Die Konfiguration definiert öffentliche und geschützte Endpunkte sowie die Integration des eigenen \texttt{JwtAuthenticationFilter}.
+
+Die \texttt{SecurityConfig} aktiviert die methodenbasierte Sicherheit durch \texttt{@EnableMethodSecurity(prePostEnabled = true)}, wodurch Annotationen wie \texttt{@PreAuthorize} auf Controller-Methoden verwendet werden können. Zudem wird die Session-Verwaltung auf \texttt{STATELESS} gesetzt, da keine serverseitigen Sessions verwendet werden. Der eigene \texttt{JwtAuthenticationFilter} wird vor dem Standard-Authentifizierungsfilter von Spring Security eingefügt, um eingehende \ac{JWT}-Tokens zu validieren.
+
+Die Konfiguration umfasst circa 100 Codezeilen und erfordert manuelles Eingreifen, um \ac{CORS}-Einstellungen, Filterreihenfolge und Endpunkt-Berechtigungen festzulegen. Dies entspricht der Hypothese $H_5$, die untersucht, ob Spring Boot eine manuelle Konfiguration der \ac{JWKS}-\ac{URI} erfordert.
+
+\subsection{CognitoService: Authentifizierung und Token-Validierung}
+
+Der \texttt{CognitoService} ist die zentrale Komponente für die Kommunikation mit \ac{AWS} Cognito. Er implementiert alle Authentifizierungs- und Registrierungsflows und nutzt das \ac{AWS} \ac{SDK} für Java. Abbildung \ref{fig:cognito_service} zeigt exemplarisch die manuelle \ac{JWT}-Validierung.
+
+\begin{figure}[h]
+\begin{verbatim}
+public JWTClaimsSet validateToken(String token) {
+    try {
+        ConfigurableJWTProcessor<SecurityContext> processor = getJwtProcessor();
+        JWTClaimsSet claims = processor.process(token, null);
+
+        String issuer = claims.getIssuer();
+        String expectedIssuer = cognitoProperties.getCognito().getIssuerUri();
+        if (!expectedIssuer.equals(issuer)) {
+            throw new InvalidTokenException("Invalid token issuer");
+        }
+
+        Instant expirationTime = claims.getExpirationTime().toInstant();
+        if (expirationTime.isBefore(Instant.now())) {
+            throw new TokenExpiredException("Token has expired");
+        }
+
+        String tokenUse = claims.getStringClaim("token_use");
+        if ("id".equals(tokenUse)) {
+            String audience = claims.getAudience().get(0);
+            String expectedAudience = cognitoProperties.getCognito().getClientId();
+            if (!expectedAudience.equals(audience)) {
+                throw new InvalidTokenException("Invalid token audience");
+            }
+        }
+        return claims;
+    } catch (Exception e) {
+        throw new InvalidTokenException("Token validation failed", e);
+    }
+}
+\end{verbatim}
+\caption{Manuelle JWT-Validierung im CognitoService}
+\label{fig:cognito_service}
+\end{figure}
+
+Wie in Abbildung \ref{fig:cognito_service} dargestellt, erfordert die Token-Validierung eine manuelle Implementierung von circa 60 Codezeilen. Die Validierung umfasst das Laden der öffentlichen Schlüssel vom \ac{JWKS}-Endpunkt, die Signaturprüfung mit RS256, sowie die Validierung von Issuer, Expiration und Audience. Diese manuelle Implementierung ist ein zentraler Unterschied zum \ac{SAP CAP}-Ansatz und relevant für die Hypothesen $H_3a$ und $H_5$.
+
+Der \texttt{CognitoService} implementiert zusätzlich folgende Funktionen:
+\begin{itemize}
+    \item \textbf{Benutzerregistrierung:} Registrierung neuer Benutzer über das \ac{AWS} \ac{SDK} mit Attributzuweisung (E-Mail, Vorname, Nachname)
+    \item \textbf{E-Mail-Verifizierung:} Bestätigung der Registrierung mit einem 6-stelligen Verifizierungscode
+    \item \textbf{Login:} Authentifizierung über den \texttt{USER\_PASSWORD\_AUTH}-Flow mit Rückgabe von Access Token, ID Token und Refresh Token
+    \item \textbf{Passwort zurücksetzen:} Implementierung des Passwort-Vergessen-Flows mit Code-Verifizierung ($H_7$)
+    \item \textbf{Secret Hash Berechnung:} Berechnung des HMAC-SHA256-Hashes für Clients mit Client Secret
+\end{itemize}
+
+Der gesamte \texttt{CognitoService} umfasst über 500 Codezeilen, was die Komplexität der manuellen Integration mit \ac{AWS} Cognito zeigt.
+
+\subsection{AuthController: REST-Endpunkte für Authentifizierung}
+
+Der \texttt{AuthController} stellt die REST-\ac{API} für alle Authentifizierungsoperationen bereit. Er delegiert die Geschäftslogik an den \texttt{CognitoService} und ist für die Hypothesen $H_3a$ und $H_6$ relevant.
+
+Die implementierten Endpunkte umfassen:
+\begin{itemize}
+    \item \texttt{POST /api/auth/register}: Registrierung neuer Benutzer
+    \item \texttt{POST /api/auth/login}: Authentifizierung und Token-Ausstellung
+    \item \texttt{POST /api/auth/verify-email}: E-Mail-Verifizierung nach Registrierung
+    \item \texttt{POST /api/auth/resend-verification-code}: Erneutes Senden des Verifizierungscodes
+    \item \texttt{POST /api/auth/forgot-password}: Anforderung eines Passwort-Reset-Codes
+    \item \texttt{POST /api/auth/confirm-password-reset}: Bestätigung des Passwort-Resets
+\end{itemize}
+
+Alle Endpunkte unter \texttt{/api/auth/**} sind öffentlich zugänglich, da sie vor der Authentifizierung aufgerufen werden müssen.
+
+Der Passwort-Vergessen-Flow ($H_7$) erfordert zudem eine zweistufige Implementierung. Im ersten Schritt ruft der Benutzer den \texttt{forgot-password}-Endpunkt mit seiner E-Mail-Adresse auf. Der \texttt{CognitoService} sendet daraufhin über die \ac{AWS} Cognito \ac{API} einen 6-stelligen Verifizierungscode an die registrierte E-Mail. Im zweiten Schritt übermittelt der Benutzer diesen Code zusammen mit dem neuen Passwort an den \texttt{confirm-password-reset}-Endpunkt. Die Implementierung umfasst dabei eine Fehlerbehandlung für abgelaufene Codes (\texttt{ExpiredCodeException}), falsche Codes (\texttt{CodeMismatchException}) und ungültige Passwörter (\texttt{InvalidPasswordException}). Zudem ist ein Rate-Limiting durch \ac{AWS} Cognito integriert, das automatisch \texttt{LimitExceededException} auslöst, wenn zu viele Anfragen gestellt werden.
+
+\subsection{OrderController: Rollenbasierte Autorisierung}
+
+Der \texttt{OrderController} zeigt die imperative Autorisierung mit Spring Security Annotationen. Er ist zentral für die Hypothesen $H_1$, $H_2$ und $H_4$. Abbildung \ref{fig:order_controller} zeigt die Verwendung der \texttt{@PreAuthorize}-Annotation.
+
+\begin{figure}[h]
+\begin{verbatim}
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<Order> getOrderById(@PathVariable String id) {
+        Order order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Order> createOrder(@RequestBody OrderDto orderDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Order order = orderService.createOrder(orderDto, auth.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteOrder(@PathVariable String id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+\end{verbatim}
+\caption{Ausschnitt aus der OrderController.java Datei mit Imperativer Autorisierung mit @PreAuthorize}
+\label{fig:order_controller}
+\end{figure}
+
+Wie in Abbildung \ref{fig:order_controller} ersichtlich, wird die Autorisierung durch \texttt{@PreAuthorize}-Annotationen auf jeder Methode definiert. Dies entspricht dem imperativen Ansatz von Spring Security, bei dem Autorisierungsregeln über den gesamten Controller verteilt sind. Die Autorisierungslogik unterscheidet zwischen:
+\begin{itemize}
+    \item \texttt{isAuthenticated()}: Jeder authentifizierte Benutzer hat Zugriff
+    \item \texttt{hasRole('MANAGER')}: Nur Benutzer mit der MANAGER-Rolle oder höher haben Zugriff
+    \item \texttt{hasRole('ADMIN')}: Nur Benutzer mit der ADMIN-Rolle haben Zugriff
+\end{itemize}
+
+Die Rollen werden aus dem \ac{JWT}-Token extrahiert, durch das Attribut \texttt{cognito:groups}-Claim, und im \texttt{JwtAuthenticationFilter} in Spring Security Authorities umgewandelt. Die Rollen sind zudem hierarchisch aufgebaut, dabei ist die Rolle \texttt{Admin} die stärkste Rolle und \texttt{User} die schwächste.
+
+\subsection{JwtAuthenticationFilter: Token-Extraktion und Authentifizierung}
+
+Der \texttt{JwtAuthenticationFilter} ist ein Spring Security Filter, der eingehende HTTP-Anfragen auf \ac{JWT}-Tokens prüft und die Authentifizierung im Security Context setzt. Er extrahiert das Token aus dem \texttt{Authorization}-Header, validiert es über den \texttt{CognitoService} und wandelt die Cognito-Gruppen in Spring Security Authorities um.
+
+Die Extraktion der Authorities erfolgt dabei aus dem \texttt{cognito:groups}-Claim des Tokens. Jede Gruppe wird mit dem Präfix \texttt{ROLE\_} versehen, um mit Spring Security Annotationen wie \texttt{hasRole('MANAGER')} kompatibel zu sein.
+
+\subsection{Zusammenfassung der Implementierung}
+
+Die Implementierung des Spring Boot Backends mit \ac{AWS} Cognito umfasst folgende zentrale Aspekte:
+
+\begin{itemize}
+    \item \textbf{Manuelle Konfiguration ($H_5$):} Die \ac{JWKS}-\ac{URI} und Issuer-\ac{URI} müssen explizit in der \texttt{application.properties} konfiguriert werden. Die Token-Validierung erfordert circa 60 Codezeilen manueller Implementierung.
+
+    \item \textbf{Imperative Autorisierung ($H_1$, $H_4$):} Autorisierungsregeln werden durch \texttt{@PreAuthorize}-Annotationen auf jeder Controller-Methode definiert. Dies führt zu einer Verteilung der Sicherheitslogik über den gesamten Quellcode.
+
+    \item \textbf{Registrierungsaufwand ($H_6$):} Die Implementierung des Registrierungs-Flows mit E-Mail-Verifizierung erfordert circa 150 Codezeilen im \texttt{CognitoService} sowie entsprechende Endpunkte im \texttt{AuthController}.
+
+    \item \textbf{Passwort-Reset ($H_7$):} Der Forgot-Password-Flow muss manuell implementiert werden und umfasst zwei separate Endpunkte (\texttt{forgot-password} und \texttt{confirm-password-reset}).
+
+    \item \textbf{Framework-Kopplung:} Die Implementierung ist eng an Spring Security und das \ac{AWS} \ac{SDK} gekoppelt, was die Austauschbarkeit des \ac{IdP} erschwert.
+\end{itemize}
+
+Der Gesamtumfang der sicherheitsrelevanten Komponenten beträgt circa 850 Codezeilen, verteilt auf \texttt{SecurityConfig} (100 Zeilen), \texttt{CognitoService} (536 Zeilen), \texttt{JwtAuthenticationFilter} (110 Zeilen) und \texttt{OrderController} (143 Zeilen). Diese Metriken werden in Kapitel \ref{ch:evaluation} für den Vergleich mit dem \ac{SAP CAP}-Backend herangezogen.
+
+\section{SAP CAP Framework Backend und SAP IAS}
+\label{sec:sap_backend}
+
+Im zweiten Backend wird \ac{SAP IAS} in Kombination mit dem \ac{SAP CAP} Framework mit Java genutzt.
+
+\subsection{Implementierungsfokus}
+Hier liegt der Schwerpunkt auf der Nutzung deklarativer Mechanismen zur Prüfung von $H_1$, $H_2$ und $H_5$:
+\begin{itemize}
+    \item \textbf{Automatische Validierung ($H_5$):} Es wird untersucht, inwieweit die Bibliothek \texttt{@sap/xssec} und der \ac{SAP CAP}-Container die Token-Validierung ohne manuellen Code übernehmen.
+    \item \textbf{Deklarative Autorisierung ($H_1$):} Sicherheitsregeln werden ausschließlich im \ac{CDS}-Datenmodell definiert (z. B. mittels \texttt{@restrict}), um die Code-Unabhängigkeit zu testen.
+\end{itemize}
+
+TODO Implementierung dokumentieren...

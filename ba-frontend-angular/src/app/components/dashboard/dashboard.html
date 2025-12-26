@@ -114,8 +114,8 @@
               </span>
             </div>
 
-            <div class="permission-item" [class.permission-granted]="hasRole('MANAGER')" [class.permission-denied]="!hasRole('MANAGER')">
-              @if (hasRole('MANAGER')) {
+            <div class="permission-item" [class.permission-granted]="hasRole('MANAGER') || hasRole('ADMIN')" [class.permission-denied]="!hasRole('MANAGER') && !hasRole('ADMIN')">
+              @if (hasRole('MANAGER') || hasRole('ADMIN')) {
                 <span class="permission-icon">✅</span>
               } @else {
                 <span class="permission-icon">❌</span>

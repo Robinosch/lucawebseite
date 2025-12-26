@@ -41,19 +41,23 @@ spring:
 
 # SAP CAP Configuration
 cds:
-  # H5: Automatic Security Handling
-  # The framework automatically:
-  # - Fetches JWKS from SAP IAS
-  # - Validates JWT signatures
-  # - Checks token expiration
-  # - Extracts claims
-  # NO manual code needed!
+  # ============================================================
+  # LOKAL (default Profil): CDS-Security deaktiviert
+  # ============================================================
+  # - Authentifizierung erfolgt über Spring Security (Basic Auth)
+  # - Mock-User definiert in SecurityConfig.java
+  # - @restrict Annotationen werden NICHT durchgesetzt
+  #
+  # CLOUD (cloud Profil): CDS-Security aktiviert
+  # - Service Binding aktiviert automatisch XSUAA/IAS
+  # - @restrict Annotationen werden durchgesetzt
+  # - Automatische JWT Token Validierung
+  # ============================================================
   security:
-    enabled: true
-    # mock-user is for local testing without SAP IAS
-    # Set to false in production
     mock:
-      enabled: ${MOCK_SECURITY:false}
+      enabled: false
+    authorization:
+      enabled: false  # Lokal deaktiviert - Spring Security übernimmt
 
   # OData V4 Configuration
   odata:
@@ -125,6 +129,10 @@ cds:
     enabled: true
     mock:
       enabled: false
+    # In der Cloud: CDS-Security vollständig aktiviert
+    # @restrict Annotationen werden durchgesetzt
+    authorization:
+      enabled: true
     # Service Binding automatically provides:
     # - IAS tenant URL
     # - JWKS endpoint
