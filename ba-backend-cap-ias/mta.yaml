@@ -42,22 +42,21 @@ modules:
   # --------------------- APP ROUTER (Angular + Auth) ----------
   - name: ba-backend-cap-ias-approuter
   # ------------------------------------------------------------
-    type: nodejs
+    type: approuter.nodejs
     path: approuter
     parameters:
       buildpack: nodejs_buildpack
-      disk-quota: 256M
+      disk-quota: 512M
       memory: 256M
     build-parameters:
       builder: custom
       commands:
         - npm install
-        - mkdir -p webapp
       requires:
         - name: ba-frontend-angular
           artifacts:
-            - "*"
-          target-path: webapp
+            - ./*
+          target-path: resources
     requires:
       - name: ba-backend-cap-ias-xsuaa
       - name: srv-api
@@ -99,8 +98,8 @@ resources:
         oauth2-configuration:
           redirect-uris:
             - https://*.cfapps.eu10.hana.ondemand.com/**
+            - https://*.cfapps.us10-001.hana.ondemand.com/**
             - https://*.hana.ondemand.com/**
-
 
   # --------------------- DESTINATION SERVICE --------------
   - name: ba-backend-cap-ias-destination
@@ -111,7 +110,7 @@ resources:
       service: destination
       service-plan: lite
       config:
-        HTML5Runtime_enabled: true
+        HTML5Runtime_enabled: false
         version: 1.0.0
         init_data:
           instance:
