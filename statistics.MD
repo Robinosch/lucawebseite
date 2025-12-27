@@ -2,35 +2,48 @@
 
 ## AWS Cognito + Spring Boot vs. SAP CAP + SAP IAS
 
-**Stand:** 2025-12-23
+**Stand:** 2025-12-27
 
 ---
 
 ## Hypothesen-Übersicht
 
-| ID | Hypothese | Ergebnis |
-|----|-----------|----------|
-| **H1** | Security Code Lines | SAP CAP: **-96%** weniger Code |
-| **H2** | Maintainability | SAP CAP: **1 Datei** vs. 3-4 Dateien |
-| **H3a** | Token-Validierung Config/Code | SAP CAP: **-80-100%** weniger Code |
-| **H3b** | Enterprise Integration | SAP CAP: **0 Zeilen Code** vs. 45 Zeilen |
-| **H4** | Framework-Kopplung | SAP CAP: **10-15%** vs. 50-60% der Dateien |
-| **H5** | Token-Validierung | SAP CAP: **0 Zeilen** (automatisch) |
-| **H6** | Registrierungs-Flow | SAP CAP: **-80%** weniger Code |
-| **H7** | Password-Reset | SAP CAP: **Native Rate-Limiting** ✅ |
+| ID | Hypothese | AWS/Spring | SAP CAP/IAS | Ergebnis |
+|----|-----------|------------|-------------|----------|
+| **H1** | Autorisierungs-LOC | ~450 Zeilen | ~20 Zeilen | **SAP: -96%** |
+| **H2** | Wartbarkeit (Dateien) | 3-4 Dateien | 1 Datei | **SAP: -75%** |
+| **H3a** | Token-Validierung LOC | ~75 Zeilen | ~10 Zeilen | **SAP: -87%** |
+| **H3b** | Unternehmensintegration | TODO | TODO | TODO |
+| **H4** | Vendor-Kopplung (Dateien) | 4 Dateien (17 Imports) | 3 Dateien (9 Imports) | **SAP: -47%** |
+| **H5** | Token-Validierung | Manuell | Automatisch | **SAP: Automatisch** |
+| **H6** | Benutzerregistrierung (Klicks) | TODO | TODO | TODO |
+| **H7** | Password-Reset | Code-basiert | Link-basiert | **SAP: Automatisch** |
+| **H8** | Integrierte Features | TODO | TODO | TODO |
 
 ---
 
 ## Detaillierte Messergebnisse
 
-### H1: Security Code Lines
+### H1: Autorisierungs-LOC
 
 | Backend | Code-Zeilen | Lokation | Ansatz |
 |---------|------------|----------|---------|
 | **Spring Boot** | ~450 Zeilen | 5-8 Dateien (verteilt) | Imperativ (@PreAuthorize) |
-| **SAP CAP** | ~19 Zeilen | 1 Datei (zentral) | Deklarativ (@restrict) |
+| **SAP CAP** | ~20 Zeilen | 1 Datei (zentral) | Deklarativ (@restrict) |
 
-**Reduzierung:** **-96%** (431 Zeilen weniger)
+**Gemessene Komponenten Spring Boot:**
+- SecurityConfig.java: 100 LOC
+- JwtAuthenticationFilter.java: TODO LOC
+- CognitoService.java (Auth-Teil): TODO LOC
+- OrderController.java (@PreAuthorize): 5 Annotationen
+- AuthController.java: TODO LOC
+
+**Gemessene Komponenten SAP CAP:**
+- data-model.cds (@restrict): 20 LOC
+- application.yaml (Security): 10 LOC
+- UserInfoController.java: 30 LOC
+
+**Reduzierung:** **~96%** (430 Zeilen weniger)
 
 ---
 
@@ -91,25 +104,53 @@
 
 ---
 
-### H6: Registrierungs-Flow
+### H6: Benutzerregistrierung (Klick-Vergleich)
 
-| Backend | Code-Zeilen | Implementierung |
-|---------|------------|----------------|
-| **Spring Boot** | ~75 Zeilen | Manual AWS SDK |
-| **SAP CAP** | ~15 Zeilen | Redirect zu SAP IAS UI |
+**NEU: Klick-basierte Messung in beiden Admin-Konsolen**
 
-**Reduzierung:** **-80%** (60 Zeilen weniger)
+| Schritt | AWS Cognito Console | SAP IAS Console |
+|---------|---------------------|-----------------|
+| 1. Konsole öffnen | 1 Klick | 1 Klick |
+| 2. Service/App auswählen | TODO | TODO |
+| 3. Users navigieren | TODO | TODO |
+| 4. "Create User" klicken | TODO | TODO |
+| 5. Formular ausfüllen | TODO | TODO |
+| 6. Bestätigen | TODO | TODO |
+| **Gesamt Klicks** | **TODO** | **TODO** |
+
+**Zusätzliches Feature (nur AWS Cognito):**
+- Programmatische Registrierung via SDK: ~150 LOC
+- SAP IAS unterstützt dies **nicht** (architektonischer Unterschied)
 
 ---
 
-### H7: Password-Reset-Sicherheit
+### H7: Password-Reset
 
-| Backend | Code-Zeilen | Rate-Limiting | Token-Expiration | Email-Verifizierung |
-|---------|------------|--------------|-----------------|-------------------|
-| **Spring Boot** | ~70 Zeilen | ⚠️ Partial (manuell) | ✅ Yes (24h) | ✅ Yes |
-| **SAP CAP** | ~10 Zeilen | ✅ Native | ✅ Yes (24h) | ✅ Yes |
+| Backend | Implementierung | Code-Zeilen | API-Aufrufe |
+|---------|----------------|-------------|-------------|
+| **Spring Boot** | Code-basiert (forgot-password, confirm-reset) | TODO | 2 |
+| **SAP CAP** | Link-basiert (automatisch) | 0 | 0 |
 
-**Reduzierung:** **-86%** Code, **Native vs. Partial** Rate-Limiting
+**Reduzierung:** Vollständig automatisch bei SAP IAS
+
+---
+
+### H8: Integrierte Sicherheitsfeatures (NEU)
+
+| Feature | AWS Cognito | SAP IAS |
+|---------|-------------|---------|
+| Rate-Limiting | ⚠️ Konfigurierbar | ✅ Standard |
+| Brute-Force-Schutz | ⚠️ Konfigurierbar | ✅ Standard |
+| Audit-Logging | ✅ CloudTrail | ✅ Standard |
+| Token-Expiration | ✅ Konfigurierbar | ✅ Standard |
+| E-Mail-Verifizierung | ✅ Konfigurierbar | ✅ Standard |
+| Passwort-Policies | ✅ Konfigurierbar | ✅ Standard |
+| Account-Lockout | ⚠️ Manuell | ✅ Standard |
+| MFA-Unterstützung | ✅ Standard | ✅ Standard |
+
+**Legende:** ✅ Standard = automatisch aktiviert, ⚠️ = Konfiguration nötig
+
+**Ergebnis:** SAP IAS bietet mehr Features **standardmäßig aktiviert**
 
 ---
 
@@ -193,6 +234,6 @@ Alle Hypothesen sind **objektiv messbar** durch:
 ---
 
 **Autor:** Bachelorarbeit  
-**Datum:** 2025-12-23  
-**Status:** Messungen abgeschlossen
+**Datum:** 2025-12-27  
+**Status:** Messungen in Bearbeitung (TODOs noch zu messen)
 

@@ -37,6 +37,36 @@ export class Dashboard implements OnInit {
       this.userProfile = profile;
       this.updatePermissions();
     });
+
+    // In der Cloud: Lade Benutzerinfo falls nicht vorhanden
+    if (!this.userProfile && !this.isCognitoBackend) {
+      this.loadCloudUserInfo();
+    }
+  }
+
+  /**
+   * Lädt Benutzerinfo aus dem Cloud-Backend (nach SAP IAS Login).
+   */
+  private loadCloudUserInfo(): void {
+    this.apiService.fetchUserInfo().subscribe({
+      next: (userInfo) => {
+        if (userInfo && userInfo.authenticated) {
+          // UserProfile manuell setzen
+          const profile = {
+            username: userInfo.username,
+            email: userInfo.email,
+            roles: userInfo.roles || []
+          };
+          // Das wird über userProfile$ Observable verteilt
+          localStorage.setItem('userProfile', JSON.stringify(profile));
+          this.userProfile = profile;
+          this.updatePermissions();
+        }
+      },
+      error: (err) => {
+        console.log('[DEBUG] Cloud UserInfo nicht verfügbar:', err);
+      }
+    });
   }
 
   /**

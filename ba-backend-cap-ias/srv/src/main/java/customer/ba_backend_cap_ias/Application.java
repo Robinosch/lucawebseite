@@ -24,6 +24,11 @@ import java.time.LocalDateTime;
  * CRITICAL DIFFERENCE:
  * - AWS Cognito: IMPERATIVE security (code in every method)
  * - SAP CAP: DECLARATIVE security (CDS annotations in model)
+ *
+ * SECURITY:
+ * - SAP CAP Framework übernimmt die Security-Konfiguration automatisch
+ * - Lokal: Mock-User aus .cdsrc.json
+ * - Cloud: XSUAA/SAP IAS über Service Binding
  */
 @SpringBootApplication
 public class Application {

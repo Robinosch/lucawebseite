@@ -80,6 +80,48 @@ export class ApiService {
         this.userProfileSubject$.next(JSON.parse(storedUser));
       }
     }
+
+    // In der Cloud: Prüfe ob bereits authentifiziert (Cookie-basiert)
+    if (environment.production && this.currentBackend === 'sapias') {
+      this.checkCloudAuth();
+    }
+  }
+
+  /**
+   * Prüft ob der Benutzer in der Cloud bereits authentifiziert ist.
+   * Der App Router setzt ein Cookie nach erfolgreicher SAP IAS Authentifizierung.
+   */
+  private checkCloudAuth(): void {
+    this.fetchUserInfo().subscribe({
+      next: (userInfo) => {
+        if (userInfo && userInfo.authenticated) {
+          const profile: UserProfile = {
+            username: userInfo.username,
+            email: userInfo.email,
+            roles: userInfo.roles || []
+          };
+          this.userProfileSubject$.next(profile);
+          localStorage.setItem('userProfile', JSON.stringify(profile));
+          this.isAuthenticatedSubject$.next(true);
+          console.log('[DEBUG] Cloud-Auth erfolgreich:', profile);
+        }
+      },
+      error: () => {
+        // Nicht authentifiziert - normal in der Cloud
+        console.log('[DEBUG] Keine Cloud-Auth gefunden');
+      }
+    });
+  }
+
+  /**
+   * Holt Benutzerinfo vom Backend (Cloud: /api/user/me).
+   */
+  fetchUserInfo(): Observable<any> {
+    const url = this.currentBackend === 'sapias'
+      ? `${environment.sapIasBackendUrl}/api/user/me`
+      : `${this.apiUrl}/user/me`;
+
+    return this.http.get<any>(url, { withCredentials: true });
   }
 
   /**

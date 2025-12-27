@@ -21,27 +21,20 @@
 			<artifactId>cds-starter-spring-boot</artifactId>
 		</dependency>
 
+		<!-- CDS FEATURE IDENTITY for SAP IAS/XSUAA Integration -->
+		<!-- Dies ist die erforderliche Dependency für SAP CAP Security -->
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-identity</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- SPRING BOOT SECURITY -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- SAP CLOUD SECURITY for SAP IAS Integration -->
-		<!-- H5: This library provides AUTOMATIC JWT validation -->
-		<!-- NO manual JWKS code needed! -->
-		<dependency>
-			<groupId>com.sap.cloud.security</groupId>
-			<artifactId>resourceserver-security-spring-boot-starter</artifactId>
-			<version>3.5.2</version>
-		</dependency>
-
-		<!-- SAP XSUAA for BTP Integration (if needed) -->
-		<dependency>
-			<groupId>com.sap.cloud.security.xsuaa</groupId>
-			<artifactId>xsuaa-spring-boot-starter</artifactId>
-			<version>3.5.2</version>
-		</dependency>
 
 		<!-- SPRING BOOT WEB for REST Controllers -->
 		<dependency>

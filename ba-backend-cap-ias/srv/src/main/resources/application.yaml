@@ -41,19 +41,24 @@ spring:
 
 # SAP CAP Configuration
 cds:
-  # H5: Automatic Security Handling
-  # The framework automatically:
-  # - Fetches JWKS from SAP IAS
-  # - Validates JWT signatures
-  # - Checks token expiration
-  # - Extracts claims
-  # NO manual code needed!
+  # ============================================================
+  # SAP CAP übernimmt die Security-Konfiguration automatisch!
+  # ============================================================
+  # LOKAL (default Profil):
+  # - Mock-User aus .cdsrc.json
+  # - @restrict Annotationen werden durchgesetzt
+  #
+  # CLOUD (cloud Profil):
+  # - XSUAA/SAP IAS über Service Binding
+  # - @restrict Annotationen werden durchgesetzt
+  # - Automatische JWT Token Validierung
+  #
+  # WICHTIG: Keine eigene SecurityFilterChain nötig!
+  # Das ist der Kernunterschied zu Spring Boot + AWS Cognito.
+  # ============================================================
   security:
-    enabled: true
-    # mock-user is for local testing without SAP IAS
-    # Set to false in production
     mock:
-      enabled: ${MOCK_SECURITY:false}
+      enabled: true  # Aktiviert Mock-User aus .cdsrc.json
 
   # OData V4 Configuration
   odata:
@@ -120,19 +125,25 @@ logging:
 spring:
   config.activate.on-profile: cloud
 
+  # H2 Database auch in Cloud für Demo-Zwecke
+  datasource:
+    url: jdbc:h2:mem:capdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-h2.sql
+
 cds:
   security:
-    enabled: true
+    # In der Cloud: XSUAA übernimmt die Authentifizierung
+    # Service Binding liefert automatisch alle Konfiguration
+    xsuaa:
+      enabled: true
     mock:
       enabled: false
-    # Service Binding automatically provides:
-    # - IAS tenant URL
-    # - JWKS endpoint
-    # - Client ID and Secret
-    # - All necessary OAuth2 configuration
-    #
-    # H3a, H6: NO manual configuration needed!
-    # vs. AWS Cognito: Requires manual application.properties setup
 
 logging:
   level:

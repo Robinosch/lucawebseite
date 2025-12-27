@@ -64,30 +64,35 @@ annotate Orders with @(restrict: [
  * METRICS for Hypothesis Testing
  *
  * H1 - Lines of Code for Authorization:
- * - CDS Annotations: ~15 lines (CENTRAL)
+ * - CDS Annotations: ~20 lines (CENTRAL, DECLARATIVE)
  * - Java Security Code: 0 lines (Framework handles it automatically!)
  * vs. AWS Cognito + Spring Boot:
- * - @PreAuthorize annotations: 1 per method = ~10-15 annotations
- * - Java Security Code: ~30 lines for AuthorizationService
+ * - @PreAuthorize annotations: distributed across controllers
+ * - SecurityConfig: ~100 lines
  * - Total: ~45-50 lines distributed across multiple files
  *
  * H2 - Maintainability (Adding new role "Observer"):
- * - SAP CAP: 1 line in data-model.cds (@restrict annotation)
- * - AWS Cognito: 5-10 files changed (controllers, services, config)
+ * - SAP CAP: 3 lines in data-model.cds (@restrict annotation)
+ * - AWS Cognito: Multiple files changed (controllers, services, config)
  *
  * H4 - Framework Coupling:
- * - SAP CAP: 1-2 files with security imports (minimal)
+ * - SAP CAP: 2-3 files with @sap imports (minimal coupling)
  * - AWS Cognito: 10+ files with org.springframework.security imports
  *
- * H6 - Registration Flow:
- * - SAP CAP: ~15 lines (redirect to SAP IAS standard UI)
- * - AWS Cognito: ~85 lines (manual implementation)
+ * H6 - User Registration (Click Comparison):
+ * - SAP CAP/SAP IAS: X clicks in Admin Console
+ * - AWS Cognito: Y clicks in AWS Console
+ * - Additional: AWS Cognito supports SDK registration (~150 LOC)
  *
- * H7 - Password Reset Security:
- * - SAP CAP: ~10 lines (redirect to SAP IAS)
- * - SAP IAS includes: Rate-Limiting, Token Expiration, Email Verification
- * - AWS Cognito: ~60 lines (partial manual implementation needed)
+ * H7 - Password Reset:
+ * - SAP CAP/SAP IAS: Configuration steps (link-based, automatic)
+ * - AWS Cognito: ~100 LOC (code-based, manual implementation)
+ *
+ * H8 - Integrated Security Features:
+ * - SAP IAS: Rate-Limiting, Brute-Force, Audit-Log (standard)
+ * - AWS Cognito: Configurable, some require manual implementation
  *
  * SAP CAP Advantage: CENTRAL, DECLARATIVE, MAINTAINABLE
+ * SAP IAS Difference: Cloud-only, Admin-driven user management
  */
 
