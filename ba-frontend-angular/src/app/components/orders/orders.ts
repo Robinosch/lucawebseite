@@ -161,7 +161,7 @@ export class Orders implements OnInit {
 
     this.apiService.deleteOrder(id).subscribe({
       next: () => {
-        this.orders = this.orders.filter(o => o.id !== id);
+        this.orders = this.orders.filter(o => (o.ID || o.id) !== id);
       },
       error: (err) => {
         console.error('[ERROR] Fehler beim Löschen der Bestellung:', err);

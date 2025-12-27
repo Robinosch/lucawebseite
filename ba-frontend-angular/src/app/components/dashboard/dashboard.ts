@@ -95,9 +95,6 @@ export class Dashboard implements OnInit {
     this.canDeleteOrders = roles.includes('ADMIN');
   }
 
-  /**
-   * Gibt zurück, ob Benutzer mindestens eine bestimmte Rolle hat.
-   */
   hasRole(role: string): boolean {
     if (!this.userProfile || !this.userProfile.roles) {
       return false;

@@ -132,9 +132,9 @@
               </td>
             </tr>
           } @else {
-            @for (order of orders; track order.id) {
+            @for (order of orders; track order.ID || order.id) {
               <tr>
-                <td><code>{{ order.id }}</code></td>
+                <td><code>{{ order.ID || order.id }}</code></td>
                 <td>{{ order.customer }}</td>
                 <td class="amount">{{ order.amount | number:'1.2-2' }} €</td>
                 <td>
@@ -145,7 +145,7 @@
                 <td>{{ order.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
                 @if (canDeleteOrders) {
                   <td>
-                    <button (click)="deleteOrder(order.id)" class="btn-delete" title="Bestellung löschen">
+                    <button (click)="deleteOrder(order.ID || order.id)" class="btn-delete" title="Bestellung löschen">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"></polyline>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>

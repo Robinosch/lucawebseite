@@ -52,68 +52,28 @@ service OrderService @(path: '/api/orders') {
 /**
  * Authentication Service
  *
- * Handles registration, login, email verification, and password reset.
- * SAP IAS integration for user management.
+ * SAP IAS Integration Notes:
+ * - SAP IAS is a CLOUD-ONLY Identity Provider
+ * - User registration is NOT done via Backend API (unlike AWS Cognito)
+ * - Users are created via SAP IAS Admin Console or Self-Service Portal
+ * - Login is handled via OIDC redirect to SAP IAS login page
+ * - Password reset uses link-based flow (automatic via SAP IAS)
+ *
+ * This service provides:
+ * - Password reset initiation (triggers SAP IAS email)
+ * - User info retrieval (from validated JWT token)
+ *
+ * H6 Comparison Point:
+ * - AWS Cognito: SDK-driven registration in backend code (~150 LOC)
+ * - SAP IAS: Admin configuration (0 LOC, configuration-based)
  */
 service AuthService @(path: '/api/auth') {
 
     /**
-     * User registration
-     * Creates new user in SAP IAS
-     */
-    action register(
-        username: String,
-        email: String,
-        password: String,
-        givenName: String,
-        familyName: String
-    ) returns {
-        success: Boolean;
-        message: String;
-        email: String;
-    };
-
-    /**
-     * User login
-     * Returns JWT tokens from SAP IAS
-     */
-    action login(
-        username: String,
-        password: String
-    ) returns {
-        accessToken: String;
-        idToken: String;
-        refreshToken: String;
-        expiresIn: Integer;
-        username: String;
-    };
-
-    /**
-     * Email verification with code
-     */
-    action verifyEmail(
-        email: String,
-        username: String,
-        verificationCode: String
-    ) returns {
-        success: Boolean;
-        message: String;
-        email: String;
-    };
-
-    /**
-     * Resend verification code
-     */
-    action resendVerificationCode(
-        email: String
-    ) returns {
-        success: Boolean;
-        message: String;
-    };
-
-    /**
-     * Request password reset - sends email with link/code
-     * SAP IAS: Sends email with reset link
+     * Request password reset - triggers SAP IAS email with reset link
+     * SAP IAS handles: Email template, secure link, expiration, delivery
+     *
+     * H7: Link-based reset (SAP IAS) vs. Code-based reset (AWS Cognito)
      */
     action forgotPassword(
         email: String,
@@ -124,8 +84,9 @@ service AuthService @(path: '/api/auth') {
     };
 
     /**
-     * Confirm password reset (only needed for certain flows)
-     * SAP IAS typically uses link-based reset, not code-based
+     * Confirm password reset
+     * Note: SAP IAS typically uses link-based reset handled entirely by SAP IAS UI
+     * This endpoint exists for API consistency with AWS Cognito implementation
      */
     action confirmPasswordReset(
         email: String,
@@ -136,16 +97,25 @@ service AuthService @(path: '/api/auth') {
         message: String;
     };
 
-
     /**
      * Get current user info (from validated JWT token)
      *
      * H5: Token validation happens AUTOMATICALLY before this is called
+     * No manual JWT validation code required!
      */
     function me() returns {
         username: String;
         roles: array of String;
         email: String;
+    };
+
+    /**
+     * Health check endpoint
+     */
+    function health() returns {
+        status: String;
+        service: String;
+        timestamp: String;
     };
 }
 
@@ -153,23 +123,27 @@ service AuthService @(path: '/api/auth') {
  * METRICS for Hypothesis Testing (H1-H7)
  *
  * Service Definition Complexity:
- * - CDS Service Definition: ~50 lines
- * - Java Service Implementation: ~30 lines (only business logic!)
- * - Security Code: 0 lines (all in data-model.cds)
+ * - CDS Service Definition: ~60 lines
+ * - Java Handler Implementation: ~100 lines (AuthServiceHandler)
+ * - Security Code: 0 lines (all declarative in data-model.cds)
  *
  * vs. AWS Cognito + Spring Boot:
- * - Controller: ~80 lines
- * - Service: ~60 lines
+ * - AuthController: ~170 lines
+ * - CognitoService: ~536 lines
  * - Security Configuration: ~100 lines
- * - Manual JWT validation: ~150 lines
- * - Total: ~390 lines
+ * - JwtAuthenticationFilter: ~110 lines
+ * - Total: ~916 lines
  *
- * H1: SAP CAP ~80% LESS CODE for authorization
- * H2: SAP CAP requires 1 file edit vs. 5-10 files for new role
- * H3a: SAP CAP ~2-3 min setup vs. ~5 min for Spring Boot
- * H4: SAP CAP 1-2 files with security imports vs. 10+ files
- * H5: SAP CAP 0 lines for token validation vs. 150 lines manual
- * H6: SAP CAP ~15 lines for registration vs. ~85 lines manual
- * H7: SAP CAP ~10 lines for password reset (with rate-limiting) vs. ~60 lines (partial features)
+ * H1: SAP CAP ~80% LESS CODE for authorization (declarative @restrict)
+ * H2: SAP CAP requires 1 file edit (data-model.cds) vs. multiple files for new role
+ * H3a: SAP CAP minimal config vs. manual JWKS/JWT setup in Spring Boot
+ * H4: SAP CAP 2 files with @sap imports vs. 10+ files with Spring Security imports
+ * H5: SAP CAP 0 lines for token validation (automatic) vs. ~60 lines manual
+ * H6: SAP CAP 0 LOC for registration (admin config) vs. ~150 LOC SDK-driven
+ * H7: SAP CAP ~30 lines for password reset vs. ~100 lines for AWS Cognito
+ *
+ * Key Architectural Difference:
+ * - SAP IAS: Cloud-only IdP, admin/self-service user management
+ * - AWS Cognito: SDK-driven, programmatic user management from backend
  */
 

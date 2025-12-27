@@ -1,4 +1,4 @@
-﻿<div class="register-container">
+﻿﻿<div class="register-container">
   <div class="register-card">
     <div class="register-header">
       <h1>📝 Registrierung</h1>
@@ -25,80 +25,116 @@
       </p>
     </div>
 
-    @if (errorMessage) {
-      <div class="alert alert-error">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        {{ errorMessage }}
-      </div>
-    }
-
-    @if (successMessage) {
-      <div class="alert alert-success">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        {{ successMessage }}
-      </div>
-    }
-
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName" class="form-label">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
+    @if (selectedBackend === 'sapias') {
+      <div class="sap-ias-notice">
+        <div class="notice-icon">🔶</div>
+        <div class="notice-content">
+          <h3>SAP IAS - Cloud-only Identity Provider</h3>
+          <p>
+            Bei SAP IAS erfolgt die Benutzerregistrierung <strong>nicht</strong> über eine Backend-API,
+            sondern über die <strong>SAP IAS Administrator-Konsole</strong> oder ein konfigurierbares
+            <strong>Self-Service-Portal</strong>.
+          </p>
+          <div class="notice-details">
+            <h4>📋 Benutzer-Onboarding bei SAP IAS:</h4>
+            <ul>
+              <li>✅ Administrator erstellt Benutzer in der SAP IAS Console</li>
+              <li>✅ Oder: Self-Service-Portal für Endbenutzer konfigurieren</li>
+              <li>✅ Automatische E-Mail-Benachrichtigung durch SAP IAS</li>
+              <li>✅ Passwort-Richtlinien zentral in SAP IAS definiert</li>
+            </ul>
+          </div>
+          <p class="hypothesis-note">
+            <strong>Hypothese H6:</strong> Dies demonstriert den fundamentalen Unterschied:
+            AWS Cognito ermöglicht SDK-gesteuerte Registrierung (~150 LOC),
+            SAP IAS nutzt administrative Konfiguration (0 LOC im Backend).
+          </p>
+          <a routerLink="/login" class="btn-back-to-login">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
             </svg>
-            Vorname
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            formControlName="firstName"
-            [class.invalid]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
-            placeholder="Max"
-            class="form-input"
-          />
-          @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
-            <span class="error-message">Vorname ist erforderlich</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="lastName" class="form-label">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Nachname
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            formControlName="lastName"
-            [class.invalid]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
-            placeholder="Mustermann"
-            class="form-input"
-          />
-          @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
-            <span class="error-message">Nachname ist erforderlich</span>
-          }
+            Zurück zum Login
+          </a>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="username" class="form-label">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M12 1v6m0 6v6m8-8h-6M4 12H1"></path>
+    } @else {
+      <!-- AWS Cognito: Registrierungsformular anzeigen -->
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
-          Benutzername
+          {{ errorMessage }}
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          {{ successMessage }}
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="register-form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName" class="form-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Vorname
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              [class.invalid]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+              placeholder="Max"
+              class="form-input"
+            />
+            @if (registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched) {
+              <span class="error-message">Vorname ist erforderlich</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Nachname
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              [class.invalid]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+              placeholder="Mustermann"
+              class="form-input"
+            />
+            @if (registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched) {
+              <span class="error-message">Nachname ist erforderlich</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="username" class="form-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6m8-8h-6M4 12H1"></path>
+            </svg>
+            Benutzername
         </label>
         <input
           type="text"
@@ -216,37 +252,38 @@
     <div class="implementation-note">
       <div class="note-icon">📊</div>
       <div class="note-content">
-        <h3>Hypothese H6: Benutzerregistrierung - Implementierungsaufwand</h3>
+        <h3>Hypothese H6: Benutzer-Onboarding - Implementierungsaufwand</h3>
         <div class="comparison">
           <div class="comparison-item comparison-aws">
-            <h4>🔷 AWS Cognito (Imperativ)</h4>
+            <h4>🔷 AWS Cognito (SDK-gesteuert)</h4>
             <ul>
               <li>✏️ Manuelle UI-Implementierung erforderlich</li>
               <li>🔍 Custom Validierungslogik schreiben</li>
-              <li>🔌 SignUp API Integration mit SDK</li>
+              <li>🔌 SignUp API Integration mit SDK (~150 LOC)</li>
               <li>📧 E-Mail-Verifikation konfigurieren</li>
               <li>⚠️ Fehlerbehandlung manuell implementieren</li>
             </ul>
-            <p class="effort-badge">Aufwand: <span class="badge badge-high">Hoch</span></p>
+            <p class="effort-badge">Aufwand: <span class="badge badge-high">Hoch (Code)</span></p>
           </div>
           <div class="comparison-item comparison-sap">
-            <h4>🔶 SAP IAS (Deklarativ)</h4>
+            <h4>🔶 SAP IAS (Admin-Konsole)</h4>
             <ul>
-              <li>✅ Self-Service Templates verfügbar</li>
-              <li>✅ Vorkonfigurierte Validierung</li>
-              <li>✅ Standardisierte OIDC-Flows</li>
-              <li>✅ Automatische E-Mail-Verifikation</li>
-              <li>✅ Zentrale Fehlerbehandlung</li>
+              <li>✅ Benutzer über Admin-Konsole erstellen</li>
+              <li>✅ Self-Service-Portal konfigurierbar</li>
+              <li>✅ Keine Backend-API für Registrierung</li>
+              <li>✅ Automatische E-Mail-Benachrichtigung</li>
+              <li>✅ Zentrale Passwort-Richtlinien</li>
             </ul>
-            <p class="effort-badge">Aufwand: <span class="badge badge-low">Niedrig</span></p>
+            <p class="effort-badge">Aufwand: <span class="badge badge-low">Niedrig (Konfiguration)</span></p>
           </div>
         </div>
         <p class="bff-note">
-          <strong>🔄 BFF-Pattern:</strong> Das Backend handhabt die IdP-Kommunikation.
-          Das Frontend sendet nur die Registrierungsdaten als HTTP POST-Request.
+          <strong>🔄 Architektur-Unterschied:</strong> AWS Cognito ermöglicht programmatische Registrierung,
+          SAP IAS nutzt administrative Konfiguration (Cloud-only IdP).
         </p>
       </div>
     </div>
+    } <!-- Ende @else (AWS Cognito Formular) -->
   </div>
 </div>
 
