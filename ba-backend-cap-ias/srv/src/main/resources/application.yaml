@@ -59,6 +59,25 @@ cds:
   security:
     mock:
       enabled: true  # Aktiviert Mock-User aus .cdsrc.json
+      default-users:
+        enabled: true
+      users:
+        - name: admin@test.com
+          password: admin123
+          roles:
+            - 'Admin'
+        - name: manager@test.com
+          password: manager123
+          roles:
+            - 'Manager'
+        - name: user@test.com
+          password: user123
+          roles:
+            - 'User'
+        - name: observer@test.com
+          password: observer123
+          roles:
+            - 'Observer'
 
   # OData V4 Configuration
   odata:
@@ -138,9 +157,9 @@ spring:
 
 cds:
   security:
-    # In der Cloud: XSUAA übernimmt die Authentifizierung
-    # Service Binding liefert automatisch alle Konfiguration
     xsuaa:
+      enabled: false
+    identity:
       enabled: true
     mock:
       enabled: false

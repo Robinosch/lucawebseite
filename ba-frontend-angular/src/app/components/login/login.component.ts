@@ -42,6 +42,9 @@ export class LoginComponent implements OnInit {
   /**
    * Login-Handler: Sendet Credentials an Backend
    * Backend handhabt OAuth2-Flow mit ausgewähltem IdP
+   *
+   * SAP IAS: Verwendet Basic Auth (Browser-Maske)
+   * AWS Cognito: Verwendet Custom Login-Endpoint
    */
   login(): void {
     if (!this.username || !this.password) {
@@ -58,24 +61,40 @@ export class LoginComponent implements OnInit {
       backend: this.selectedBackend
     };
 
-    this.apiService.login(credentials).subscribe({
-      next: (response) => {
-        console.log('[DEBUG] Login erfolgreich, Response:', response);
-        this.loading = false;
+    // SAP IAS verwendet Basic Auth - Browser-Maske wird automatisch angezeigt
+    // AWS Cognito verwendet Custom Login-Endpoint
+    if (this.selectedBackend === 'sapias') {
+      // Für SAP IAS: Redirect zur geschützten Ressource
+      // Browser zeigt Basic Auth Dialog
+      console.log('[SAP IAS] Verwende Basic Auth (Browser-Maske)');
 
-        console.log('[DEBUG] Navigiere zu:', this.returnUrl);
-        this.router.navigate([this.returnUrl]).then(success => {
-          console.log('[DEBUG] Navigation erfolgreich:', success);
-        }).catch(err => {
-          console.error('[DEBUG] Navigation fehlgeschlagen:', err);
-        });
-      },
-      error: (error) => {
-        console.error('Login-Fehler:', error);
-        this.errorMessage = error.error?.message || 'Authentifizierung fehlgeschlagen. Bitte prüfen Sie Ihre Zugangsdaten';
-        this.loading = false;
-      }
-    });
+      // Setze Basic Auth Header für nachfolgende Requests
+      this.apiService.setBasicAuth(this.username, this.password);
+
+      // Navigiere direkt zum Dashboard - Browser zeigt Auth-Dialog bei Bedarf
+      this.loading = false;
+      this.router.navigate([this.returnUrl]);
+    } else {
+      // AWS Cognito verwendet Custom Login-Endpoint
+      this.apiService.login(credentials).subscribe({
+        next: (response) => {
+          console.log('[DEBUG] Login erfolgreich, Response:', response);
+          this.loading = false;
+
+          console.log('[DEBUG] Navigiere zu:', this.returnUrl);
+          this.router.navigate([this.returnUrl]).then(success => {
+            console.log('[DEBUG] Navigation erfolgreich:', success);
+          }).catch(err => {
+            console.error('[DEBUG] Navigation fehlgeschlagen:', err);
+          });
+        },
+        error: (error) => {
+          console.error('Login-Fehler:', error);
+          this.errorMessage = error.error?.message || 'Authentifizierung fehlgeschlagen. Bitte prüfen Sie Ihre Zugangsdaten';
+          this.loading = false;
+        }
+      });
+    }
   }
 
   /**

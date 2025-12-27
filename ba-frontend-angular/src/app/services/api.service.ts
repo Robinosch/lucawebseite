@@ -592,6 +592,34 @@ export class ApiService {
     console.log(`[DEBUG] Backend gewechselt zu: ${this.currentBackend}, URL: ${url}`);
   }
 
+  /**
+   * Setzt Basic Auth Credentials für SAP CAP Backend.
+   * Browser-Maske wird beim ersten API-Call automatisch angezeigt.
+   */
+  setBasicAuth(username: string, password: string): void {
+    const basicAuth = btoa(`${username}:${password}`);
+    this.basicAuthCredentials = basicAuth;
+    this.currentBackend = 'sapias';
+    localStorage.setItem('basicAuthCredentials', basicAuth);
+    localStorage.setItem('currentBackend', 'sapias');
+
+    // User Profile aus Username ableiten
+    const userProfile: UserProfile = {
+      username: username,
+      email: username,
+      roles: this.extractRolesFromUsername(username)
+    };
+
+    this.userProfileSubject$.next(userProfile);
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+    this.isAuthenticatedSubject$.next(true);
+
+    console.log('[DEBUG] Basic Auth gesetzt:', {
+      username,
+      roles: userProfile.roles
+    });
+  }
+
   isCognitoBackend(): boolean {
     return this.currentBackend === 'cognito';
   }

@@ -14,24 +14,28 @@
           "kind": "mocked",
           "users": {
             "admin": {
+              "password": "admin123",
               "roles": [
                 "Admin"
               ],
               "email": "admin@example.com"
             },
             "manager": {
+              "password": "manager123",
               "roles": [
                 "Manager"
               ],
               "email": "manager@example.com"
             },
             "user": {
+              "password": "user123",
               "roles": [
                 "User"
               ],
               "email": "user@example.com"
             },
             "observer": {
+              "password": "observer123",
               "roles": [
                 "Observer"
               ],
