@@ -1,11 +1,6 @@
 {
   "welcomeFile": "/index.html",
   "authenticationMethod": "route",
-  "sessionTimeout": 60,
-  "logout": {
-    "logoutEndpoint": "/logout",
-    "logoutPage": "/index.html"
-  },
   "routes": [
     {
       "source": "^/odata/v4/(.*)$",
@@ -22,14 +17,9 @@
       "csrfProtection": false
     },
     {
-      "source": "^/user-api/currentUser$",
-      "target": "/currentUser",
-      "service": "sap-approuter-userapi"
-    },
-    {
-      "source": "^/(.*)$",
+      "source": "^(.*)$",
       "target": "$1",
-      "localDir": "resources",
+      "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa"
     }
   ]

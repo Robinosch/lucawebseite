@@ -67,8 +67,15 @@ export class ApiService {
   private userProfileSubject$ = new BehaviorSubject<UserProfile | null>(null);
   public userProfile$: Observable<UserProfile | null> = this.userProfileSubject$.asObservable();
 
+  private isCloudMode = (environment as any).cloudMode || environment.production;
+
   constructor() {
-    // Token aus localStorage wiederherstellen (falls vorhanden)
+    if (this.isCloudMode) {
+      this.currentBackend = 'sapias';
+      this.isAuthenticatedSubject$.next(true);
+      return;
+    }
+
     const storedToken = localStorage.getItem('accessToken');
     const storedBasicAuth = localStorage.getItem('basicAuthCredentials');
     const storedBackend = localStorage.getItem('currentBackend') as 'cognito' | 'sapias';
@@ -92,43 +99,38 @@ export class ApiService {
     if (storedUser) {
       this.userProfileSubject$.next(JSON.parse(storedUser));
     }
-
-    // In der Cloud: Prüfe ob bereits authentifiziert (Cookie-basiert)
-    if (environment.production && this.currentBackend === 'sapias') {
-      this.checkCloudAuth();
-    }
   }
 
   /**
-   * Prüft ob der Benutzer in der Cloud bereits authentifiziert ist.
-   * Der App Router setzt ein Cookie nach erfolgreicher SAP IAS Authentifizierung.
-   */
-  private checkCloudAuth(): void {
-    this.fetchUserInfo().subscribe({
-      next: (userInfo) => {
-        if (userInfo && userInfo.authenticated) {
-          const profile: UserProfile = {
-            username: userInfo.username,
-            email: userInfo.email,
-            roles: userInfo.roles || []
-          };
-          this.userProfileSubject$.next(profile);
-          localStorage.setItem('userProfile', JSON.stringify(profile));
-          this.isAuthenticatedSubject$.next(true);
-          console.log('[DEBUG] Cloud-Auth erfolgreich:', profile);
-        }
-      },
-      error: () => {
-        // Nicht authentifiziert - normal in der Cloud
-        console.log('[DEBUG] Keine Cloud-Auth gefunden');
-      }
-    });
-  }
-
-  /**
-   * Holt Benutzerinfo vom Backend (Cloud: /api/user/me).
+   * Holt Benutzerinfo vom Backend.
+   * Im Cloud-Modus wird der App Router User-API Service verwendet.
+   * Dieser gibt automatisch die Benutzerinfos aus dem XSUAA/IAS Token zurück.
    */
   fetchUserInfo(): Observable<any> {
+    // Cloud-Modus: App Router User-API Service
+    if (this.isCloudMode) {
+      return this.http.get<any>('/user-api/currentUser', { withCredentials: true }).pipe(
+        map(user => {
+          const roles = this.extractRolesFromScopes(user.scopes || []);
+
+          return {
+            authenticated: true,
+            username: user.firstname ? `${user.firstname} ${user.lastname}` : user.email || user.logonName,
+            email: user.email || user.logonName,
+            roles: roles,
+            givenName: user.firstname,
+            familyName: user.lastname,
+            scopes: user.scopes,
+            rawUser: user
+          };
+        }),
+        catchError(err => {
+          console.error('[DEBUG] Cloud-Auth Fehler:', err);
+          return throwError(() => err);
+        })
+      );
+    }
+
     const url = this.currentBackend === 'sapias'
       ? `${environment.sapIasBackendUrl}/api/user/me`
       : `${this.apiUrl}/user/me`;
@@ -137,14 +139,55 @@ export class ApiService {
   }
 
   /**
+   * Extrahiert Rollen aus XSUAA Scopes.
+   * XSUAA Scopes haben das Format: appname.RoleName (z.B. ba-backend-cap-ias!t12345.Admin)
+   *
+   */
+  private extractRolesFromScopes(scopes: string[]): string[] {
+    if (!scopes || scopes.length === 0) {
+      console.log('[DEBUG] Keine Scopes vorhanden - verwende Default-Rolle "User"');
+      return ['User'];
+    }
+
+    const roles: string[] = [];
+    const knownRoles = ['Admin', 'Manager', 'User', 'Observer'];
+
+    for (const scope of scopes) {
+      if (['openid', 'email', 'profile', 'address', 'phone'].includes(scope)) {
+        continue;
+      }
+
+      const parts = scope.split('.');
+      const roleName = parts[parts.length - 1];
+
+      if (knownRoles.includes(roleName)) {
+        roles.push(roleName);
+        console.log(`[DEBUG] Rolle "${roleName}" aus Scope "${scope}" extrahiert`);
+      }
+    }
+
+    if (roles.length === 0) {
+      return ['User'];
+    }
+
+    return roles;
+  }
+
+  /**
    * Erstellt HTTP-Headers mit Authorization Token/Basic Auth.
+   * - Cloud-Modus: Kein Header nötig (Cookie/Session via App Router)
    * - Cognito: Bearer Token
-   * - SAP CAP: Basic Auth (lokal) oder Bearer Token (Cloud/SAP IAS)
+   * - SAP CAP lokal: Basic Auth
    */
   private getHeaders(): HttpHeaders {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json'
     };
+
+    // Cloud-Modus: Kein Authorization Header nötig - XSUAA/SAP IAS via Cookie
+    if (this.isCloudMode) {
+      return new HttpHeaders(headers);
+    }
 
     if (this.currentBackend === 'sapias' && this.basicAuthCredentials) {
       // SAP CAP lokal: Basic Auth
@@ -452,7 +495,11 @@ export class ApiService {
 
     this.isAuthenticatedSubject$.next(false);
     this.userProfileSubject$.next(null);
-    this.router.navigate(['/login']);
+
+    // Im Cloud-Modus übernimmt App Router die Umleitung
+    if (!this.isCloudMode) {
+      this.router.navigate(['/login']);
+    }
   }
 
   /**
@@ -633,10 +680,16 @@ export class ApiService {
 
   /**
    * Gibt die korrekte Orders-URL basierend auf dem Backend zurück.
-   * - Cognito: /api/orders (REST)
-   * - SAP IAS: /odata/v4/api/orders/Orders (OData V4)
+   * - Cloud-Modus: Relative URL (App Router leitet weiter)
+   * - Cognito lokal: /api/orders (REST)
+   * - SAP IAS lokal: /odata/v4/api/orders/Orders (OData V4)
    */
   private getOrdersUrl(): string {
+    // Cloud-Modus: Relative URL - App Router leitet an Backend weiter
+    if (this.isCloudMode) {
+      return '/odata/v4/api/orders/Orders';
+    }
+
     if (this.currentBackend === 'sapias') {
       return `${environment.sapIasODataUrl}/Orders`;
     }

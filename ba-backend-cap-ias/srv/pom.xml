@@ -35,6 +35,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- OAUTH2 RESOURCE SERVER for JWT Token Validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+
 
 		<!-- SPRING BOOT WEB for REST Controllers -->
 		<dependency>

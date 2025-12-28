@@ -4,6 +4,8 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { ApiService, UserProfile } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
+import {environment} from '../../../environments/environment';
 
 /**
  * Orders-Komponente mit geschützten Ressourcen.
@@ -24,6 +26,7 @@ import { ApiService, UserProfile } from '../../services/api.service';
 export class Orders implements OnInit {
   private apiService = inject(ApiService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   orders: any[] = [];
 
@@ -40,6 +43,9 @@ export class Orders implements OnInit {
   canViewOrderDetails = false;
   canCreateOrders = false;
   canDeleteOrders = false;
+  isCloudMode = (environment as any).cloudMode || environment.production;
+
+  isCognitoBackend = true;
 
   // Neues Bestellungs-Formular
   showCreateForm = false;
@@ -51,13 +57,18 @@ export class Orders implements OnInit {
 
   ngOnInit(): void {
     this.apiService.userProfile$.subscribe(profile => {
-      this.userProfile = profile;
+      if (this.isCloudMode || !this.isCognitoBackend) {
+        this.userProfile = JSON.parse(localStorage.getItem('userProfile') ?? 'null') ;
+      }else{
+        this.userProfile = profile;
+      }
       this.updatePermissions();
 
-      if (this.canViewOrders) {
-        this.loadOrders();
+      if (this.isCloudMode || !this.isCognitoBackend) {
       }
     });
+
+    this.loadOrders();
   }
 
   /**
@@ -85,23 +96,27 @@ export class Orders implements OnInit {
    * Lädt alle Bestellungen vom Backend.
    * Backend: GET /api/orders
    * Authorization: isAuthenticated()
+   *
    */
   loadOrders(): void {
-    if (!this.canViewOrders) {
-      this.error = 'Keine Berechtigung zum Anzeigen von Bestellungen';
-      this.isLoadingSubject.next(false);
-      return;
-    }
-
     this.isLoadingSubject.next(true);
     this.error = null;
 
     this.apiService.getAllOrders().subscribe({
       next: (orders) => {
         this.orders = orders || [];
+        if (this.orders.length > 0) {
+          this.toast.success(`${this.orders.length} Bestellung(en) geladen`);
+        }
       },
       error: (err) => {
-        this.error = err.error?.message || 'Fehler beim Laden der Bestellungen';
+        if (err.status === 403) {
+          this.error = 'Keine Berechtigung zum Anzeigen von Bestellungen (403 Forbidden)';
+          this.toast.error('❌ Keine Berechtigung zum Anzeigen von Bestellungen');
+        } else {
+          this.error = err.error?.message || 'Fehler beim Laden der Bestellungen';
+          this.toast.error(`Fehler: ${this.error}`);
+        }
         this.orders = [];
       },
       complete: () => {
@@ -115,13 +130,10 @@ export class Orders implements OnInit {
    * Erstellt eine neue Bestellung.
    * Backend: POST /api/orders
    * Authorization: hasRole('ADMIN')
+   *
+   * HINWEIS: Frontend-Schutz entfernt - Backend entscheidet über Berechtigung
    */
   createOrder(): void {
-    if (!this.canCreateOrders) {
-      this.error = 'Keine Berechtigung zum Erstellen von Bestellungen. ADMIN-Rolle erforderlich!';
-      return;
-    }
-
     this.isLoadingSubject.next(true);
     this.error = null;
 
@@ -130,10 +142,18 @@ export class Orders implements OnInit {
         this.orders.unshift(order);
         this.showCreateForm = false;
         this.resetForm();
+        this.toast.success('✓ Bestellung erfolgreich erstellt!');
       },
       error: (err) => {
         console.error('[ERROR] Fehler beim Erstellen der Bestellung:', err);
-        this.error = err.error?.message || 'Fehler beim Erstellen der Bestellung';
+        // Bei 403 zeige spezifische Fehlermeldung
+        if (err.status === 403) {
+          this.error = 'Keine Berechtigung zum Erstellen von Bestellungen (403 Forbidden). ADMIN-Rolle erforderlich!';
+          this.toast.error('❌ Keine Berechtigung! ADMIN-Rolle erforderlich zum Erstellen von Bestellungen.');
+        } else {
+          this.error = err.error?.message || 'Fehler beim Erstellen der Bestellung';
+          this.toast.error(`Fehler: ${this.error}`);
+        }
       },
       complete: () => {
         this.isLoadingSubject.next(false);
@@ -145,13 +165,10 @@ export class Orders implements OnInit {
    * Löscht eine Bestellung.
    * Backend: DELETE /api/orders/{id}
    * Authorization: hasRole('ADMIN')
+   *
+   * HINWEIS: Frontend-Schutz entfernt - Backend entscheidet über Berechtigung
    */
   deleteOrder(id: string): void {
-    if (!this.canDeleteOrders) {
-      this.error = 'Keine Berechtigung zum Löschen von Bestellungen. ADMIN-Rolle erforderlich!';
-      return;
-    }
-
     if (!confirm('Bestellung wirklich löschen?')) {
       return;
     }
@@ -162,10 +179,18 @@ export class Orders implements OnInit {
     this.apiService.deleteOrder(id).subscribe({
       next: () => {
         this.orders = this.orders.filter(o => (o.ID || o.id) !== id);
+        this.toast.success('✓ Bestellung erfolgreich gelöscht!');
       },
       error: (err) => {
         console.error('[ERROR] Fehler beim Löschen der Bestellung:', err);
-        this.error = err.error?.message || 'Fehler beim Löschen der Bestellung';
+        // Bei 403 zeige spezifische Fehlermeldung
+        if (err.status === 403) {
+          this.error = 'Keine Berechtigung zum Löschen von Bestellungen (403 Forbidden). ADMIN-Rolle erforderlich!';
+          this.toast.error('❌ Keine Berechtigung! ADMIN-Rolle erforderlich zum Löschen von Bestellungen.');
+        } else {
+          this.error = err.error?.message || 'Fehler beim Löschen der Bestellung';
+          this.toast.error(`Fehler: ${this.error}`);
+        }
       },
       complete: () => {
         this.isLoadingSubject.next(false);

@@ -34,10 +34,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # These will be automatically populated via Service Binding in SAP BTP
-          # For local testing, you can set them here:
-          issuer-uri: ${IAS_ISSUER_URI:https://your-tenant.accounts.ondemand.com}
-          jwk-set-uri: ${IAS_JWKS_URI:https://your-tenant.accounts.ondemand.com/oauth2/certs}
+          issuer-uri: ${IAS_ISSUER_URI:https://al3kyocay.trial-accounts.ondemand.com}
+          jwk-set-uri: ${IAS_JWKS_URI:https://al3kyocay.trial-accounts.ondemand.com/oauth2/certs}
 
 # SAP CAP Configuration
 cds:
@@ -140,7 +138,7 @@ logging:
     customer.ba_backend_cap_ias: TRACE
 
 ---
-# Production Profile - Full SAP IAS Integration
+# Production Profile - SAP BTP Cloud Deployment mit SAP IAS
 spring:
   config.activate.on-profile: cloud
 
@@ -155,10 +153,25 @@ spring:
       mode: always
       schema-locations: classpath:schema-h2.sql
 
+  # OAuth2 Resource Server Configuration
+  # Die JWKS URI wird automatisch aus VCAP_SERVICES gelesen
+  # Fallback: Manuell konfigurieren falls nötig
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # XSUAA JWKS URI wird automatisch aus Service Binding gelesen
+          # Format: https://<subdomain>.authentication.<region>.hana.ondemand.com/token_keys
+          jwk-set-uri: ${vcap.services.ba-backend-cap-ias-xsuaa.credentials.url:https://ea92a7aatrial.authentication.us10.hana.ondemand.com}/token_keys
+
 cds:
   security:
+    # ARCHITEKTUR: XSUAA (Authorization) + SAP IAS (Identity)
+    # - XSUAA übernimmt OAuth2 Token Management und Scopes/Rollen
+    # - SAP IAS übernimmt User-Authentifizierung (via Trust in BTP)
+    # - Der App-Router leitet automatisch zur SAP IAS Login-Seite
     xsuaa:
-      enabled: false
+      enabled: true
     identity:
       enabled: true
     mock:
@@ -168,3 +181,4 @@ logging:
   level:
     root: WARN
     customer.ba_backend_cap_ias: INFO
+    com.sap.cloud.security: DEBUG

@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { ApiService, UserProfile } from '../../services/api.service';
+import {Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router, RouterModule} from '@angular/router';
+import {ApiService, UserProfile} from '../../services/api.service';
+import {environment} from '../../../environments/environment';
+import {ToastService} from '../../services/toast.service';
 
 /**
  * Dashboard-Component für BFF-Pattern.
@@ -22,9 +24,12 @@ import { ApiService, UserProfile } from '../../services/api.service';
 export class Dashboard implements OnInit {
   private apiService = inject(ApiService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+  private toast = inject(ToastService);
 
   userProfile: UserProfile | null = null;
   isAuthenticated = this.apiService.isAuthenticated();
+  isCloudMode = (environment as any).cloudMode || environment.production;
 
   isCognitoBackend = true;
   canViewOrders = false;
@@ -33,13 +38,15 @@ export class Dashboard implements OnInit {
 
   ngOnInit(): void {
     this.isCognitoBackend = this.apiService.isCognitoBackend();
+
     this.apiService.userProfile$.subscribe(profile => {
+      console.log('[DEBUG] Dashboard: userProfile$ Update erhalten:', profile);
       this.userProfile = profile;
       this.updatePermissions();
+      this.cdr.detectChanges();
     });
 
-    // In der Cloud: Lade Benutzerinfo falls nicht vorhanden
-    if (!this.userProfile && !this.isCognitoBackend) {
+    if (this.isCloudMode || !this.isCognitoBackend) {
       this.loadCloudUserInfo();
     }
   }
@@ -50,21 +57,35 @@ export class Dashboard implements OnInit {
   private loadCloudUserInfo(): void {
     this.apiService.fetchUserInfo().subscribe({
       next: (userInfo) => {
-        if (userInfo && userInfo.authenticated) {
-          // UserProfile manuell setzen
-          const profile = {
-            username: userInfo.username,
-            email: userInfo.email,
-            roles: userInfo.roles || []
+        console.log('[DEBUG] Cloud UserInfo erhalten:', userInfo);
+        if (userInfo) {
+          const profile: UserProfile = {
+            username: userInfo.username || userInfo.email || 'Unknown User',
+            email: userInfo.email || '',
+            roles: userInfo.roles || ['User']
           };
-          // Das wird über userProfile$ Observable verteilt
-          localStorage.setItem('userProfile', JSON.stringify(profile));
+
           this.userProfile = profile;
+          localStorage.setItem('userProfile', JSON.stringify(profile));
           this.updatePermissions();
+          this.cdr.detectChanges();
+
+          const rolesText = profile.roles.length > 0 ? profile.roles.join(', ') : 'Keine';
+          this.toast.success(`Willkommen ${profile.username}! Rollen: ${rolesText}`);
         }
       },
       error: (err) => {
-        console.log('[DEBUG] Cloud UserInfo nicht verfügbar:', err);
+        console.log('[DEBUG] Cloud UserInfo Fehler:', err);
+        this.toast.warning('Benutzerinfo konnte nicht geladen werden');
+        if (this.isCloudMode) {
+          this.userProfile = {
+            username: 'Cloud User',
+            email: '',
+            roles: ['User']
+          };
+          this.updatePermissions();
+          this.cdr.detectChanges();
+        }
       }
     });
   }
@@ -114,7 +135,8 @@ export class Dashboard implements OnInit {
    */
   logout(): void {
     this.apiService.logout().subscribe({
-      next: () => {},
+      next: () => {
+      },
       error: (error) => {
         console.error('Logout-Fehler:', error);
         this.router.navigate(['/login']);
@@ -129,5 +151,4 @@ export class Dashboard implements OnInit {
     this.router.navigate(['/orders']);
   }
 }
-
 

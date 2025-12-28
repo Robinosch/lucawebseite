@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard';
+import { environment } from '../environments/environment';
+
+const cloudMode = (environment as any).cloudMode || environment.production;
+const defaultRoute = cloudMode ? '/dashboard' : '/login';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: defaultRoute,
     pathMatch: 'full'
   },
   {
@@ -30,15 +34,15 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./components/dashboard/dashboard').then(m => m.Dashboard),
-    canActivate: [authGuard]
+    canActivate: cloudMode ? [] : [authGuard]
   },
   {
     path: 'orders',
     loadComponent: () => import('./components/orders/orders').then(m => m.Orders),
-    canActivate: [authGuard]
+    canActivate: cloudMode ? [] : [authGuard]
   },
   {
     path: '**',
-    redirectTo: '/login'
+    redirectTo: defaultRoute
   }
 ];

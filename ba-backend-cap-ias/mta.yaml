@@ -37,6 +37,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: ba-backend-cap-ias-xsuaa
+      - name: ba-backend-cap-ias-identity
       - name: ba-backend-cap-ias-destination
 
   # --------------------- APP ROUTER (Angular + Auth) ----------
@@ -59,6 +60,7 @@ modules:
           target-path: resources
     requires:
       - name: ba-backend-cap-ias-xsuaa
+      - name: ba-backend-cap-ias-identity
       - name: srv-api
         group: destinations
         properties:
@@ -84,7 +86,9 @@ modules:
       supported-platforms: []
 
 resources:
-  # --------------------- XSUAA SERVICE --------------------
+  # --------------------- XSUAA SERVICE (erforderlich für App-Router) ----
+  # Der App-Router braucht XSUAA für OAuth2 Token Management
+  # SAP IAS wird über Trust-Konfiguration im BTP Cockpit als Identity Provider eingebunden
   - name: ba-backend-cap-ias-xsuaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -94,12 +98,25 @@ resources:
       config:
         xsappname: ba-backend-cap-ias-${org}-${space}
         tenant-mode: dedicated
-        description: Bachelor Thesis SAP CAP Backend - XSUAA Service
+
+  # --------------------- SAP IAS (Identity Service) ----
+  # Wird über Trust-Konfiguration mit XSUAA verbunden
+  # Die Benutzer-Authentifizierung erfolgt über SAP IAS
+  - name: ba-backend-cap-ias-identity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: identity
+      service-plan: application
+      config:
+        display-name: BA-CAP-IAS-Bachelor-Thesis
         oauth2-configuration:
           redirect-uris:
-            - https://*.cfapps.eu10.hana.ondemand.com/**
             - https://*.cfapps.us10-001.hana.ondemand.com/**
-            - https://*.hana.ondemand.com/**
+            - https://*.cfapps.eu10.hana.ondemand.com/**
+          post-logout-redirect-uris:
+            - https://*.cfapps.us10-001.hana.ondemand.com/**
+        credential-types:
+          - binding-secret
 
   # --------------------- DESTINATION SERVICE --------------
   - name: ba-backend-cap-ias-destination

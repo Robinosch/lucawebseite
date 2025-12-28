@@ -17,8 +17,26 @@
       "csrfProtection": false
     },
     {
-      "source": "^(.*)$",
+      "source": "^/(.+\\.js)$",
       "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/(.+\\.css)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/(.+\\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "/index.html",
       "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa"
     }

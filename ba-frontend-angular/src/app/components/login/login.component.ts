@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ApiService, LoginRequest } from '../../services/api.service';
+import { environment } from '../../../environments/environment';
 
 /**
  * Login-Komponente mit BFF-Pattern (Backend-for-Frontend).
@@ -10,6 +11,11 @@ import { ApiService, LoginRequest } from '../../services/api.service';
  * - Username/Password-Eingabe
  * - Backend handhabt OAuth2/OIDC-Kommunikation mit IdP
  * - Frontend sendet nur Credentials an Backend
+ *
+ * CLOUD-MODUS (SAP BTP):
+ * - App Router handhabt Authentifizierung via XSUAA/SAP IAS
+ * - User ist bereits authentifiziert wenn er diese Seite erreicht
+ * - Kein Login-Formular nötig - direkter Redirect zum Dashboard
  */
 @Component({
   selector: 'app-login',
@@ -31,13 +37,26 @@ export class LoginComponent implements OnInit {
   errorMessage: string = '';
   returnUrl: string = '/dashboard';
 
+  isCloudMode: boolean = (environment as any).cloudMode || environment.production;
+
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
 
+    // Cloud-Modus: Kein Login-Formular nötig - XSUAA/SAP IAS übernimmt Authentifizierung
+    if (this.isCloudMode) {
+      console.log('[CLOUD] Cloud-Modus erkannt - leite zum Dashboard weiter');
+      // Im Cloud-Modus ist der User bereits über XSUAA authentifiziert
+      // App Router hat die Authentifizierung bereits durchgeführt
+      this.router.navigate([this.returnUrl]);
+      return;
+    }
+
+    // Lokal: Prüfe ob bereits eingeloggt
     if (this.apiService.isAuthenticated()) {
       this.router.navigate([this.returnUrl]);
     }
   }
+
 
   /**
    * Login-Handler: Sendet Credentials an Backend
