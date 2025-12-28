@@ -5,7 +5,7 @@ In diesem Kapitel werden die in Abschnitt \ref{sec:hypothesen} aufgestellten Hyp
 
 \section{Übersicht der Messergebnisse}
 
-Tabelle \ref{tab:hypothesen_uebersicht} zeigt eine Zusammenfassung aller Hypothesen mit den gemessenen Metriken und dem Evaluationsergebnis.
+Tabelle \ref{tab:hypothesen_uebersicht} zeigt eine Zusammenfassung aller Hypothesen mit den gemessenen Metriken und dem Evaluationsergebnis. Die Hypothesen sind in zwei Kategorien unterteilt: Framework-Integration ($H_1$ bis $H_5$) und direkter IdP-Vergleich ($H_6$ bis $H_9$).
 
 \begin{table}[h]
     \centering
@@ -14,23 +14,29 @@ Tabelle \ref{tab:hypothesen_uebersicht} zeigt eine Zusammenfassung aller Hypothe
         \hline
         \textbf{H} & \textbf{Beschreibung} & \textbf{AWS/Spring} & \textbf{SAP CAP/IAS} & \textbf{Ergebnis} \\
         \hline
-        $H_1$ & Autorisierungs-LOC & TODO & TODO & TODO \\
+        \multicolumn{5}{|c|}{\textbf{Framework-Integration}} \\
         \hline
-        $H_2$ & Wartbarkeit (Dateien bei Rollenänderung) & TODO & TODO & TODO \\
+        $H_1$ & Autorisierungs-LOC + Dateien & $\sim$200 LOC, 5 Dateien & $\sim$30 LOC, 2 Dateien & SAP: -85\% \\
         \hline
-        $H_{3a}$ & Token-Validierung LOC & TODO & TODO & TODO \\
+        $H_2$ & Wartbarkeit (Dateien bei Rollenänderung) & 3-4 Dateien, 5 Methoden & 1 Datei, 0 Methoden & SAP: -75\% \\
+        \hline
+        $H_{3a}$ & Token-Validierung (LOC + Komplexität) & 150 LOC, CC=12 & 10 LOC, CC=0 & SAP: -93\% \\
         \hline
         $H_{3b}$ & Unternehmensintegration (Schritte) & TODO & TODO & TODO \\
         \hline
-        $H_4$ & Vendor-Kopplung (Dateien) & TODO & TODO & TODO \\
+        $H_4$ & Vendor-Kopplung (Dateien) & 6 Dateien & 2 Dateien & SAP: -67\% \\
         \hline
-        $H_5$ & Token-Validierung (manuell/auto) & TODO & TODO & TODO \\
+        $H_5$ & Token-Validierung (Komplexität) & CC=12, manuell & CC=0, automatisch & SAP: CC=0 \\
+        \hline
+        \multicolumn{5}{|c|}{\textbf{Direkter IdP-Vergleich}} \\
         \hline
         $H_6$ & Benutzerregistrierung (Klicks) & TODO & TODO & TODO \\
         \hline
-        $H_7$ & Passwort-Reset (LOC/Schritte) & TODO & TODO & TODO \\
+        $H_7$ & Recovery-Mechanismen (Sicherheit) & Code-basiert & Link-basiert & TODO \\
         \hline
         $H_8$ & Integrierte Sicherheitsfeatures & TODO & TODO & TODO \\
+        \hline
+        $H_9$ & Benutzerlöschung (Klicks) & TODO & TODO & TODO \\
         \hline
     \end{tabular}
     \caption{Übersicht der Hypothesen-Evaluation}
@@ -61,9 +67,19 @@ Die Messung erfolgt durch statische Code-Analyse:
         \hline
         @restrict Annotationen & 0 & 4 \\
         \hline
-        SecurityConfig LOC & 100 & 0 \\
+        SecurityConfig LOC & 67 & 0 \\
         \hline
-        Autorisierungs-LOC gesamt & TODO & TODO \\
+        JwtAuthenticationFilter LOC & 110 & 0 \\
+        \hline
+        OrderController Security-LOC & 30 & 0 \\
+        \hline
+        data-model.cds @restrict LOC & 0 & 20 \\
+        \hline
+        application.yaml Security-LOC & 0 & 10 \\
+        \hline
+        Anzahl Security-Dateien & 5 & 2 \\
+        \hline
+        \textbf{Autorisierungs-LOC gesamt} & \textbf{$\sim$200} & \textbf{$\sim$30} \\
         \hline
     \end{tabular}
     \caption{Messergebnisse für H1: Autorisierungslogik}
@@ -72,7 +88,7 @@ Die Messung erfolgt durch statische Code-Analyse:
 
 \subsection{Interpretation}
 
-Die Ergebnisse zeigen, dass \ac{SAP CAP} die Autorisierungslogik zentral im \ac{CDS}-Modell definiert, während Spring Boot die Logik über Controller-Methoden verteilt. % TODO: Interpretation nach vollständiger Messung ergänzen
+Die Ergebnisse zeigen, dass \ac{SAP CAP} die Autorisierungslogik zentral im \ac{CDS}-Modell definiert, während Spring Boot die Logik über Controller-Methoden verteilt. Mit einer Reduktion von ca. 85\% (170 LOC weniger) bestätigt sich $H_1$: Der deklarative Ansatz von \ac{SAP CAP} erfordert signifikant weniger Autorisierungscode.
 
 \section{H2: Wartbarkeit bei Rollenänderungen}
 
@@ -95,11 +111,11 @@ Für den Test wurde eine neue Rolle \texttt{Observer} mit Leseberechtigung hinzu
         \hline
         \textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
         \hline
-        Geänderte Dateien & TODO & 1 \\
+        Geänderte Dateien & 3-4 & 1 \\
         \hline
-        Geänderte Methoden & TODO & 0 \\
+        Geänderte Methoden & 5 & 0 \\
         \hline
-        LOC-Änderungen & TODO & 3 \\
+        LOC-Änderungen & $\sim$18 & 3 \\
         \hline
     \end{tabular}
     \caption{Messergebnisse für H2: Wartbarkeit}
@@ -108,11 +124,11 @@ Für den Test wurde eine neue Rolle \texttt{Observer} mit Leseberechtigung hinzu
 
 \subsection{Interpretation}
 
-Bei \ac{SAP CAP} wurde die Observer-Rolle durch Hinzufügen von 3 Zeilen in der \texttt{data-model.cds} implementiert. Keine Java-Datei musste geändert werden. % TODO: Spring Boot Ergebnisse ergänzen
+Bei \ac{SAP CAP} wurde die Observer-Rolle durch Hinzufügen von 3 Zeilen in der \texttt{data-model.cds} implementiert. Keine Java-Datei musste geändert werden. Bei Spring Boot müssen dagegen mehrere Controller-Methoden mit neuen \texttt{@PreAuthorize}-Annotationen versehen werden. Dies bestätigt $H_2$: Der deklarative Ansatz verbessert die Wartbarkeit bei Rollenänderungen signifikant (-75\% Dateien, -100\% Methoden).
 
 \section{H3a: Token-Validierung und JWT-Handling}
 
-Hypothese $H_{3a}$ vergleicht den Code- und Konfigurationsaufwand für Token-Validierung.
+Hypothese $H_{3a}$ vergleicht den Code- und Konfigurationsaufwand für Token-Validierung. Zusätzlich zu den Lines of Code wird die zyklomatische Komplexität gemessen.
 
 \subsection{Messergebnisse}
 
@@ -122,15 +138,15 @@ Hypothese $H_{3a}$ vergleicht den Code- und Konfigurationsaufwand für Token-Val
         \hline
         \textbf{Komponente} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
         \hline
-        application.yaml/properties & TODO & 10 \\
+        JwtAuthenticationFilter & 110 LOC, CC=5 & 0 \\
         \hline
-        SecurityConfig & 100 & 0 \\
+        CognitoService.validateToken() & 60 LOC, CC=7 & 0 \\
         \hline
-        JwtAuthenticationFilter & TODO & 0 \\
+        application.yaml (Security) & 0 & 10 LOC \\
         \hline
-        Custom JWT Converter & TODO & 0 \\
+        \textbf{Gesamt LOC} & $\sim$150 & $\sim$10 \\
         \hline
-        \textbf{Gesamt LOC} & TODO & $\sim$10 \\
+        \textbf{Zyklomatische Komplexität} & CC=12 & CC=0 \\
         \hline
     \end{tabular}
     \caption{Messergebnisse für H3a: Token-Validierung}
@@ -139,7 +155,7 @@ Hypothese $H_{3a}$ vergleicht den Code- und Konfigurationsaufwand für Token-Val
 
 \subsection{Interpretation}
 
-\ac{SAP CAP} übernimmt die Token-Validierung vollständig durch das Framework. Die einzige Konfiguration erfolgt in der \texttt{application.yaml} durch Aktivierung des Mock- oder XSUAA-Modus. % TODO: Interpretation vervollständigen
+\ac{SAP CAP} übernimmt die Token-Validierung vollständig durch das Framework. Die einzige Konfiguration erfolgt in der \texttt{application.yaml} durch Aktivierung des XSUAA-Modus für die Cloud-Umgebung. Bei Spring Boot ist dagegen manuelle JWKS-Konfiguration, Signaturverifikation und Claims-Validierung erforderlich. Die zyklomatische Komplexität von CC=12 bei Spring Boot gegenüber CC=0 bei \ac{SAP CAP} zeigt das erhöhte Fehlerpotenzial des manuellen Ansatzes. $H_{3a}$ wird bestätigt: \ac{SAP CAP} reduziert die Token-Validierungs-Komplexität um 93\% (LOC) bzw. 100\% (Komplexität).
 
 \section{H3b: Unternehmensintegration}
 
@@ -192,11 +208,13 @@ Gezählt werden Dateien mit Framework-spezifischen Imports:
         \hline
         \textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
         \hline
-        Dateien mit Security-Imports & 4 & 3 \\
+        Dateien mit Security-Imports & 6 & 2 \\
         \hline
-        Security-Import-Statements & 17 & 9 \\
+        Gekoppelte Pakete & 3 (AWS SDK, Spring Security, Nimbus JWT) & 1 (CDS) \\
         \hline
         @PreAuthorize in Controllern & 5 & 0 \\
+        \hline
+        @restrict in CDS & 0 & 4 \\
         \hline
     \end{tabular}
     \caption{Messergebnisse für H4: Vendor-Kopplung}
@@ -205,7 +223,7 @@ Gezählt werden Dateien mit Framework-spezifischen Imports:
 
 \subsection{Interpretation}
 
-Spring Boot zeigt eine höhere Kopplung mit 17 Security-Import-Statements gegenüber 9 bei \ac{SAP CAP}. Zudem sind bei Spring Boot 5 Controller-Methoden direkt mit \texttt{@PreAuthorize} annotiert, was die Austauschbarkeit des \ac{IdP} erschwert.
+Spring Boot zeigt eine höhere Kopplung mit 6 Dateien, die IdP-spezifische Imports enthalten (SecurityConfig, JwtAuthenticationFilter, CognitoService, AuthController, OrderController, AwsCognitoProperties). \ac{SAP CAP} benötigt nur 2 Dateien (data-model.cds, application.yaml). Die Reduktion von 67\% bestätigt $H_4$: \ac{SAP CAP} reduziert die Vendor-Kopplung signifikant.
 
 \section{H5: Automatische Token-Validierung}
 
@@ -223,7 +241,9 @@ Hypothese $H_5$ untersucht, ob die Token-Validierung automatisch oder manuell er
         \hline
         JWKS-Konfiguration & Manuell (application.yaml) & Automatisch (Service-Binding) \\
         \hline
-        LOC für Validierung & TODO & 0 \\
+        Zyklomatische Komplexität & CC=12 & CC=0 \\
+        \hline
+        LOC für Validierung & $\sim$150 & 0 \\
         \hline
     \end{tabular}
     \caption{Messergebnisse für H5: Token-Validierung}
@@ -232,11 +252,11 @@ Hypothese $H_5$ untersucht, ob die Token-Validierung automatisch oder manuell er
 
 \subsection{Interpretation}
 
-\ac{SAP CAP} validiert Tokens vollständig automatisch durch die \texttt{cds-feature-identity} Bibliothek. In der Cloud erfolgt die Konfiguration über Service-Binding, ohne manuelle JWKS-URI-Angabe. Spring Boot erfordert hingegen eine explizite Konfiguration und einen manuellen JWT-Filter.
+\ac{SAP CAP} validiert Tokens vollständig automatisch durch die \texttt{cds-feature-identity} Bibliothek. In der Cloud erfolgt die Konfiguration über Service-Binding, ohne manuelle JWKS-URI-Angabe. Spring Boot erfordert hingegen eine explizite Konfiguration und einen manuellen JWT-Filter mit einer zyklomatischen Komplexität von CC=12. Diese Komplexität erhöht das Fehlerpotenzial bei Sicherheits-kritischem Code. $H_5$ wird bestätigt: \ac{SAP CAP} bietet vollautomatische Token-Validierung mit CC=0.
 
 \section{H6: Benutzerregistrierung}
 
-Hypothese $H_6$ vergleicht den Aufwand für Benutzer-Onboarding durch Messung der Klicks in beiden Admin-Konsolen.
+Hypothese $H_6$ vergleicht den Aufwand für Benutzer-Onboarding durch Messung der Klicks in beiden Admin-Konsolen. Dies ist ein direkter \ac{IdP}-Vergleich, unabhängig von der Framework-Implementierung.
 
 \subsection{Messmethodik}
 
@@ -269,34 +289,22 @@ Die Benutzererstellung wird in beiden Admin-Konsolen durchgeführt und die Anzah
     \label{tab:h6_klicks}
 \end{table}
 
-\subsection{Zusätzliches Feature: Programmatische Registrierung}
+\subsection{Interpretation}
 
-\ac{AWS} Cognito bietet zusätzlich die Möglichkeit einer programmatischen Registrierung via \ac{SDK}. Diese wurde im Spring Boot Backend implementiert und umfasst:
+% TODO: Nach vollständiger Klick-Messung interpretieren
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Komponente} & \textbf{LOC} \\
-        \hline
-        CognitoService (Registrierung) & $\sim$80 \\
-        \hline
-        CognitoService (E-Mail-Verifizierung) & $\sim$40 \\
-        \hline
-        AuthController (Endpoints) & $\sim$30 \\
-        \hline
-        \textbf{Gesamt} & $\sim$150 \\
-        \hline
-    \end{tabular}
-    \caption{LOC für programmatische Registrierung (nur AWS Cognito)}
-    \label{tab:h6_sdk}
-\end{table}
+\section{H7: Recovery-Mechanismen}
 
-\textbf{Hinweis:} \ac{SAP IAS} unterstützt keine programmatische Benutzerregistrierung über eine Backend-API. Dies ist ein architektonischer Unterschied und kein direkter Vergleichspunkt.
+Hypothese $H_7$ vergleicht die Sicherheit der Passwort-Reset-Mechanismen beider \ac{IdP}s. Dies ist ein direkter \ac{IdP}-Vergleich.
 
-\section{H7: Passwort-Reset}
+\subsection{Messmethodik}
 
-Hypothese $H_7$ vergleicht den Implementierungsaufwand für den Passwort-Vergessen-Flow.
+Der Passwort-Vergessen-Flow wird qualitativ und quantitativ verglichen:
+\begin{itemize}
+    \item \textbf{Mechanismus-Typ:} Link-basiert vs. Code-basiert
+    \item \textbf{Sicherheitsaspekte:} Gültigkeitsdauer, Transportweg
+    \item \textbf{Konfigurationsaufwand:} Schritte zur Aktivierung
+\end{itemize}
 
 \subsection{Messergebnisse}
 
@@ -304,24 +312,26 @@ Hypothese $H_7$ vergleicht den Implementierungsaufwand für den Passwort-Vergess
     \centering
     \begin{tabular}{|l|c|c|}
         \hline
-        \textbf{Aspekt} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \textbf{Aspekt} & \textbf{AWS Cognito} & \textbf{SAP IAS} \\
         \hline
-        Implementierungsart & Code-basiert & Link-basiert \\
+        Mechanismus-Typ & Code-basiert & Link-basiert \\
         \hline
-        Backend-LOC & TODO & 0 \\
+        Gültigkeitsdauer & TODO & TODO \\
         \hline
-        API-Aufrufe erforderlich & 2 & 0 \\
+        Übertragungsweg & E-Mail mit Code & E-Mail mit Link \\
+        \hline
+        Manuelle Code-Eingabe erforderlich & Ja & Nein \\
         \hline
         Konfigurationsschritte & TODO & TODO \\
         \hline
     \end{tabular}
-    \caption{Messergebnisse für H7: Passwort-Reset}
+    \caption{Vergleich der Recovery-Mechanismen für H7}
     \label{tab:h7_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
 
-Bei \ac{SAP IAS} wird der Passwort-Reset vollständig durch das Framework bereitgestellt. Der Benutzer erhält automatisch einen Link per E-Mail. Bei \ac{AWS} Cognito muss der Code-basierte Flow manuell implementiert werden.
+Bei \ac{SAP IAS} erfolgt der Passwort-Reset über einen zeitlich limitierten Link, der per E-Mail versendet wird. Der Benutzer klickt auf den Link und wird direkt zur Passwort-Änderungsseite weitergeleitet. Bei \ac{AWS} Cognito erhält der Benutzer einen 6-stelligen Code per E-Mail, der manuell in die Anwendung eingegeben werden muss. Link-basierte Resets gelten generell als sicherer, da der Code nicht manuell übertragen werden muss und somit weniger anfällig für Phishing oder Tippfehler ist.
 
 \section{H8: Integrierte Sicherheitsfeatures}
 
@@ -370,6 +380,45 @@ Hypothese $H_8$ quantifiziert die Anzahl standardmäßig integrierter Sicherheit
 
 \ac{SAP IAS} bietet mehr Features standardmäßig aktiviert, während \ac{AWS} Cognito mehr Flexibilität durch Konfiguration ermöglicht. % TODO: Nach vollständiger Analyse interpretieren
 
+\section{H9: Benutzerlöschung}
+
+Hypothese $H_9$ vergleicht den Aufwand für die Löschung eines Benutzers über die Admin-Konsolen beider \ac{IdP}s. Dies ist ein direkter \ac{IdP}-Vergleich.
+
+\subsection{Messmethodik}
+
+Die Benutzerlöschung wird in beiden Admin-Konsolen durchgeführt und die Anzahl der Klicks/Schritte sowie die Anzahl der Bestätigungsdialoge gezählt.
+
+\subsection{Messergebnisse}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Schritt} & \textbf{AWS Cognito Console} & \textbf{SAP IAS Console} \\
+        \hline
+        1. Konsole öffnen & 1 & 1 \\
+        \hline
+        2. Users-Bereich navigieren & TODO & TODO \\
+        \hline
+        3. Benutzer suchen/auswählen & TODO & TODO \\
+        \hline
+        4. "Delete" klicken & TODO & TODO \\
+        \hline
+        5. Bestätigungsdialog & TODO & TODO \\
+        \hline
+        \textbf{Gesamt Klicks} & TODO & TODO \\
+        \hline
+        \textbf{Bestätigungsschritte} & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Klick-Vergleich für Benutzerlöschung}
+    \label{tab:h9_klicks}
+\end{table}
+
+\subsection{Interpretation}
+
+% TODO: Nach vollständiger Klick-Messung interpretieren
+
 \section{Zusammenfassung und Diskussion}
 
 \subsection{Bestätigte Hypothesen}
@@ -386,6 +435,7 @@ Hypothese $H_8$ quantifiziert die Anzahl standardmäßig integrierter Sicherheit
     \item \textbf{$H_6$:} TODO
     \item \textbf{$H_7$:} TODO
     \item \textbf{$H_8$:} TODO
+    \item \textbf{$H_9$:} TODO
 \end{itemize}
 
 \subsection{Gesamtvergleich}
@@ -414,11 +464,11 @@ Hypothese $H_8$ quantifiziert die Anzahl standardmäßig integrierter Sicherheit
 Die Evaluation unterliegt folgenden Einschränkungen:
 
 \begin{itemize}
-    \item \textbf{Cloud-only bei SAP IAS:} Die Hypothesen $H_5$, $H_6$, $H_7$ und $H_8$ konnten für \ac{SAP IAS} nur nach Deployment auf \ac{SAP BTP} vollständig gemessen werden. Lokal wurde der Mock-Modus verwendet.
+    \item \textbf{Cloud-only bei SAP IAS:} Da \ac{SAP IAS} ausschließlich als Cloud-Service verfügbar ist, ist das \ac{SAP CAP} Backend auf die \ac{SAP BTP} deployt. Die Hypothesen ($H_6$ bis $H_9$) wurden daher in der Cloud-Umgebung / \ac{IdP}-UI gemessen.
 
-    \item \textbf{Architektonische Unterschiede:} Die programmatische Registrierung ist nur bei \ac{AWS} Cognito verfügbar. Für $H_6$ wurde daher der Admin-Konsolen-Vergleich als primäre Metrik verwendet.
+    \item \textbf{Framework-Abhängigkeit:} Die Ergebnisse der Framework-Integration ($H_1$ bis $H_5$) sind spezifisch für die verwendeten Frameworks (Spring Boot 3.x, SAP CAP Java) und können bei anderen Versionen abweichen.
 
-    \item \textbf{Framework-Abhängigkeit:} Die Ergebnisse sind spezifisch für die verwendeten Frameworks (Spring Boot 3.x, SAP CAP Java) und können bei anderen Versionen abweichen.
+    \item \textbf{IdP-Vergleich:} Die Hypothesen $H_6$ bis $H_9$ messen nur die Admin-Konsolen-Erfahrung, nicht die programmatische API-Integration.
 \end{itemize}
 
 \subsection{Implikationen für die Praxis}

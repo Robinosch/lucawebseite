@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 /**
  * Order Entity for demonstrating role-based access control.
- * Used for hypothesis testing H1, H2, H4.
+ * Relevant für Hypothesentests H1 (Autorisierungs-LOC), H2 (Wartbarkeit), H4 (Vendor-Kopplung).
  */
 @Entity
 @Table(name = "orders")

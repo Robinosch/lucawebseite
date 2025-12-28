@@ -13,15 +13,16 @@ import java.time.LocalDateTime;
  * This application demonstrates AWS Cognito integration for a Bachelor Thesis
  * comparing AWS Cognito vs. SAP IAS.
  * 
- * Measured Hypotheses:
+ * Measured Hypotheses (Framework-Integration):
  * - H1: Security implementation complexity (Lines of Code) - IMPERATIVE approach
  * - H2: Role-based authorization maintainability (distributed @PreAuthorize)
- * - H3a: Time-to-First-Token (Setup + Configuration)
+ * - H3a: Token-Validierung LOC und zyklomatische Komplexität
  * - H4: Security coupling (dependency analysis across files)
  * - H5: Token validation complexity (manual JWKS configuration)
- * - H6: Registration flow implementation effort (manual AWS SDK integration)
- * - H7: Password reset security (AWS Cognito features + manual implementation)
- * 
+ *
+ * IdP-Hypothesen (in Admin-Konsole gemessen):
+ * - H6-H9: Benutzerregistrierung, Recovery, Features, Löschung (in AWS Console)
+ *
  * CRITICAL DIFFERENCE vs. SAP CAP:
  * - AWS Cognito: IMPERATIVE security (@PreAuthorize on every method)
  * - SAP CAP: DECLARATIVE security (CDS @restrict annotations)
@@ -40,31 +41,16 @@ public class BaBackendSpringCognitoApplication {
         log.info("Identity Provider: AWS Cognito User Pool");
         log.info("Security Model: IMPERATIVE (@PreAuthorize Annotations)");
         log.info("");
-        log.info("Measuring Hypotheses:");
-        log.info("  H1: Security Code Lines (Expected: 30-50 lines distributed)");
+        log.info("Measuring Hypotheses (Framework-Integration):");
+        log.info("  H1: Security Code Lines (Autorisierungs-LOC)");
         log.info("  H2: Maintainability (Distributed @PreAuthorize)");
-        log.info("  H3a: Setup Time & Time-to-First-Token");
-        log.info("  H4: Security Coupling (Expected: 5-8 files with AWS imports)");
+        log.info("  H3a: Token-Validierung LOC + zyklomatische Komplexität");
+        log.info("  H4: Security Coupling (Vendor-Abhängigkeit)");
         log.info("  H5: Token Validation (Manual JWKS Configuration)");
-        log.info("  H6: Registration Flow (Manual AWS SDK Implementation)");
-        log.info("  H7: Password Reset Security (AWS Cognito Features)");
+        log.info("  H6-H9: IdP-Hypothesen (in AWS Console gemessen)");
         log.info("==========================================================");
         
         SpringApplication.run(BaBackendSpringCognitoApplication.class, args);
-        
-        log.info("==========================================================");
-        log.info("AWS COGNITO BACKEND STARTED SUCCESSFULLY");
-        log.info("Server running on port: 8081");
-        log.info("H2 Console: http://localhost:8081/h2-console");
-        log.info("Metrics Endpoint: http://localhost:8081/api/metrics/report");
-        log.info("");
-        log.info("Key Differences vs. SAP CAP:");
-        log.info("  - IMPERATIVE security (@PreAuthorize on every method)");
-        log.info("  - MANUAL JWT validation configuration (JWKS URI)");
-        log.info("  - DISTRIBUTED security checks (across 5-8 files)");
-        log.info("  - MANUAL AWS SDK integration (SignUp, ForgotPassword, etc.)");
-        log.info("  - PARTIAL rate-limiting (needs manual implementation)");
-        log.info("==========================================================");
     }
 }
 

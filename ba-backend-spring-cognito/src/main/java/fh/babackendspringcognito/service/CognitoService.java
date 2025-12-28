@@ -37,13 +37,15 @@ import java.util.Map;
 
 /**
  * AWS Cognito Service for authentication and registration.
- * CRITICAL for hypothesis testing:
- * - H3a: Code & Configuration for Token Validation & JWT Handling (measured in MetricsService)
- * - H5: Manual JWT token validation
- * - H6: Registration flow complexity
- * - H7: Password reset flow
+ * Relevant für Framework-Hypothesen:
+ * - H3a: Token-Validierung LOC und zyklomatische Komplexität
+ * - H5: Manuelle JWT Token-Validierung (CC=12)
  *
- * Lines of Code for H5 Token Validation: ~150 lines (manual JWKS validation)
+ * Hinweis: H6-H9 sind IdP-Hypothesen und werden in der AWS Console gemessen.
+ * Die programmatische Registrierung ist ein zusätzliches Feature gegenüber SAP IAS.
+ *
+ * Lines of Code für Token Validation: ~150 Zeilen (manuelle JWKS-Validierung)
+ * Zyklomatische Komplexität: CC=12
  */
 @Slf4j
 @Service
@@ -55,9 +57,8 @@ public class CognitoService {
     private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
 
     /**
-     * Register a new user in AWS Cognito.
-     * Measures H6 - Registration Flow Complexity.
-     * Steps counted: 1) Build request, 2) Calculate secret hash, 3) Call Cognito API, 4) Handle response.
+     * Register a new user in AWS Cognito via SDK.
+     * Programmatische Registrierung - zusätzliches Feature gegenüber SAP IAS.
      */
     public void registerUser(RegistrationRequest request) {
         long startTime = System.currentTimeMillis();
@@ -340,7 +341,7 @@ public class CognitoService {
 
     /**
      * Verify user email with confirmation code.
-     * H6 CRITICAL: Email verification endpoint for registration flow.
+     * Teil der programmatischen Registrierung via AWS SDK.
      *
      * @param username Username to verify
      * @param code 6-digit verification code sent to user's email
@@ -383,7 +384,7 @@ public class CognitoService {
 
     /**
      * Resend verification code to user's email.
-     * H6: Improves UX for registration flow.
+     * Teil der programmatischen Registrierung via AWS SDK.
      *
      * @param email Email address to resend code to
      */

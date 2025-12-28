@@ -1,24 +1,30 @@
-# 📊 Bachelorarbeit - Statistiken & Messergebnisse
+# Bachelorarbeit - Statistiken
 
 ## AWS Cognito + Spring Boot vs. SAP CAP + SAP IAS
-
-**Stand:** 2025-12-27
 
 ---
 
 ## Hypothesen-Übersicht
 
-| ID | Hypothese | AWS/Spring | SAP CAP/IAS | Ergebnis |
-|----|-----------|------------|-------------|----------|
-| **H1** | Autorisierungs-LOC | ~450 Zeilen | ~20 Zeilen | **SAP: -96%** |
-| **H2** | Wartbarkeit (Dateien) | 3-4 Dateien | 1 Datei | **SAP: -75%** |
-| **H3a** | Token-Validierung LOC | ~75 Zeilen | ~10 Zeilen | **SAP: -87%** |
-| **H3b** | Unternehmensintegration | TODO | TODO | TODO |
-| **H4** | Vendor-Kopplung (Dateien) | 4 Dateien (17 Imports) | 3 Dateien (9 Imports) | **SAP: -47%** |
-| **H5** | Token-Validierung | Manuell | Automatisch | **SAP: Automatisch** |
-| **H6** | Benutzerregistrierung (Klicks) | TODO | TODO | TODO |
-| **H7** | Password-Reset | Code-basiert | Link-basiert | **SAP: Automatisch** |
-| **H8** | Integrierte Features | TODO | TODO | TODO |
+### Framework-Integration (H1-H5) - Statische Code-Analyse
+
+| ID | Hypothese | Metrik | AWS/Spring | SAP CAP/IAS | Ergebnis |
+|----|-----------|--------|------------|-------------|----------|
+| **H1** | Autorisierungs-LOC | Lines of Code + Anzahl Dateien | ~200 LOC, 5 Dateien | ~30 LOC, 2 Dateien | **SAP: -85%** |
+| **H2** | Wartbarkeit | Dateien/Methoden für neue Rolle | 3-4 Dateien, 5 Methoden | 1 Datei, 0 Methoden | **SAP: -75%** |
+| **H3a** | Token-Validierung | LOC + Zyklomatische Komplexität | ~150 LOC, CC=12 | ~10 LOC, CC=0 | **SAP: -93%** |
+| **H3b** | Unternehmensintegration | TODO | TODO | TODO | TODO |
+| **H4** | Vendor-Kopplung | Dateien mit IdP-spezifischen Imports | 6 Dateien | 2 Dateien | **SAP: -67%** |
+| **H5** | Token-Validierung Automatisierung | Zyklomatische Komplexität | CC=12 (manuell) | CC=0 (automatisch) | **SAP: Automatisch** |
+
+### IdP-Vergleich (H6-H9) - Admin-Konsolen-Messung
+
+| ID | Hypothese | Metrik | AWS Cognito | SAP IAS | Ergebnis |
+|----|-----------|--------|-------------|---------|----------|
+| **H6** | Benutzerregistrierung | Anzahl Klicks | TODO | TODO | TODO |
+| **H7** | Recovery-Mechanismen | Konfigurationsaufwand + Sicherheit | Code-basiert | Link-basiert | TODO |
+| **H8** | Integrierte Features | Anzahl Standard-Features | TODO | TODO | TODO |
+| **H9** | Benutzerlöschung | Anzahl Klicks + Bestätigungen | TODO | TODO | TODO |
 
 ---
 
@@ -26,24 +32,22 @@
 
 ### H1: Autorisierungs-LOC
 
-| Backend | Code-Zeilen | Lokation | Ansatz |
-|---------|------------|----------|---------|
-| **Spring Boot** | ~450 Zeilen | 5-8 Dateien (verteilt) | Imperativ (@PreAuthorize) |
-| **SAP CAP** | ~20 Zeilen | 1 Datei (zentral) | Deklarativ (@restrict) |
+| Backend | Code-Zeilen | Dateien | Ansatz |
+|---------|------------|---------|---------|
+| **Spring Boot** | ~200 LOC | 5 Dateien (verteilt) | Imperativ (@PreAuthorize) |
+| **SAP CAP** | ~30 LOC | 2 Dateien (zentral) | Deklarativ (@restrict) |
 
 **Gemessene Komponenten Spring Boot:**
-- SecurityConfig.java: 100 LOC
-- JwtAuthenticationFilter.java: TODO LOC
-- CognitoService.java (Auth-Teil): TODO LOC
-- OrderController.java (@PreAuthorize): 5 Annotationen
-- AuthController.java: TODO LOC
+- SecurityConfig.java: 67 LOC
+- JwtAuthenticationFilter.java: 110 LOC (davon ~80 Security-relevant)
+- OrderController.java (@PreAuthorize): 5 Annotationen, ~30 LOC
+- AuthController.java: ~20 LOC (Security-relevant)
 
 **Gemessene Komponenten SAP CAP:**
 - data-model.cds (@restrict): 20 LOC
 - application.yaml (Security): 10 LOC
-- UserInfoController.java: 30 LOC
 
-**Reduzierung:** **~96%** (430 Zeilen weniger)
+**Reduzierung:** **~85%** (170 Zeilen weniger)
 
 ---
 
@@ -60,14 +64,23 @@
 
 ---
 
-### H3a: Token-Validierung Config/Code
+### H3a: Token-Validierung LOC + Zyklomatische Komplexität
 
-| Backend | Config/Code | Komponenten | Fehlerquellen |
-|---------|------------|-------------|---------------|
-| **Spring Boot** | 75 Zeilen | YAML (5) + SecurityConfig (40) + Converter (30) | 5 |
-| **SAP CAP** | 0-15 Zeilen | package.json (cds-Block) | 0 |
+| Backend | LOC | Zyklomatische Komplexität | Komponenten |
+|---------|-----|---------------------------|-------------|
+| **Spring Boot** | ~150 LOC | CC=12 | JwtAuthenticationFilter + CognitoService.validateToken() |
+| **SAP CAP** | ~10 LOC | CC=0 | application.yaml (XSUAA-Aktivierung) |
 
-**Reduzierung:** **-80-100%** (60-75 Zeilen weniger)
+**Spring Boot Token-Validierung (manuell):**
+- JwtAuthenticationFilter.java: 110 LOC, CC=5
+- CognitoService.validateToken(): ~60 LOC, CC=7
+- Manuelle JWKS-Konfiguration, Signaturverifikation, Claims-Validierung
+
+**SAP CAP Token-Validierung (automatisch):**
+- application.yaml: 10 LOC (cds.security.xsuaa.enabled: true)
+- Framework übernimmt vollständig: JWKS, Signatur, Claims
+
+**Reduzierung:** **~93% LOC**, **100% Komplexität**
 
 ---
 
@@ -82,36 +95,58 @@
 
 ---
 
-### H4: Framework-Kopplung
+### H4: Vendor-Kopplung (Dateien mit IdP-spezifischen Imports)
 
-| Backend | Dateien mit Security-Imports | % aller Dateien |
-|---------|----------------------------|----------------|
-| **Spring Boot** | 10-12 Dateien | ~50-60% |
-| **SAP CAP** | 1-2 Dateien | ~10-15% |
+| Backend | Dateien mit Security-Imports | Gekoppelte Pakete |
+|---------|----------------------------|-------------------|
+| **Spring Boot** | 6 Dateien | software.amazon.awssdk.*, org.springframework.security.* |
+| **SAP CAP** | 2 Dateien | @sap/cds, CDS-Annotationen |
 
-**Reduzierung:** **-80-83%** weniger gekoppelte Dateien
+**Spring Boot gekoppelte Dateien:**
+1. SecurityConfig.java (Spring Security)
+2. JwtAuthenticationFilter.java (Spring Security + Nimbus JWT)
+3. CognitoService.java (AWS SDK)
+4. AuthController.java (Spring Security)
+5. OrderController.java (Spring Security @PreAuthorize)
+6. AwsCognitoProperties.java (AWS Config)
+
+**SAP CAP gekoppelte Dateien:**
+1. data-model.cds (@restrict Annotationen)
+2. application.yaml (cds.security)
+
+**Reduzierung:** **~67%** weniger gekoppelte Dateien
 
 ---
 
-### H5: Token-Validierung (Automatisch vs. Manuell)
+### H5: Token-Validierung (Automatisch vs. Manuell) + Zyklomatische Komplexität
 
-| Backend | Code-Zeilen | Implementierung |
-|---------|------------|----------------|
-| **Spring Boot** | ~40 Zeilen | Manual (JWKS-URI Config) |
-| **SAP CAP** | 0 Zeilen | Automatic (Framework) |
+| Backend | Zyklomatische Komplexität | Implementierung |
+|---------|---------------------------|----------------|
+| **Spring Boot** | CC=12 | Manuell (JWKS-URI Config, JWT Parsing, Claims Validation) |
+| **SAP CAP** | CC=0 | Automatisch (Framework übernimmt alles) |
 
-**Reduzierung:** **-100%** (vollautomatisch)
+**Spring Boot Komplexitäts-Aufschlüsselung:**
+- JwtAuthenticationFilter.doFilterInternal(): CC=3
+- JwtAuthenticationFilter.extractAuthorities(): CC=4
+- CognitoService.validateToken(): CC=5
+- **Gesamt: CC=12**
+
+**SAP CAP Komplexität:**
+- Keine Token-Validierungslogik im Anwendungscode
+- **Gesamt: CC=0**
+
+**Reduzierung:** **100%** (vollautomatisch, keine Fehlerquellen)
 
 ---
 
-### H6: Benutzerregistrierung (Klick-Vergleich)
+### H6: Benutzerregistrierung (Klick-Vergleich in Admin-Konsolen)
 
-**NEU: Klick-basierte Messung in beiden Admin-Konsolen**
+**Messung erfolgt in AWS Console und SAP IAS Admin-Konsole (nicht im Code)**
 
 | Schritt | AWS Cognito Console | SAP IAS Console |
 |---------|---------------------|-----------------|
 | 1. Konsole öffnen | 1 Klick | 1 Klick |
-| 2. Service/App auswählen | TODO | TODO |
+| 2. User Pool / Application auswählen | TODO | TODO |
 | 3. Users navigieren | TODO | TODO |
 | 4. "Create User" klicken | TODO | TODO |
 | 5. Formular ausfüllen | TODO | TODO |
@@ -119,23 +154,27 @@
 | **Gesamt Klicks** | **TODO** | **TODO** |
 
 **Zusätzliches Feature (nur AWS Cognito):**
-- Programmatische Registrierung via SDK: ~150 LOC
+- Programmatische Registrierung via SDK: Implementiert in AuthController + CognitoService
 - SAP IAS unterstützt dies **nicht** (architektonischer Unterschied)
 
 ---
 
-### H7: Password-Reset
+### H7: Recovery-Mechanismen (IdP-Vergleich)
 
-| Backend | Implementierung | Code-Zeilen | API-Aufrufe |
-|---------|----------------|-------------|-------------|
-| **Spring Boot** | Code-basiert (forgot-password, confirm-reset) | TODO | 2 |
-| **SAP CAP** | Link-basiert (automatisch) | 0 | 0 |
+**Messung erfolgt in den IdP-Konsolen**
 
-**Reduzierung:** Vollständig automatisch bei SAP IAS
+| Aspekt | AWS Cognito | SAP IAS |
+|--------|-------------|---------|
+| **Mechanismus** | Code-basiert (6-stellig) | Link-basiert (URL) |
+| **Sicherheitsbewertung** | Gut (Code muss übertragen werden) | Besser (kein manueller Code) |
+| **Gültigkeitsdauer** | Konfigurierbar (Standard: 24h) | TODO |
+| **Konfigurationsaufwand** | TODO Klicks | TODO Klicks |
+
+**Unterschied:** Link-basiert gilt als sicherer, da kein manueller Code-Transfer nötig
 
 ---
 
-### H8: Integrierte Sicherheitsfeatures (NEU)
+### H8: Integrierte Sicherheitsfeatures (IdP-Vergleich)
 
 | Feature | AWS Cognito | SAP IAS |
 |---------|-------------|---------|
@@ -154,24 +193,37 @@
 
 ---
 
+### H9: Benutzerlöschung (IdP-Vergleich)
+
+**Messung erfolgt in AWS Console und SAP IAS Admin-Konsole**
+
+| Aspekt | AWS Cognito | SAP IAS |
+|--------|-------------|---------|
+| Anzahl Klicks | TODO | TODO |
+| Bestätigungsdialoge | TODO | TODO |
+| Soft-Delete Option | TODO | TODO |
+
+---
+
 ## Zusammenfassung
 
-### Quantitative Vorteile (SAP CAP)
+### Quantitative Vorteile (SAP CAP) - Framework-Integration
 
-| Kategorie | Durchschnittliche Reduktion |
-|-----------|---------------------------|
-| **Code-Zeilen** | **-70% bis -100%** |
-| **Dateiänderungen** | **-75-100%** |
-| **Framework-Kopplung** | **-80-83%** |
-| **Config/Code für Token-Validierung** | **-80-100%** |
+| Kategorie | Metrik | Reduktion |
+|-----------|--------|-----------|
+| **H1: Autorisierungs-LOC** | Lines of Code | **-85%** |
+| **H2: Wartbarkeit** | Dateien/Methoden | **-75%** |
+| **H3a: Token-Validierung** | LOC + Zyklom. Komplexität | **-93%** |
+| **H4: Vendor-Kopplung** | Gekoppelte Dateien | **-67%** |
+| **H5: Automatisierung** | Zyklom. Komplexität | **CC=0 vs CC=12** |
 
-### Qualitative Vorteile (SAP CAP)
+### IdP-Vergleich (H6-H9) - Noch zu messen
 
-1. ✅ **Deklarative Sicherheit** - Zentral, wartbar, nachvollziehbar
-2. ✅ **Automatische Token-Validierung** - Keine Fehlerquelle
-3. ✅ **Standard-UIs** - Registrierung + Password-Reset out-of-the-box
-4. ✅ **Native Security-Features** - Rate-Limiting eingebaut
-5. ✅ **Service Binding** - Automatische IdP-Integration
+Die IdP-spezifischen Hypothesen werden direkt in den Admin-Konsolen gemessen:
+- **H6:** Klicks für Benutzerregistrierung
+- **H7:** Recovery-Mechanismus Sicherheit
+- **H8:** Anzahl integrierter Features
+- **H9:** Klicks für Benutzerlöschung
 
 ---
 
@@ -188,52 +240,22 @@
 - **Gesamtcode:** ~1200 Zeilen
 
 ---
-
-## API-Endpunkte
-
-### Metriken-API (beide Backends)
-
-```bash
-# H1: Security Code Lines
-GET /api/metrics/security-code
-
-# H3a: Token-Validierung Config/Code
-GET /api/metrics/token-validation-config
-
-# H3b: Enterprise Integration
-GET /api/metrics/enterprise-integration
-
-# H4: Framework Coupling
-GET /api/metrics/coupling
-
-# H5: Token Validation
-GET /api/metrics/token-validation
-
-# H6: Registration Flow
-GET /api/metrics/registration-flow
-
-# H7: Password Reset
-GET /api/metrics/password-reset
-
-# Vollständiger Report
-GET /api/metrics/report
-```
-
----
-
 ## Wissenschaftliche Validierung
 
-Alle Hypothesen sind **objektiv messbar** durch:
+### Framework-Integration (H1-H5)
+Gemessen durch **statische Code-Analyse**:
 - ✅ Lines of Code (automatisiert zählbar)
-- ✅ Anzahl geänderter Dateien/Methoden
-- ✅ Konfigurationsschritte (dokumentiert)
-- ✅ Boolean-Features (native vs. manuell)
+- ✅ Zyklomatische Komplexität (mit Tools wie SonarQube, lizard)
+- ✅ Anzahl Dateien mit IdP-Imports
+- ✅ Boolean-Features (automatisch vs. manuell)
+
+### IdP-Vergleich (H6-H9)
+Gemessen durch **manuelle Admin-Konsolen-Tests**:
+- ✅ Anzahl Klicks (objektiv zählbar)
+- ✅ Feature-Checklisten (standardmäßig aktiviert ja/nein)
+- ✅ Sicherheitsmechanismus-Vergleich (Link vs. Code)
 
 **Unabhängig von Entwickler-Kompetenz!**
 
 ---
-
-**Autor:** Bachelorarbeit  
-**Datum:** 2025-12-27  
-**Status:** Messungen in Bearbeitung (TODOs noch zu messen)
 

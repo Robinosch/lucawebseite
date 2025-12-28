@@ -122,6 +122,10 @@ In Unternehmenslandschaften muss der \ac{IdP} mit bestehenden Infrastrukturen zu
 
 Basierend auf den definierten Bewertungskriterien, der Bedrohungsanalyse und der Analyse der technologischen Integration werden folgende Hypothesen aufgestellt und in der Fallstudie getestet. Nach den Prinzipien der evaluativen Case Study nach \citep{Kitchenham1995} werden alle Hypothesen unter kontrollierten Bedingungen getestet, um andere Faktoren, wie z.B. Netzwerkleistung auszuschließen und eine faire Vergleichbarkeit zwischen \ac{AWS} Cognito und \ac{SAP CAP} mit \ac{SAP IAS} zu gewährleisten.
 
+Die Hypothesen sind in zwei Kategorien unterteilt, um einmal die Framework-Integration und auch die \ac{IdP}s selbst zu evaluieren. Die erste Kategorie ($H_1$ bis $H_5$) untersucht die \textbf{Framework-Integration mit den jeweiligen \ac{IdP}s}, also Spring Boot mit \ac{AWS} Cognito und \ac{SAP CAP} mit \ac{SAP IAS} die Authentifizierung und Autorisierung implementieren. Die zweite Kategorie ($H_6$ bis $H_9$) fokussiert sich auf den \textbf{direkten Vergleich der \ac{IdP}s} (\ac{AWS} Cognito vs. \ac{SAP IAS}), unabhängig von der Framework-Implementierung.
+
+\subsubsection{Hypothesen zur Framework-Integration mit IdPs}
+
 \begin{enumerate}
     \item[$H_1$] \textbf{Security:} Der deklarative Sicherheitsansatz von \ac{SAP CAP} reduziert die Anzahl notwendiger Autorisierungs-Code-Zeilen gegenüber dem imperativen Spring Security Ansatz mit \ac{AWS} Cognito. Dies senkt das Risiko für Implementierungsfehler wie \textit{Improper Authorization} (\ac{OWASP} CNAS-3).
 
@@ -134,51 +138,56 @@ Basierend auf den definierten Bewertungskriterien, der Bedrohungsanalyse und der
     \item[$H_4$] \textbf{Portability:} Der Koppelungsgrad zwischen Applikationscode und Framework ist bei Spring Boot mit \ac{AWS} Cognito aufgrund der verteilten Spring Security Annotationen in den Service-Methoden höher als bei \ac{SAP CAP}/\ac{SAP IAS}, wo Autorisierungsregeln zentral im \ac{CDS}-Modell definiert sind.
 
     \item[$H_5$] \textbf{Security -- Token-Validierung:} Die Anzahl der Code-Zeilen für die \ac{JWT}-Token-Validierung ist bei \ac{SAP CAP} geringer als bei Spring Boot mit \ac{AWS} Cognito, da \ac{SAP CAP} die Validierung automatisch durch das Framework durchführt.
-
-    \item[$H_6$] \textbf{Developer Experience -- Benutzer-Onboarding:} Die manuelle Benutzererstellung über die Admin-Konsole erfordert bei \ac{SAP IAS} weniger Klicks/Schritte als bei \ac{AWS} Cognito. Zusätzlich bietet \ac{AWS} Cognito die Möglichkeit einer programmatischen Registrierung via \ac{SDK}, die als separater Vergleichspunkt dokumentiert wird.
-
-    \item[$H_7$] \textbf{Security -- Recovery-Mechanismen:} Der Passwort-Reset-Flow bei \ac{SAP IAS} erfordert weniger manuelle Implementierungsschritte als bei \ac{AWS} Cognito mit Spring Boot, da \ac{SAP IAS} den Flow vollständig über das Framework bereitstellt.
-
-    \item[$H_8$] \textbf{Security -- Integrierte Sicherheitsfeatures:} \ac{SAP IAS} bietet mehr standardmäßig integrierte Sicherheitsfeatures (Rate-Limiting, Audit-Logging, automatische Token-Expiration, Brute-Force-Schutz) als \ac{AWS} Cognito, wo diese teilweise manuell implementiert oder konfiguriert werden müssen.
 \end{enumerate}
 
+\subsubsection{Hypothesen zum direkten IdP-Vergleich}
 
-Die Hypothesen beschreiben zwei zentrale Ebenen des \ac{IAM}, nämlich die \textbf{Autorisierungsschicht} (H1, H2, H4, H5) und die \textbf{Developer Experience \& Sicherheitsintegration} (H3a, H3b, H6, H7, H8).
+Die folgenden Hypothesen vergleichen \ac{AWS} Cognito und \ac{SAP IAS} als \ac{IdP}s direkt, ohne Berücksichtigung der Framework-Implementierung. Die Messungen erfolgen über die Admin-Konsolen und die integrierten Features der \ac{IdP}s.
 
-H1 und H2 testen die Kernunterscheidung zwischen deklarativen und imperativen Sicherheitsparadigmen, die das zentrale Differenzierungsmerkmal zwischen \ac{SAP CAP} und Spring Boot darstellt. H4 adressiert das Risiko von Vendor Lock-in durch unterschiedliche Kopplungsmuster.
+\begin{enumerate}
+    \item[$H_6$] \textbf{IdP -- Benutzer-Onboarding:} Die manuelle Benutzererstellung über die Admin-Konsole erfordert bei \ac{SAP IAS} weniger Klicks/Schritte als bei \ac{AWS} Cognito.
 
-H5 ist wichtig, da die automatische Token-Validierung durch \ac{SAP CAP} einen strukturellen Sicherheitsvorteil darstellt, der Implementierungsfehler (z.B. fehlende oder falsche Signaturverifizierung) verhindert. Dies ist insbesondere im Kontext des \ac{OWASP} Risikos ``\textit{Improper Authentication \& Authorization}'' zentral.
+    \item[$H_7$] \textbf{IdP -- Recovery-Mechanismen:} \ac{SAP IAS} bietet einen sichereren Passwort-Reset-Mechanismus als \ac{AWS} Cognito, da der Reset über einen zeitlich limitierten Link erfolgt statt über einen manuell einzugebenden Code.
 
-H3a und H3b messen die praktische Developer Experience in unterschiedlichen Szenarien. H3a misst die Code-Komplexität von Token-Mechanismen unter kontrollierten lokalen Bedingungen, während H3b die Unternehmensintegration in Cloud-Umgebungen validiert.
+    \item[$H_8$] \textbf{IdP -- Integrierte Sicherheitsfeatures:} \ac{SAP IAS} bietet mehr standardmäßig integrierte Sicherheitsfeatures (Rate-Limiting, Audit-Logging, automatische Token-Expiration, Brute-Force-Schutz) als \ac{AWS} Cognito.
 
-H6 vergleicht den Aufwand für Benutzer-Onboarding durch Messung der Klicks in beiden Admin-Konsolen. Zusätzlich wird die programmatische Registrierung bei \ac{AWS} Cognito als differenzierendes Feature dokumentiert. H7 untersucht den Implementierungsaufwand für Recovery-Flows. H8 quantifiziert die standardmäßig integrierten Sicherheitsfeatures beider \ac{IdP}.
+    \item[$H_9$] \textbf{IdP -- Benutzerlöschung:} Die Löschung eines Benutzers über die Admin-Konsole erfordert bei \ac{AWS} Cognito weniger Klicks/Schritte als bei \ac{SAP IAS}.
+\end{enumerate}
+
+Die Hypothesen beschreiben zwei zentrale Ebenen des \ac{IAM}. Die \textbf{Framework-Integration} ($H_1$ bis $H_5$) testet die Kernunterscheidung zwischen deklarativen und imperativen Sicherheitsparadigmen sowie die Token-Validierung. Der \textbf{direkte IdP-Vergleich} ($H_6$ bis $H_9$) evaluiert die Benutzerfreundlichkeit und Sicherheitsfeatures der \ac{IdP}s selbst.
+
+$H_1$ und $H_2$ testen die Kernunterscheidung zwischen deklarativen und imperativen Sicherheitsparadigmen, die das zentrale Differenzierungsmerkmal zwischen \ac{SAP CAP} und Spring Boot darstellt. $H_4$ adressiert das Risiko von Vendor Lock-in durch unterschiedliche Kopplungsmuster.
+
+$H_5$ ist wichtig, da die automatische Token-Validierung durch \ac{SAP CAP} einen strukturellen Sicherheitsvorteil darstellt, der Implementierungsfehler (z.B. fehlende oder falsche Signaturverifizierung) verhindert. Dies ist insbesondere im Kontext des \ac{OWASP} Risikos ``\textit{Improper Authentication \& Authorization}'' zentral.
+
+$H_{3a}$ und $H_{3b}$ messen die praktische Developer Experience in unterschiedlichen Szenarien. $H_{3a}$ misst die Code-Komplexität von Token-Mechanismen unter kontrollierten lokalen Bedingungen, während $H_{3b}$ die Unternehmensintegration in Cloud-Umgebungen validiert.
+
+$H_6$ und $H_9$ vergleichen die Benutzerfreundlichkeit der Admin-Konsolen beider \ac{IdP}s durch objektive Klick-Messungen. $H_7$ evaluiert die Sicherheit der Recovery-Mechanismen (Link-basiert vs. Code-basiert). $H_8$ quantifiziert die standardmäßig integrierten Sicherheitsfeatures beider \ac{IdP}.
 
 
 \subsubsection{Messbarkeiten der Hypothesen}
 
 Die folgenden Hypothesen werden durch Metriken gemessen,
 um ihre Überprüfbarkeit sicherzustellen. Jede Hypothese wird anhand von messbaren Kriterien evaluiert, die während der Implementierungsphase erfasst werden.
-Die Hypothesen H1 bis H7 wurden formuliert, um Unterschiede zwischen den
-Frameworks zu messen und nicht von verschiedenen Entwickler-Kompetenzen abhängig
-zu sein. Alle Messungen basieren daher auf Metriken wie Code-Zeilen,
-Anzahl von Dateien und Fehlerquellen-Analyse, die unabhängig von der Entwickler-Kompetenz sind.
+Die Hypothesen wurden formuliert, um Unterschiede zwischen den
+Frameworks und \ac{IdP}s zu messen und nicht von verschiedenen Entwickler-Kompetenzen abhängig
+zu sein. Alle Messungen basieren daher auf objektiven Metriken wie Code-Zeilen,
+Anzahl von Dateien, zyklomatische Komplexität und Klick-Zählungen, die unabhängig von der Entwickler-Kompetenz sind.
 
-\textbf{H1 – Sicherheit der Autorisierungslogik:} Die zyklomatische Komplexität
-der Autorisierungsschicht wird mittels statischer Code-Analyse gemessen. Dies
-umfasst die Anzahl unabhängiger Pfade durch Token-Validierung und rollenbasierte
-Zugriffskontrolle. Zusätzlich wird die Anzahl explizit geschriebener Codezeilen
+\paragraph{Messbarkeiten für Framework-Integration ($H_1$ bis $H_5$)}
+
+\textbf{H1 – Sicherheit der Autorisierungslogik:} Die Anzahl der Dateien mit Autorisierungslogik wird gezählt, um die Streuung der Sicherheitsregeln zu quantifizieren.
+Zusätzlich wird die Anzahl explizit geschriebener Codezeilen
 für Autorisierung quantifiziert. Für \ac{SAP CAP} werden alle \texttt{@restrict}-Annotationen
 im \ac{CDS}-Modell gezählt. Für Spring Boot werden
 alle \texttt{@PreAuthorize}-Annotationen über Controller und Services gezählt.
 
 \textbf{H2 – Code-Änderungen und Wartbarkeit:} Durch das Hinzufügen einer neuen
 Rolle wird gemessen, wie viele Dateien und Methoden angepasst werden müssen.
-Dies zeigt die Streuung der Autorisierungslogik über den Quellcode. Zusätzlich
-wird die Änderung der zyklomatischen Komplexität erfasst.
+Dies zeigt die Streuung der Autorisierungslogik über den Quellcode.
 
 \textbf{H3a – Token-Validierung und JWT-Handling:} Die Anzahl der Code- und Konfigurationszeilen
-für Token-Validierung und \ac{JWT}-Handling wird gemessen, um die Implementierungs-Komplexität
-zu identifizieren. Für \ac{SAP CAP} werden die Konfigurationszeilen in \texttt{cds.json gezählt}. Für Spring Boot wird die \texttt{application.yaml}, Config-Zeilen und SecurityConfig-Klassen gezählt. Zusätzlich wird die Anzahl möglicher Fehlerquellen dokumentiert.
+für Token-Validierung und \ac{JWT}-Handling wird gemessen. Zusätzlich wird die zyklomatische Komplexität der Token-Validierungslogik mittels statischer Code-Analyse erfasst. Die zyklomatische Komplexität misst die Anzahl unabhängiger Pfade durch den Code und quantifiziert damit die Fehleranfälligkeit. Für \ac{SAP CAP} werden die Konfigurationszeilen in \texttt{application.yaml} gezählt. Für Spring Boot wird die \texttt{application.yaml}, SecurityConfig und JwtAuthenticationFilter analysiert.
 
 \textbf{H3b – Unternehmensintegration:} Der
 Konfigurationsaufwand bei der Anbindung eines externen \ac{IdP} wird erfasst
@@ -194,44 +203,51 @@ Kopplung an den jeweiligen \ac{IdP}. Für \ac{SAP CAP} werden Dateien mit @sap
 spezifischen Imports gezählt. Für Spring Boot werden Dateien mit \texttt{org.springframework.security} Imports gezählt.
 
 \textbf{H5 – Token-Validierung:} Es wird gemessen, ob die Signaturverifizierung
-automatisch oder manuell erfolgt. Erfasst werden die erforderlichen Konfigurationsschritte
-und Codezeilen für sichere Token-Validierung. Für \ac{SAP CAP} werden Code-Zeilen
-für manuelle Token-Validierung gezählt.
-Für Spring Boot werden Konfigurationszeilen, SecurityConfig und Custom JWT Converter gezählt.
-Weil \ac{SAP IAS} ein Cloud-only Service ist, wird die automatische Token-Validierung durch \ac{SAP CAP} erst beim Deployment auf die \ac{SAP BTP} vollständig messbar. Lokal wird der Mock-Modus verwendet, der die Framework-Architektur demonstriert.
+automatisch oder manuell erfolgt. Die zyklomatische Komplexität der Token-Validierungslogik wird mittels statischer Code-Analyse gemessen. Für \ac{SAP CAP} beträgt diese 0, da das Framework die Validierung automatisch durchführt.
+Für Spring Boot wird die Komplexität des \texttt{JwtAuthenticationFilter} und \texttt{CognitoService.validateToken()} gemessen.
+
+\paragraph{Messbarkeiten für direkten IdP-Vergleich ($H_6$ bis $H_9$)}
 
 \textbf{H6 – Benutzerregistrierung:} Die manuelle Benutzererstellung wird in beiden Admin-Konsolen durch Anzahl der Klicks/Schritte gemessen:
 \begin{itemize}
     \item Für \ac{AWS} Cognito: Anzahl der Klicks in der AWS Console für die Erstellung eines neuen Benutzers (User Pool $\rightarrow$ Users $\rightarrow$ Create User $\rightarrow$ Formular ausfüllen).
-    \item Für \ac{SAP IAS}: Anzahl der Klicks in der SAP IAS Admin-Konsole für die Erstellung eines neuen Benutzers (Applications $\rightarrow$ Users $\rightarrow$ Add $\rightarrow$ Formular ausfüllen).
+    \item Für \ac{SAP IAS}: Anzahl der Klicks in der SAP IAS Admin-Konsole für die Erstellung eines neuen Benutzers (Users \& Authorizations $\rightarrow$ User Management $\rightarrow$ Add $\rightarrow$ Formular ausfüllen).
 \end{itemize}
-Zusätzlich wird als differenzierendes Feature dokumentiert, dass \ac{AWS} Cognito eine programmatische Registrierung via \ac{SDK} ermöglicht (~150 LOC), während \ac{SAP IAS} dies nicht unterstützt. Dies stellt keinen direkten Vergleichspunkt dar, sondern eine architektonische Unterscheidung.
 
-\textbf{H7 – Passwort-Reset:}
-Der Passwort-Vergessen-Flow wird durch Anzahl der Implementierungsschritte verglichen:
+\textbf{H7 – Recovery-Mechanismen:}
+Der Passwort-Vergessen-Flow wird qualitativ und quantitativ verglichen:
 \begin{itemize}
-    \item Für Spring Boot mit \ac{AWS} Cognito: Anzahl der Code-Zeilen für den Reset-Flow (forgot-password, confirm-password-reset Endpunkte) und Anzahl der erforderlichen API-Aufrufe.
-    \item Für \ac{SAP CAP} mit \ac{SAP IAS}: Anzahl der Konfigurationsschritte in der Admin-Konsole für den Link-basierten Reset (automatisch durch \ac{SAP IAS} bereitgestellt).
+    \item \textbf{Sicherheitsaspekt:} Link-basiert (\ac{SAP IAS}) vs. Code-basiert (\ac{AWS} Cognito). Link-basierte Resets gelten als sicherer, da der Code nicht manuell übertragen werden muss.
+    \item \textbf{Gültigkeitsdauer:} Zeitliche Limitierung des Reset-Tokens/-Codes in beiden \ac{IdP}s.
+    \item \textbf{Konfigurationsaufwand:} Anzahl der Einstellungen im jeweiligen \ac{IdP}, um den Recovery-Flow zu aktivieren.
 \end{itemize}
 
 \textbf{H8 – Integrierte Sicherheitsfeatures:}
 Die Anzahl der standardmäßig integrierten Sicherheitsfeatures wird für beide \ac{IdP} gezählt:
 \begin{itemize}
     \item \textbf{Zu prüfende Features:} Rate-Limiting, Brute-Force-Schutz, Audit-Logging, automatische Token-Expiration, E-Mail-Verifizierung, Passwort-Policies, Account-Lockout, MFA-Unterstützung.
-    \item Für jedes Feature wird dokumentiert: (a) standardmäßig aktiviert, (b) konfigurierbar, (c) manuelle Implementierung erforderlich.
+    \item Für jedes Feature wird dokumentiert: (a) standardmäßig aktiviert, (b) konfigurierbar, (c) nicht verfügbar.
 \end{itemize}
 Diese Metrik ist objektiv messbar durch Feature-Checklisten und erfordert keine Entwicklerkompetenz-abhängige Zeitmessung.
 
+\textbf{H9 – Benutzerlöschung:}
+Die Löschung eines Benutzers wird in beiden Admin-Konsolen durch folgende Metriken gemessen:
+\begin{itemize}
+    \item Für \ac{AWS} Cognito: Anzahl der Klicks in der AWS Console für die Löschung eines Benutzers (User Pool $\rightarrow$ Users $\rightarrow$ Benutzer auswählen $\rightarrow$ Delete).
+    \item Für \ac{SAP IAS}: Anzahl der Klicks in der SAP IAS Admin-Konsole für die Löschung eines Benutzers (Users \& Authorizations $\rightarrow$ User Management $\rightarrow$ Benutzer auswählen $\rightarrow$ Delete).
+    \item \textbf{Zusätzlich:} Anzahl der Bestätigungsschritte (Confirmation Dialogs) für die Löschung.
+\end{itemize}
+
 \subsubsection{Testumgebungen und Messkontext}
 
-Da \ac{SAP IAS} ausschließlich als Cloud-Service verfügbar ist, werden die Hypothesen in unterschiedlichen Umgebungen gemessen:
+Die Hypothesen zur Framework-Integration ($H_1$ bis $H_5$) messen Framework-inhärente Eigenschaften wie Code-Struktur, Autorisierungslogik und Vendor-Kopplung. Diese werden durch statische Code-Analyse erfasst und sind unabhängig von der Laufzeitumgebung.
+
+Für die IdP-spezifischen Hypothesen ($H_6$ bis $H_9$) werden die beiden Ökosysteme in unterschiedlichen Umgebungen betrieben:
 
 \begin{itemize}
-    \item \textbf{Lokale Messung (Mock-Modus für \ac{SAP CAP}):} Die Hypothesen $H_1$, $H_2$, $H_3a$ und $H_4$ messen Framework-inhärente Eigenschaften wie Code-Struktur, Autorisierungslogik und Vendor-Kopplung. Diese sind unabhängig davon, ob ein echter \ac{IdP} oder ein Mock verwendet wird, da sie die statische Code-Analyse betreffen.
+    \item \textbf{Spring Boot mit \ac{AWS} Cognito:} Die Anwendung läuft lokal und verbindet sich direkt mit dem \ac{AWS} Cognito Cloud-Service. Das \ac{AWS} \ac{SDK} ermöglicht eine vollständige \ac{IdP}-Integration ohne Cloud-Deployment des Backends.
 
-    \item \textbf{Cloud-Messung (\ac{SAP BTP} für \ac{SAP CAP}, \ac{AWS} für Spring Boot):} Die Hypothesen $H_5$, $H_{3b}$, $H_6$, $H_7$ und $H_8$ erfordern eine echte \ac{IdP}-Integration, um die vollständige Funktionalität zu validieren. Für \ac{SAP CAP} erfolgt die Messung nach Deployment auf \ac{SAP BTP} mit Service-Binding zu \ac{SAP IAS}.
-
-    \item \textbf{Spring Boot mit \ac{AWS} Cognito:} Kann sowohl lokal als auch in der Cloud gegen den echten \ac{AWS} Cognito Service gemessen werden, da das \ac{AWS} \ac{SDK} eine direkte Verbindung ermöglicht.
+    \item \textbf{\ac{SAP CAP} mit \ac{SAP IAS}:} Da \ac{SAP IAS} ausschließlich als Cloud-Service verfügbar ist, wurde das \ac{SAP CAP} Backend auf die \ac{SAP BTP} deployt. Die Anbindung an \ac{SAP IAS} erfolgt über automatisches Service-Binding. Lokal kann die Anwendung ohne \ac{IdP}-Anbindung gestartet werden, wobei die Framework-Architektur und die deklarativen Sicherheitsregeln weiterhin messbar sind.
 \end{itemize}
 
 Die Metriken werden während der Implementierung erfasst und in
@@ -244,18 +260,21 @@ zu ermöglichen.
 Um die Vergleichbarkeit der beiden \ac{IdP}-Lösungen zu gewährleisten, wird eine Web-Anwendung in beiden Ökosystemen genutzt und entwickelt. Die Architektur folgt einer strikten Trennung von Frontend und Backend.
 
 \subsection{Funktionale Anforderungen und Vergleichspunkte}
-Die Anwendung setzt dabei Anforderungen um, die für die Prüfung der Hypothesen $H_1$ bis $H_6$ benötigt werden:
-\begin{itemize}
-    \item \textbf{Benutzerregistrierung ($H_6$):} Ein neuer Benutzer soll sich manuell registrieren können oder von einen Admin registriert werden können.
-    \item \textbf{Recovery-Mechanismus ($H_7$):} Der Benutzer soll den Passwort-Vergessen-Flow benutzen können, um sich bei einem vergessen Passwort eine E-Mail mit dem weiterem Vorgehen schicken lassen zu können.
-    \item \textbf{Benutzer-Verwaltung ($H_3a$)}:
-    Ein Benutzer soll sich anmelden können. Die Löschung von
-    Benutzern direkt im \ac{IdP} wird nicht verglichen, da es keine wichtige Vergleichsmöglichkeit zwischen \ac{AWS} Cognito und
-    \ac{SAP IAS} gibt. Denn Benutzer werden von Admins über z.B. Weboberflächen in der \ac{IdP}
-    gelöscht (AWS Cognito oder SAP Admin-Panel), nicht durch die Anwendung.
-    \item \textbf{Authentifizierung und Token-Validierung ($H_5$):} Der Login-Prozess muss ein valides \ac{JWT} liefern. Kritisch ist hierbei die backend-seitige Prüfung der Signatur gegen das \ac{JWKS}, um Manipulationen auszuschließen.
-    \item \textbf{Geschützter API-Zugriff ($H_1, H_2$):} Ein Backend-Endpunkt (z. B. \texttt{/api/orders}) wird rollenbasiert abgesichert, um den Unterschied zwischen imperativer und deklarativer Autorisierung zu messen.
+Die Anwendung setzt dabei Anforderungen um, die für die Prüfung der Hypothesen benötigt werden. Die Anforderungen gliedern sich in zwei Kategorien:
 
+\paragraph{Backend-Implementierung (Framework-Integration $H_1$ bis $H_5$):}
+\begin{itemize}
+    \item \textbf{Benutzer-Verwaltung ($H_{3a}$):} Ein Benutzer soll sich anmelden können.
+    \item \textbf{Authentifizierung und Token-Validierung ($H_5$):} Der Login-Prozess muss ein valides \ac{JWT} liefern. Kritisch ist hierbei die backend-seitige Prüfung der Signatur gegen das \ac{JWKS}, um Manipulationen auszuschließen.
+    \item \textbf{Geschützter API-Zugriff ($H_1$, $H_2$):} Ein Backend-Endpunkt (z. B. \texttt{/api/orders}) wird rollenbasiert abgesichert, um den Unterschied zwischen imperativer und deklarativer Autorisierung zu messen.
+\end{itemize}
+
+\paragraph{IdP-Vergleich über Admin-Konsolen ($H_6$ bis $H_9$):}
+Die folgenden Funktionen werden nicht im Frontend implementiert, sondern direkt über die Admin-Konsolen der jeweiligen \ac{IdP}s gemessen:
+\begin{itemize}
+    \item \textbf{Benutzerregistrierung ($H_6$):} Ein neuer Benutzer wird über die Admin-Konsole des jeweiligen \ac{IdP} erstellt. Die Anzahl der Klicks wird verglichen.
+    \item \textbf{Recovery-Mechanismus ($H_7$):} Der Passwort-Vergessen-Flow wird qualitativ verglichen (Link-basiert vs. Code-basiert). Für das Spring Boot Backend wurde der Recovery-Flow zusätzlich implementiert.
+    \item \textbf{Benutzerlöschung ($H_9$):} Ein Benutzer wird über die Admin-Konsole des jeweiligen \ac{IdP} gelöscht. Die Anzahl der Klicks wird verglichen.
 \end{itemize}
 
 \subsection{Technologischer Aufbau}
@@ -626,81 +645,82 @@ Die \texttt{@restrict}-Annotationen aus dem Datenmodell werden automatisch auf d
 
 \subsection{Minimale Konfiguration in application.yaml}
 
-Im Gegensatz zur umfangreichen Spring Security Konfiguration bei \ac{AWS} Cognito ist die Konfiguration für \ac{SAP CAP} minimal. Abbildung \ref{fig:cap_config} zeigt die relevanten Einstellungen.
+Im Gegensatz zur Spring Security Konfiguration für \ac{AWS} Cognito, ist die Konfiguration für \ac{SAP CAP} minimal. Abbildung \ref{fig:cap_config} zeigt die relevanten Einstellungen.
 
 \begin{figure}[h]
     \begin{verbatim}
-cds:
-  security:
-    mock:
-      enabled: true  # Lokal: Mock-User aus .cdsrc.json
-
----
-spring:
-  config.activate.on-profile: cloud
-
 cds:
   security:
     xsuaa:
-      enabled: true  # Cloud: XSUAA/SAP IAS via Service Binding
-    mock:
-      enabled: false
+      enabled: true  # XSUAA/SAP IAS via Service Binding
     \end{verbatim}
-    \caption{Minimale Security-Konfiguration in application.yaml}
+    \caption{Minimale Security-Konfiguration in application.yaml für Cloud-Deployment}
     \label{fig:cap_config}
 \end{figure}
 
-Die Konfiguration unterscheidet zwischen zwei Profilen:
-\begin{itemize}
-    \item \textbf{Lokal (default):} Mock-User aus \texttt{.cdsrc.json} für Entwicklung
-    \item \textbf{Cloud (cloud):} XSUAA/\ac{SAP IAS} über automatische Service-Binding
-\end{itemize}
+In der Cloud-Umgebung auf der \ac{SAP BTP} ist lediglich die Aktivierung von XSUAA erforderlich. Die Verbindung zu \ac{SAP IAS} erfolgt automatisch über Service-Binding. Es ist keine manuelle \ac{JWKS}-\ac{URI} Konfiguration oder JWT-Filter-Implementierung notwendig -- das Framework übernimmt die gesamte Token-Validierung automatisch.
 
-\subsection{UserInfo-Endpoint für Frontend-Integration}
+\subsection{Event Handler für Geschäftslogik}
 
-Für die Frontend-Integration wurde ein minimaler \texttt{UserInfoController} implementiert, der Benutzerinformationen aus dem authentifizierten Token extrahiert. Dies ist der einzige Java-Code für Authentifizierung im gesamten Backend.
+Für Geschäftslogik wie das Setzen des \texttt{createdBy}-Feldes werden Event Handler verwendet. Abbildung \ref{fig:cap_handler} zeigt einen Ausschnitt des \texttt{OrderServiceHandler}.
 
 \begin{figure}[h]
     \begin{verbatim}
-@RestController
-@RequestMapping("/api/user")
-public class UserInfoController {
+@Component
+@ServiceName(OrderService_.CDS_NAME)
+public class OrderServiceHandler implements EventHandler {
 
-    @GetMapping("/me")
-    public ResponseEntity<Map<String, Object>> getCurrentUser() {
+    @Before(event = "CREATE", entity = Orders_.CDS_NAME)
+    public void beforeCreateOrder(CdsCreateEventContext context) {
         Authentication auth = SecurityContextHolder
             .getContext().getAuthentication();
+        String username = auth != null ? auth.getName() : "anonymous";
 
-        List<String> roles = auth.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .map(role -> role.replace("ROLE_", ""))
-            .collect(Collectors.toList());
-
-        return ResponseEntity.ok(Map.of(
-            "authenticated", true,
-            "username", auth.getName(),
-            "roles", roles
-        ));
+        // Autorisierung erfolgt AUTOMATISCH durch CDS @restrict
+        context.getCqn().entries().forEach(entry -> {
+            entry.put("createdBy", username);
+        });
     }
 }
     \end{verbatim}
-    \caption{Minimaler UserInfoController für Frontend-Integration}
-    \label{fig:userinfo_controller}
+    \caption{Event Handler für Geschäftslogik (OrderServiceHandler.java)}
+    \label{fig:cap_handler}
 \end{figure}
 
-Dieser Controller umfasst lediglich circa 30 Zeilen Code und dient ausschließlich der Frontend-Kommunikation. Die eigentliche Authentifizierung und Autorisierung wird vollständig vom Framework übernommen.
+Der Handler enthält \textbf{keine} Autorisierungslogik -- diese wird vollständig durch die \texttt{@restrict}-Annotationen im \ac{CDS}-Modell durchgesetzt. Der Handler fokussiert sich ausschließlich auf Geschäftslogik.
 
 \subsection{SAP BTP Deployment und Service-Konfiguration}
 
 Für das Deployment auf der \ac{SAP BTP} wird eine Multi-Target Application (MTA) konfiguriert. Die wesentlichen Komponenten sind:
 
 \begin{itemize}
-    \item \textbf{XSUAA Service:} Stellt die OAuth2/OIDC-Integration bereit
-    \item \textbf{App Router:} Handhabt die Authentifizierung und leitet Anfragen weiter
+    \item \textbf{XSUAA Service:} Stellt die OAuth2/OIDC-Integration bereit und verbindet sich mit \ac{SAP IAS}
+    \item \textbf{App Router:} Handhabt die Authentifizierung und leitet Anfragen an das Backend weiter
     \item \textbf{Backend Service:} Das \ac{SAP CAP} Backend mit automatischer Token-Validierung
 \end{itemize}
 
-Die Rollen werden in der \texttt{xs-security.json} definiert und über Role Collections in der \ac{SAP BTP} zugewiesen.
+Die Rollen werden in der \texttt{xs-security.json} definiert. Abbildung \ref{fig:xs_security} zeigt einen Ausschnitt.
+
+\begin{figure}[h]
+    \begin{verbatim}
+{
+  "xsappname": "ba-backend-cap-ias",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.Admin", "description": "Full access" },
+    { "name": "$XSAPPNAME.Manager", "description": "Read/Write" },
+    { "name": "$XSAPPNAME.User", "description": "Read-only" },
+    { "name": "$XSAPPNAME.Observer", "description": "Observer" }
+  ],
+  "role-templates": [
+    { "name": "Admin", "scope-references": ["$XSAPPNAME.Admin"] },
+    { "name": "Manager", "scope-references": ["$XSAPPNAME.Manager"] }
+  ]
+}
+    \end{verbatim}
+    \caption{Rollen-Definition in xs-security.json}
+    \label{fig:xs_security}
+\end{figure}
 
 \begin{figure}[h]
     \centering
@@ -710,16 +730,18 @@ Die Rollen werden in der \texttt{xs-security.json} definiert und über Role Coll
     \label{fig:btp_role_collections}
 \end{figure}
 
-In Abbildung \ref{fig:btp_role_collections} wird die Zuweisung von Rollen zu Benutzern in der \ac{SAP BTP} dargestellt. Die Schritte für die Konfiguration umfassen:
+In Abbildung \ref{fig:btp_role_collections} wird die Zuweisung von Rollen zu Benutzern in der \ac{SAP BTP} dargestellt. Die Konfiguration erfolgt über:
 \begin{enumerate}
     \item Erstellung der Role Collections (Admin, Manager, User, Observer)
     \item Zuweisung der Scopes aus \texttt{xs-security.json}
     \item Zuweisung der Benutzer zu den Role Collections
 \end{enumerate}
 
+\textbf{Hinweis:} Im Gegensatz zu \ac{AWS} Cognito, bei dem ein User Pool manuell erstellt werden muss (vgl. Abbildung \ref{fig:cognito_user_pool}), erfolgt die \ac{IdP}-Konfiguration bei \ac{SAP IAS} automatisch durch das XSUAA Service-Binding in der \texttt{mta.yaml}.
+
 \subsection{Unterschiede zu AWS Cognito: Benutzerregistrierung und Login}
 
-Ein wesentlicher architektonischer Unterschied zu \ac{AWS} Cognito liegt im Benutzer-Onboarding:
+Ein wesentlicher Unterschied zu \ac{AWS} Cognito liegt im Benutzer-Erstellung:
 
 \begin{itemize}
     \item \textbf{\ac{SAP IAS}:} Benutzer werden über die Admin-Konsole oder Self-Service-Portal erstellt. Es gibt keine programmatische Registrierung über eine Backend-API.
@@ -728,11 +750,7 @@ Ein wesentlicher architektonischer Unterschied zu \ac{AWS} Cognito liegt im Benu
 
 Für $H_6$ werden daher die Klicks in beiden Admin-Konsolen gezählt, um einen fairen Vergleich zu ermöglichen. Die programmatische Registrierung bei \ac{AWS} Cognito wird als zusätzliches Feature dokumentiert.
 
-Der Login-Flow unterscheidet sich ebenfalls:
-\begin{itemize}
-    \item \textbf{Lokal:} Mock-User aus \texttt{.cdsrc.json} mit HTTP Basic Auth
-    \item \textbf{Cloud:} OAuth2/OIDC Redirect über den App Router zu \ac{SAP IAS}
-\end{itemize}
+Der Login-Flow in der Cloud erfolgt über OAuth2/OIDC Redirect: Der App Router leitet nicht-authentifizierte Anfragen an \ac{SAP IAS} weiter, wo die Anmeldung erfolgt. Nach erfolgreicher Authentifizierung wird der Benutzer mit einem gültigen Token zurückgeleitet.
 
 \subsection{Zusammenfassung der Implementierung}
 
@@ -750,4 +768,4 @@ Die Implementierung des \ac{SAP CAP} Backends mit \ac{SAP IAS} zeichnet sich dur
     \item \textbf{Integrierte Sicherheitsfeatures ($H_8$):} \ac{SAP IAS} bietet standardmäßig Rate-Limiting, Brute-Force-Schutz, Audit-Logging und automatische Token-Expiration ohne zusätzliche Konfiguration.
 \end{itemize}
 
-Der Gesamtumfang der sicherheitsrelevanten Komponenten beträgt circa 50 Zeilen, verteilt auf \texttt{data-model.cds} (20 Zeilen für @restrict), \texttt{application.yaml} (10 Zeilen Security-Konfiguration) und \texttt{UserInfoController.java} (30 Zeilen). Diese Metriken werden in Kapitel \ref{ch:evaluation} für den Vergleich mit dem Spring Boot Backend herangezogen.
+Der Gesamtumfang der sicherheitsrelevanten Komponenten beträgt circa 30 Zeilen, verteilt auf \texttt{data-model.cds} (20 Zeilen für @restrict) und \texttt{application.yaml} (10 Zeilen Security-Konfiguration). Event Handler wie der \texttt{OrderServiceHandler} enthalten keine Autorisierungslogik. Diese Metriken werden in Kapitel \ref{ch:evaluation} für den Vergleich mit dem Spring Boot Backend herangezogen.
