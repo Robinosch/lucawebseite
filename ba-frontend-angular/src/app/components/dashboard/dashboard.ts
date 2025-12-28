@@ -40,13 +40,12 @@ export class Dashboard implements OnInit {
     this.isCognitoBackend = this.apiService.isCognitoBackend();
 
     this.apiService.userProfile$.subscribe(profile => {
-      console.log('[DEBUG] Dashboard: userProfile$ Update erhalten:', profile);
       this.userProfile = profile;
       this.updatePermissions();
       this.cdr.detectChanges();
     });
 
-    if (this.isCloudMode || !this.isCognitoBackend) {
+    if (this.isCloudMode && !this.isCognitoBackend) {
       this.loadCloudUserInfo();
     }
   }
@@ -108,10 +107,8 @@ export class Dashboard implements OnInit {
 
     const roles = this.userProfile.roles.map(r => r.toUpperCase());
 
-    // Jeder authentifizierte Benutzer kann Orders sehen
     this.canViewOrders = this.isAuthenticated;
 
-    // Nur ADMIN kann Orders erstellen und löschen
     this.canCreateOrders = roles.includes('ADMIN');
     this.canDeleteOrders = roles.includes('ADMIN');
   }
@@ -124,7 +121,7 @@ export class Dashboard implements OnInit {
   }
 
   /**
-   * Kürzt Token für Anzeigezwecke (nur für Demo - eigentlich keine Tokens im Frontend!).
+   * Gibt eine maskierte Token-Darstellung zurück (Session-basiert).
    */
   getTruncatedToken(): string {
     return 'Session-Cookie (HTTP-only)';

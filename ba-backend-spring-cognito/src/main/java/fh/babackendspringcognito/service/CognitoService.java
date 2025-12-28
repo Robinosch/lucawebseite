@@ -51,7 +51,6 @@ import java.util.Map;
 public class CognitoService {
 
     private final AwsCognitoProperties cognitoProperties;
-    private final MetricsService metricsService;
     private CognitoIdentityProviderClient cognitoClient;
     private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
 
@@ -94,8 +93,6 @@ public class CognitoService {
             long duration = System.currentTimeMillis() - startTime;
             log.info("AWS_COGNITO_REGISTRATION_SUCCESS: userSub={}, confirmed={}, duration={}ms",
                     response.userSub(), response.userConfirmed(), duration);
-
-            metricsService.recordRegistrationStep("User registration completed", duration);
 
         } catch (UsernameExistsException e) {
             log.error("AWS_COGNITO_REGISTRATION_ERROR: User already exists - {}", e.getMessage());
@@ -141,7 +138,6 @@ public class CognitoService {
             if (result == null)
                 throw new AuthenticationException("Authentication failed: No tokens received");
 
-            // Parse ID Token to extract user info and roles
             String[] roles = new String[0];
             String email = request.getUsername();
             String username = request.getUsername();
@@ -189,9 +185,6 @@ public class CognitoService {
     }
 
     /**
-     * CRITICAL for H5: Manual JWT token validation against AWS Cognito JWKS.
-     * This demonstrates the complexity of manual token validation.
-     *
      * Validation steps:
      * 1. Fetch JWKS from Cognito endpoint
      * 2. Parse and verify JWT signature (RS256)
@@ -218,7 +211,6 @@ public class CognitoService {
             log.debug("JWT_CLAIMS_EXPIRATION: {}", claims.getExpirationTime());
             log.debug("JWT_CLAIMS_TOKEN_USE: {}", claims.getStringClaim("token_use"));
 
-            // Validate issuer (MANDATORY for both Access Token and ID Token)
             String issuer = claims.getIssuer();
             String expectedIssuer = cognitoProperties.getCognito().getIssuerUri();
             if (!expectedIssuer.equals(issuer)) {
@@ -226,19 +218,16 @@ public class CognitoService {
                 throw new InvalidTokenException("Invalid token issuer");
             }
 
-            // Validate expiration (MANDATORY)
             Instant expirationTime = claims.getExpirationTime().toInstant();
             if (expirationTime.isBefore(Instant.now())) {
                 log.error("JWT_VALIDATION_ERROR: Token expired at {}", expirationTime);
                 throw new TokenExpiredException("Token has expired");
             }
 
-            // Validate token_use claim (optional, but good practice)
             String tokenUse = claims.getStringClaim("token_use");
             if (tokenUse != null) {
                 log.debug("JWT_TOKEN_USE: {}", tokenUse);
 
-                // ID Token validation: requires 'aud' claim
                 if ("id".equals(tokenUse)) {
                     if (claims.getAudience() == null || claims.getAudience().isEmpty()) {
                         log.error("JWT_VALIDATION_ERROR: ID Token missing audience claim");
@@ -253,20 +242,15 @@ public class CognitoService {
                     log.debug("JWT_VALIDATION: ID Token audience validated: {}", audience);
                 }
 
-                // Access Token validation: 'aud' claim is OPTIONAL or may contain different value
                 if ("access".equals(tokenUse)) {
                     log.debug("JWT_VALIDATION: Access Token detected, audience validation skipped (not required for Access Tokens)");
-                    // Access Tokens are validated by signature + issuer + expiration only
                 }
             } else {
-                // If token_use claim is missing, skip audience validation
                 log.debug("JWT_VALIDATION: token_use claim not found, skipping audience validation");
             }
 
             long duration = System.currentTimeMillis() - startTime;
             log.info("JWT_VALIDATION_SUCCESS: Token validated successfully in {}ms, token_use={}", duration, tokenUse);
-
-            metricsService.recordTokenValidation(duration);
 
             return claims;
 
@@ -368,8 +352,6 @@ public class CognitoService {
         try {
             CognitoIdentityProviderClient client = getCognitoClient();
 
-            // AWS Cognito uses username for confirmation, not email
-            // In our case, username = email (from registration)
             String secretHash = calculateSecretHash(username);
 
             ConfirmSignUpRequest confirmRequest = ConfirmSignUpRequest.builder()
@@ -384,9 +366,6 @@ public class CognitoService {
             long duration = System.currentTimeMillis() - startTime;
             log.info("EMAIL_VERIFICATION_SUCCESS: username={}, duration={}ms, timestamp={}",
                     username, duration, LocalDateTime.now());
-
-            metricsService.recordRegistrationStep("Email verification completed", duration);
-
         } catch (CodeMismatchException e) {
             log.error("EMAIL_VERIFICATION_ERROR: Invalid verification code for username={} - {}", username, e.getMessage());
             throw new AuthenticationException("Invalid verification code. Please check and try again.");
@@ -428,9 +407,6 @@ public class CognitoService {
             long duration = System.currentTimeMillis() - startTime;
             log.info("RESEND_CODE_SUCCESS: email={}, duration={}ms, codeDelivery={}, timestamp={}",
                     email, duration, response.codeDeliveryDetails().deliveryMedium(), LocalDateTime.now());
-
-            metricsService.recordRegistrationStep("Verification code resent", duration);
-
         } catch (LimitExceededException e) {
             log.error("RESEND_CODE_ERROR: Rate limit exceeded for email={} - {}", email, e.getMessage());
             throw new AuthenticationException("Too many requests. Please try again later.");
@@ -469,9 +445,6 @@ public class CognitoService {
             long duration = System.currentTimeMillis() - startTime;
             log.info("FORGOT_PASSWORD_SUCCESS: email={}, duration={}ms, codeDelivery={}, timestamp={}",
                     email, duration, response.codeDeliveryDetails().deliveryMedium(), LocalDateTime.now());
-
-            metricsService.recordPasswordResetStep("Password reset code sent", duration);
-
         } catch (UserNotFoundException e) {
             log.error("FORGOT_PASSWORD_ERROR: User not found for email={} - {}", email, e.getMessage());
             log.info("FORGOT_PASSWORD_USER_NOT_FOUND: email={}, but returning success for security", email);
@@ -514,9 +487,6 @@ public class CognitoService {
             long duration = System.currentTimeMillis() - startTime;
             log.info("CONFIRM_PASSWORD_RESET_SUCCESS: email={}, duration={}ms, timestamp={}",
                     email, duration, LocalDateTime.now());
-
-            metricsService.recordPasswordResetStep("Password reset completed", duration);
-
         } catch (CodeMismatchException e) {
             log.error("CONFIRM_PASSWORD_RESET_ERROR: Invalid code for email={} - {}", email, e.getMessage());
             throw new AuthenticationException("Invalid verification code. Please check and try again.");

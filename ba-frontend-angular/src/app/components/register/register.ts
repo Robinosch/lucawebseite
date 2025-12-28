@@ -70,8 +70,6 @@ export class Register {
 
     const formData = this.registerForm.value;
     const registrationStartTime = performance.now();
-    // H6 Metrik: Start der Registrierung
-    console.log(`[CASE_STUDY_METRIC] REGISTRATION_STARTED: backend=${this.selectedBackend}, username=${formData.username}, email=${formData.email}, timestamp=${new Date().toISOString()}`);
 
     const registerData: RegisterRequest = {
       familyName: formData.lastName,
@@ -86,8 +84,6 @@ export class Register {
       next: (response) => {
         const registrationDuration = performance.now() - registrationStartTime;
 
-        console.log(`[CASE_STUDY_METRIC] REGISTRATION_SUCCESS: backend=${this.selectedBackend}, duration_ms=${registrationDuration.toFixed(2)}, email=${formData.email}, timestamp=${new Date().toISOString()}`);
-
         this.successMessage = response.message ||
           'Registrierung erfolgreich! Du wirst zur Email-Verifizierung weitergeleitet...';
 
@@ -96,26 +92,18 @@ export class Register {
         localStorage.setItem('pending_verification_backend', this.selectedBackend);
         localStorage.setItem('registration_timestamp', registrationStartTime.toString());
 
-        console.log('[DEBUG] Weiterleitung zu /verify-email mit email:', formData.email);
-
         this.isLoading = false;
         this.router.navigate(['/verify-email'], {
           queryParams: {
             email: formData.email,
             username: formData.username
           }
-        }).then(success => {
-          console.log('[DEBUG] Navigation erfolgreich:', success);
-        }).catch(err => {
-          console.error('[DEBUG] Navigation fehlgeschlagen:', err);
-        });
+        }).then(success => {})
+          .catch(err => {});
       },
       error: (error) => {
         const registrationDuration = performance.now() - registrationStartTime;
         console.error('Registrierungs-Fehler:', error);
-
-        console.log(`[CASE_STUDY_METRIC] REGISTRATION_FAILED: backend=${this.selectedBackend}, duration_ms=${registrationDuration.toFixed(2)}, error=${error.error?.message || error.message}, timestamp=${new Date().toISOString()}`);
-
         this.errorMessage = error.error?.message ||
           'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
         this.isLoading = false;
@@ -147,41 +135,5 @@ export class Register {
         this.markFormGroupTouched(control);
       }
     });
-  }
-
-
-  switchBackend(): void {
-    console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.registerForm.get(fieldName);
-
-    if (!field || !field.touched || !field.errors) {
-      return '';
-    }
-
-    if (field.errors['required']) {
-      return 'Dieses Feld ist erforderlich.';
-    }
-
-    if (field.errors['email']) {
-      return 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
-    }
-
-    if (field.errors['minlength']) {
-      return `Mindestens ${field.errors['minlength'].requiredLength} Zeichen erforderlich.`;
-    }
-
-    if (field.errors['passwordMismatch']) {
-      return 'Passwörter stimmen nicht überein.';
-    }
-
-    return '';
-  }
-
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.registerForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
   }
 }

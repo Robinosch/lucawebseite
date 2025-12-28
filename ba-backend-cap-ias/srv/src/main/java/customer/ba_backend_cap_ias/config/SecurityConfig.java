@@ -35,12 +35,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
                 .requestMatchers("/", "/index.html", "/actuator/health").permitAll()
-                // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            // Use OAuth2 Resource Server with JWT - SAP CAP configures the JwtDecoder
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
 
         return http.build();

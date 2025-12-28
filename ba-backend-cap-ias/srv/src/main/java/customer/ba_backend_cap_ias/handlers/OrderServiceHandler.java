@@ -76,7 +76,7 @@ public class OrderServiceHandler implements EventHandler {
 
     /**
      * Action-Handler für Order-Abschluss.
-     * Nur Admin darf Orders abschließen (definiert in data-model.cds).
+     * Nur Admin darf Orders abschließen (data-model.cds).
      */
     @On(event = CompleteOrderContext.CDS_NAME)
     public void onCompleteOrder(CompleteOrderContext context) {
@@ -87,7 +87,6 @@ public class OrderServiceHandler implements EventHandler {
         logger.info("ORDER_COMPLETE: user={}, orderId={}", username, orderId);
         logger.info("NO_MANUAL_AUTHORIZATION_CODE: Framework handled it automatically");
 
-        // Order Status auf COMPLETED setzen
         var result = db.run(
             Update.entity(Orders_.class)
                 .where(o -> o.ID().eq(orderId))
@@ -107,7 +106,7 @@ public class OrderServiceHandler implements EventHandler {
 
     /**
      * Action-Handler für Order-Stornierung.
-     * Admin oder der Ersteller der Order darf stornieren.
+     * Admin oder Ersteller darf Order stornieren.
      */
     @On(event = CancelOrderContext.CDS_NAME)
     public void onCancelOrder(CancelOrderContext context) {
@@ -117,7 +116,6 @@ public class OrderServiceHandler implements EventHandler {
 
         logger.info("ORDER_CANCEL: user={}, orderId={}", username, orderId);
 
-        // Order Status auf CANCELLED setzen
         var result = db.run(
             Update.entity(Orders_.class)
                 .where(o -> o.ID().eq(orderId))

@@ -60,7 +60,6 @@
         </div>
       </div>
     } @else {
-      <!-- AWS Cognito: Registrierungsformular anzeigen -->
       @if (errorMessage) {
         <div class="alert alert-error">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -248,42 +247,7 @@
       </svg>
       Anmelden
     </a>
-
-    <div class="implementation-note">
-      <div class="note-icon">📊</div>
-      <div class="note-content">
-        <h3>Hypothese H6: Benutzer-Onboarding - Implementierungsaufwand</h3>
-        <div class="comparison">
-          <div class="comparison-item comparison-aws">
-            <h4>🔷 AWS Cognito (SDK-gesteuert)</h4>
-            <ul>
-              <li>✏️ Manuelle UI-Implementierung erforderlich</li>
-              <li>🔍 Custom Validierungslogik schreiben</li>
-              <li>🔌 SignUp API Integration mit SDK (~150 LOC)</li>
-              <li>📧 E-Mail-Verifikation konfigurieren</li>
-              <li>⚠️ Fehlerbehandlung manuell implementieren</li>
-            </ul>
-            <p class="effort-badge">Aufwand: <span class="badge badge-high">Hoch (Code)</span></p>
-          </div>
-          <div class="comparison-item comparison-sap">
-            <h4>🔶 SAP IAS (Admin-Konsole)</h4>
-            <ul>
-              <li>✅ Benutzer über Admin-Konsole erstellen</li>
-              <li>✅ Self-Service-Portal konfigurierbar</li>
-              <li>✅ Keine Backend-API für Registrierung</li>
-              <li>✅ Automatische E-Mail-Benachrichtigung</li>
-              <li>✅ Zentrale Passwort-Richtlinien</li>
-            </ul>
-            <p class="effort-badge">Aufwand: <span class="badge badge-low">Niedrig (Konfiguration)</span></p>
-          </div>
-        </div>
-        <p class="bff-note">
-          <strong>🔄 Architektur-Unterschied:</strong> AWS Cognito ermöglicht programmatische Registrierung,
-          SAP IAS nutzt administrative Konfiguration (Cloud-only IdP).
-        </p>
-      </div>
-    </div>
-    } <!-- Ende @else (AWS Cognito Formular) -->
+    }
   </div>
 </div>
 

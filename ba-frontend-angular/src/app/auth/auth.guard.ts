@@ -7,8 +7,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const apiService = inject(ApiService);
 
-  // Cloud-Modus: User ist bereits via XSUAA/SAP IAS authentifiziert
-  // Der App Router leitet nicht-authentifizierte User automatisch um
   const isCloudMode = (environment as any).cloudMode || environment.production;
   if (isCloudMode) {
     return true;

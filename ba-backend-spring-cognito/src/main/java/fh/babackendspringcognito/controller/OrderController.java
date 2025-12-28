@@ -2,7 +2,6 @@ package fh.babackendspringcognito.controller;
 
 import fh.babackendspringcognito.dto.OrderDto;
 import fh.babackendspringcognito.model.Order;
-import fh.babackendspringcognito.service.MetricsService;
 import fh.babackendspringcognito.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 
 /**
  * Order Controller with role-based authorization.
- * CRITICAL for hypothesis testing:
  * - H1: Security implementation (imperative @PreAuthorize)
  * - H2: Role-based access control granularity
  * - H4: Security coupling (Spring Security dependency)
@@ -38,7 +36,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final MetricsService metricsService;
 
     /**
      * Get all orders.
@@ -53,8 +50,6 @@ public class OrderController {
 
         log.info("AUTHORIZATION_CHECK: endpoint=/api/orders, method=GET, user={}, authorities={}",
                 username, auth.getAuthorities());
-
-        metricsService.recordAuthorizationCheck("/api/orders", "AUTHENTICATED", username);
 
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
@@ -74,8 +69,6 @@ public class OrderController {
         log.info("AUTHORIZATION_CHECK: endpoint=/api/orders/{id}, method=GET, user={}, authorities={}",
                 username, auth.getAuthorities());
 
-        metricsService.recordAuthorizationCheck("/api/orders/{id}", "MANAGER", username);
-
         Order order = orderService.getOrderById(id);
         return ResponseEntity.ok(order);
     }
@@ -93,8 +86,6 @@ public class OrderController {
 
         log.info("AUTHORIZATION_CHECK: endpoint=/api/orders, method=POST, user={}, authorities={}",
                 username, auth.getAuthorities());
-
-        metricsService.recordAuthorizationCheck("/api/orders", "ADMIN", username);
 
         Order order = orderService.createOrder(orderDto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
@@ -114,8 +105,6 @@ public class OrderController {
         log.info("AUTHORIZATION_CHECK: endpoint=/api/orders/{id}, method=DELETE, user={}, authorities={}",
                 username, auth.getAuthorities());
 
-        metricsService.recordAuthorizationCheck("/api/orders/{id}", "ADMIN", username);
-
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
@@ -132,8 +121,6 @@ public class OrderController {
 
         log.info("AUTHORIZATION_CHECK: endpoint=/api/orders/customer/{customerId}, method=GET, user={}, authorities={}",
                 username, auth.getAuthorities());
-
-        metricsService.recordAuthorizationCheck("/api/orders/customer/{customerId}", "AUTHENTICATED", username);
 
         List<Order> orders = orderService.getOrdersByCustomer(customerId);
         return ResponseEntity.ok(orders);

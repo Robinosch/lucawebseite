@@ -62,8 +62,6 @@ export class ApiService {
   private basicAuthCredentials: string | null = null;
 
   private isAuthenticatedSubject$ = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject$.asObservable();
-
   private userProfileSubject$ = new BehaviorSubject<UserProfile | null>(null);
   public userProfile$: Observable<UserProfile | null> = this.userProfileSubject$.asObservable();
 
@@ -94,7 +92,6 @@ export class ApiService {
       this.isAuthenticatedSubject$.next(true);
     }
 
-    // User Profile wiederherstellen
     const storedUser = localStorage.getItem('userProfile');
     if (storedUser) {
       this.userProfileSubject$.next(JSON.parse(storedUser));
@@ -107,9 +104,7 @@ export class ApiService {
    * Dieser gibt automatisch die Benutzerinfos aus dem XSUAA/IAS Token zurück.
    */
   fetchUserInfo(): Observable<any> {
-    // Cloud-Modus: App Router User-API Service
-    if (this.isCloudMode) {
-      return this.http.get<any>('/user-api/currentUser', { withCredentials: true }).pipe(
+    return this.http.get<any>('/user-api/currentUser', { withCredentials: true }).pipe(
         map(user => {
           const roles = this.extractRolesFromScopes(user.scopes || []);
 
@@ -125,17 +120,9 @@ export class ApiService {
           };
         }),
         catchError(err => {
-          console.error('[DEBUG] Cloud-Auth Fehler:', err);
           return throwError(() => err);
         })
       );
-    }
-
-    const url = this.currentBackend === 'sapias'
-      ? `${environment.sapIasBackendUrl}/api/user/me`
-      : `${this.apiUrl}/user/me`;
-
-    return this.http.get<any>(url, { withCredentials: true });
   }
 
   /**
@@ -145,7 +132,6 @@ export class ApiService {
    */
   private extractRolesFromScopes(scopes: string[]): string[] {
     if (!scopes || scopes.length === 0) {
-      console.log('[DEBUG] Keine Scopes vorhanden - verwende Default-Rolle "User"');
       return ['User'];
     }
 
@@ -256,7 +242,6 @@ export class ApiService {
       return this.loginSapCap(credentials);
     }
 
-    // Cognito Backend: Standard JWT-Flow
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials, {
       withCredentials: true
     }).pipe(
@@ -312,13 +297,11 @@ export class ApiService {
     // Basic Auth Credentials Base64-kodieren
     const basicAuth = btoa(`${credentials.username}:${credentials.password}`);
 
-    // Credentials lokal speichern - werden bei jedem Request verwendet
     this.basicAuthCredentials = basicAuth;
     this.currentBackend = 'sapias';
     localStorage.setItem('basicAuthCredentials', basicAuth);
     localStorage.setItem('currentBackend', 'sapias');
 
-    // User Profile aus Username ableiten (Mock-User)
     const userProfile: UserProfile = {
       username: credentials.username,
       email: credentials.username,
