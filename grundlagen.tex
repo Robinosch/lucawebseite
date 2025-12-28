@@ -9,18 +9,18 @@ Die Authentifizierung und Autorisierung von Benutzern in verteilten Cloud-System
 
 \subsection{OAuth 2.0 als Autorisierungsframework für delegierten Zugriff}
 
-OAuth 2.0 ist ein Autorisierungsframework, da es Anwendungen ermöglicht, im Namen eines Benutzers auf geschützte Ressourcen zuzugreifen, ohne dass die Anmeldedaten des Benutzers mit der Anwendung geteilt werden müssen\footnote{ \url{https://datatracker.ietf.org/doc/html/rfc6749}, aufgerufen am 07.11.2025}. Das Framework definiert dabei vier Hauptakteure: den Resource Owner (z.B. der Benutzer), den Client (z.B. eine Web App), den Authorization Server (der die Authentifizierung durchführt und Token ausstellt) und den Resource Server (der die geschützten Ressourcen besitzt). 
+OAuth 2.0 ist ein Autorisierungsframework, da es Anwendungen ermöglicht, im Namen eines Benutzers auf geschützte Ressourcen zuzugreifen, ohne dass die Anmeldedaten des Benutzers mit der Anwendung geteilt werden müssen\footnote{ \url{https://datatracker.ietf.org/doc/html/rfc6749}, aufgerufen am 07.11.2025}. Das Framework definiert dabei vier Hauptakteure: den Resource Owner (z.B. der Benutzer), den Client (z.B. eine Web App), den Authorization Server (der die Authentifizierung durchführt und Token ausstellt) und den Resource Server (der die geschützten Ressourcen besitzt).
 \begin{figure}[h]
-  \centering
-  \includegraphics[width=1.05\textwidth]{figures/oauth2flow.drawio.pdf}
-  \caption{Vereinfachter OAuth 2.0 Authorization Code Grant Flow}
-  \label{fig:seq}
+    \centering
+    \includegraphics[width=1.05\textwidth]{figures/oauth2flow.drawio.pdf}
+    \caption{Vereinfachter OAuth 2.0 Authorization Code Grant Flow}
+    \label{fig:seq}
 \end{figure}
 Das Sequenzdiagramm \ref{fig:seq} stellt einen beispielhaften Authorization Code Grant Flow mit OAuth 2.0 dar.
-Dabei beginnt es bei dem Resource Owner, dieser führt eine Aktion aus, die die Autorisierung startet, wie z.B. ein Login. Der Client leitet zunächst die Anfrage zum Authorization Server weiter. Der Authorization Server liefert dabei einen Endpunkt, wo sich der Resource Owner autorisieren kann, z.B. ein Login-Formular. Danach authentifiziert sich der Resource Owner gegenüber dem Authorization Server und der Authorization Server vergibt z.B. eine Genehmigung. Anschließend sendet der Authorization Server einen Authorization Code an den Client. Der Client tauscht diesen Code direkt beim Authorization Server gegen ein Access Token aus. Der Client nutzt 
+Dabei beginnt es bei dem Resource Owner, dieser führt eine Aktion aus, die die Autorisierung startet, wie z.B. ein Login. Der Client leitet zunächst die Anfrage zum Authorization Server weiter. Der Authorization Server liefert dabei einen Endpunkt, wo sich der Resource Owner autorisieren kann, z.B. ein Login-Formular. Danach authentifiziert sich der Resource Owner gegenüber dem Authorization Server und der Authorization Server vergibt z.B. eine Genehmigung. Anschließend sendet der Authorization Server einen Authorization Code an den Client. Der Client tauscht diesen Code direkt beim Authorization Server gegen ein Access Token aus. Der Client nutzt
 schließlich den Access Token, um auf geschützte Ressourcen beim Resource-Server
- zuzugreifen. Der Vorteil liegt darin, dass der Access Token 
-nicht über den Browser des Benutzers übertragen wird, sondern nur 
+zuzugreifen. Der Vorteil liegt darin, dass der Access Token
+nicht über den Browser des Benutzers übertragen wird, sondern nur
 über den Client und dem Resource Server.
 Der grundlegende OAuth 2.0-Ablauf folgt einem Request-Response-Muster mit unterschiedlichen \textit{Grant Types} für verschiedene Szenarien. Grant Types werden von OAuth 2.0 definiert für verschiedene Anwendungsszenarien.
 Der \textit{Authorization Code Grant} ist der empfohlene Flow für die meisten Anwendungstypen und bietet die höchste Sicherheit, der der Access Token niemals über den Browser des Benutzers übertragen wird, sondern nur über Server-zu-Server-Kommunikation ausgetauscht wird. Beispielsweise wird bei einem Angular Frontend mit einem Java Backend als Server der Token mit dem Java Backend ausgetauscht.
@@ -32,7 +32,7 @@ OAuth 2.0 definiert zudem das Konzept der Scopes, die den Umfang der erteilten B
 
 \subsubsection{Umsetzung in AWS Cognito}
 
-AWS Cognito User Pools implementieren OAuth 2.0 als zentrales Autorisierungsframework und unterstützen alle gängigen Grant Types\footnote{\url{https://aws.amazon.com/blogs/security/how-to-use-oauth-2-0-in-amazon-cognito-learn-about-the-different-oauth-2-0-grants/}, aufgerufen am 07.11.2025}. Die Implementierung erfolgt über User Pools, die als Authorization Server fungieren und OAuth 2.0-konforme Tokens ausstellen. Cognito unterstützt den Authorization Code Flow mit \ac{PKCE} für erhöhte Sicherheit bei öffentlichen Clients, den Client Credentials Flow für Service-zu-Service-Kommunikation sowie die Verknüpfung mit externen \ac{IdP}s über OAuth 2.0. 
+AWS Cognito User Pools implementieren OAuth 2.0 als zentrales Autorisierungsframework und unterstützen alle gängigen Grant Types\footnote{\url{https://aws.amazon.com/blogs/security/how-to-use-oauth-2-0-in-amazon-cognito-learn-about-the-different-oauth-2-0-grants/}, aufgerufen am 07.11.2025}. Die Implementierung erfolgt über User Pools, die als Authorization Server fungieren und OAuth 2.0-konforme Tokens ausstellen. Cognito unterstützt den Authorization Code Flow mit \ac{PKCE} für erhöhte Sicherheit bei öffentlichen Clients, den Client Credentials Flow für Service-zu-Service-Kommunikation sowie die Verknüpfung mit externen \ac{IdP}s über OAuth 2.0.
 
 Die Konfiguration von OAuth 2.0 in Cognito erfolgt über Application Clients, die pro Mandant oder Anwendung erstellt werden können. Jede Client-Anwendung erhält eine eindeutige ID und optional ein Client Secret. Cognito ermöglicht die Konfiguration von OAuth-Scopes, die den Zugriff auf Benutzerattribute und API-Endpunkte steuern. Die Tokens werden im \ac{JWT}-Format ausgestellt und enthalten Claims über die Benutzeridentität und die gewährten Berechtigungen.
 
@@ -70,7 +70,7 @@ Die Konfiguration von \ac{SAP IAS} als \ac{OIDC}-Provider erfolgt über die Admi
 
 \subsection{SAML 2.0 - XML-basierter Standard für Enterprise Single Sign-On}
 
- \ac{SAML} 2.0 ist ein XML-basierter Standard für den Austausch von Authentifizierungs- und Autorisierungsinformationen zwischen vertrauenswürdigen Parteien\footnote{\url{https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html}, aufgerufen am 07.11.2025}. \ac{SAML} wurde von der OASIS-Gruppe entwickelt und ist besonders im Enterprise-Umfeld für \ac{SSO}-Szenarien weit verbreitet. Das Protokoll definiert drei Hauptakteure. Der Principal (üblicherweise der Endbenutzer), den \ac{IdP} der die Authentifizierung durchführt und der Service Provider, der die Anwendung oder den Dienst bereitstellt, auf den zugegriffen werden soll.
+\ac{SAML} 2.0 ist ein XML-basierter Standard für den Austausch von Authentifizierungs- und Autorisierungsinformationen zwischen vertrauenswürdigen Parteien\footnote{\url{https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html}, aufgerufen am 07.11.2025}. \ac{SAML} wurde von der OASIS-Gruppe entwickelt und ist besonders im Enterprise-Umfeld für \ac{SSO}-Szenarien weit verbreitet. Das Protokoll definiert drei Hauptakteure. Der Principal (üblicherweise der Endbenutzer), den \ac{IdP} der die Authentifizierung durchführt und der Service Provider, der die Anwendung oder den Dienst bereitstellt, auf den zugegriffen werden soll.
 
 Der zentrale Bestandteil von  \ac{SAML} ist die \textit{Assertion}, ein XML-Dokument, das Aussagen über einen Principal enthält. \ac{SAML} definiert drei Arten von Statements.
 Die \textit{Authentication Statements} bestätigen, dass ein Principal zu einem bestimmten Zeitpunkt mit einer bestimmten Methode authentifiziert wurde. \textit{Attribute Statements} enthalten Attributinformationen über den Principal, wie Name, E-Mail-Adresse oder Gruppen. \textit{Authorization Decision Statements} beschreiben, ob ein Principal berechtigt ist, eine bestimmte Aktion auf einer Ressource auszuführen. Die Assertions werden signiert, um deren Integrität und Authentizität zu gewährleisten, und können optional verschlüsselt werden.
@@ -184,11 +184,11 @@ Die beiden Integrationspfade unterscheiden sich in ihrem Design:
 
 \begin{itemize}
     \item \textbf{Deklarativ vs. Imperativ:} \ac{SAP CAP} nutzt einen deklarativen Ansatz, bei dem Regeln im \ac{CDS}-Modell definiert werden. Spring Security/Spring Boot nutzt einen imperativen Ansatz, bei dem Entwickler Regeln an beliebigen Stellen im Code durch Annotationen oder Programmlogik implementieren.
-    
+
     \item \textbf{Zentralisiert vs. Verteilt:} In \ac{SAP CAP} sind Autorisierungsregeln zentral im Datenmodell definiert. Bei Spring Security sind diese über Controller, Services und möglicherweise weitere Komponenten verteilt.
-    
+
     \item \textbf{Framework-gesteuert vs. Developer-gesteuert:} \ac{SAP CAP} erzwingt eine bestimmte Struktur und Best Practice für Autorisierung. Spring Security bietet dafür Flexibilität.
-    
+
     \item \textbf{Automatische Durchsetzung:} \ac{SAP CAP} führt Autorisierungsregeln automatisch auf Datenbankebene durch. Spring Security erfordert, dass jede Methode explizit geschützt wird.
 \end{itemize}
 
@@ -212,6 +212,10 @@ Spring Security validiert diese Tokens automatisch über die Cognito-\ac{JWKS}-U
 
 \ac{SAP IAS} besitzt ein ähnliches Konzept, dabei implementiert es standardisierte Passwort-Policies \textit{Tenant}-weit. Ein Tenant ist im SAP Kontext, eine isolierte zugewiesene Umgebung innerhalb einer gemeinsamen Cloud-Infrastruktur. Dadurch können beispielsweise Kunden zu unterschiedlichen Tenants zugewiesen werden\footnote{\url{https://help.sap.com/docs/SAP_Leonardo_IoT/080fabc6cae6423fb45fca7752adb61e/462b49382316427aa59fe671a75fa39e.html}, aufgerufen am 22.11.2025} Neue Benutzer können von Administratoren erstellt oder durch Self-Service registriert werden. Der Authentifizierungs-Flow ist ebenfalls \ac{OIDC}-basiert und folgt dem Authorization Code Flow (Abbildung \ref{fig:seq})\footnote{\url{https://help.sap.com/docs/cloud-identity-services/cloud-identity-services/create-new-user}, aufgerufen am 22.11.2025}.
 
+\textbf{Wichtiger Unterschied:} \ac{SAP IAS} ist ausschließlich als Cloud-Service verfügbar und kann nicht lokal betrieben werden. Im Gegensatz zu \ac{AWS} Cognito, das über das \ac{SDK} eine direkte Verbindung auch aus lokalen Entwicklungsumgebungen ermöglicht, erfordert \ac{SAP IAS} ein Deployment auf der \ac{SAP BTP} für die vollständige Funktionalität. Für lokale Entwicklung wird daher ein Mock-Modus im \ac{SAP CAP} Framework verwendet. Dies ist ein wesentlicher architektonischer Unterschied, der bei der Hypothesenprüfung ($H_5$, $H_6$, $H_7$, $H_8$) berücksichtigt wird.
+
+Zudem unterstützt \ac{SAP IAS} \textbf{keine programmatische Benutzerregistrierung} über eine Backend-API. Benutzer werden ausschließlich über die Admin-Konsole oder das Self-Service-Portal erstellt. \ac{AWS} Cognito hingegen bietet sowohl Admin-Erstellung als auch SDK-gesteuerte Registrierung an. Für den Vergleich in $H_6$ werden daher die Klicks in beiden Admin-Konsolen gezählt, während die SDK-Registrierung bei \ac{AWS} Cognito als zusätzliches differenzierendes Feature dokumentiert wird.
+
 Im Gegensatz zu Cognito unterstützt \ac{SAP IAS} auch den Resource Owner Password Credentials Flow, bei dem der Client Benutzerdaten direkt vom Benutzer erhält.
 Außerdem bietet \ac{SAP IAS} als Alternativen zu Passwörtern X.509-Zertifikate sowie WebAuthn/Passkeys und Biometrie, unterstützt zudem Risk-Based Access Control (erhöhte Authentifizierungsanforderungen basierend auf Kontext wie Netzwerkstandort) und ermöglicht auch eine Integration mit externen \ac{IdP}\footnote{\url{https://www.erpqna.com/passwordless-authentication-passkeys-with-sap-btp-sdk-for-ios-and-sap-cloud-identity-services/}, aufgerufen am 23.11.2025}\footnote{\url{https://www.linkedin.com/pulse/strengthening-sap-authentication-zero-trust-methods-carsten-olt-dwiqe}, aufgerufen am 23.11.2025}.
 
@@ -221,10 +225,10 @@ In \ac{SAP CAP} erfolgt die Token-Validierung automatisch durch die \texttt{cds-
 
 \begin{itemize}
     \item \textbf{Token-Flows:} Cognito unterstützt primär Authorization Code Flow. \ac{SAP IAS} bietet mehr Flexibility mit mehreren Standards-Flows.
-    
+
     \item \textbf{Passwort-Policies:} Cognito erlaubt mehrere Konfiguration (höhere Komplexität, Fehlerkonfigurationsrisiko). \ac{SAP IAS} standardisiert auf Best Practices (weniger Fehler, weniger Flexibilität).
-    
+
     \item \textbf{Token-Validierung:} Cognito + Spring Boot erfordert manuelle Konfiguration. \ac{SAP CAP} + \ac{SAP IAS} validiert automatisch durch das Framework.
-    
+
     \item \textbf{Developer Experience:} \ac{SAP CAP} reduziert durch Automatisierung die Komplexität. Spring Boot mit Cognito erfordert mehr Konfiguration.
 \end{itemize}

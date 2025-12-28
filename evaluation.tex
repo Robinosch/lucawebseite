@@ -8,33 +8,33 @@ In diesem Kapitel werden die in Abschnitt \ref{sec:hypothesen} aufgestellten Hyp
 Tabelle \ref{tab:hypothesen_uebersicht} zeigt eine Zusammenfassung aller Hypothesen mit den gemessenen Metriken und dem Evaluationsergebnis.
 
 \begin{table}[h]
-\centering
-\small
-\begin{tabular}{|l|p{4cm}|c|c|c|}
-\hline
-\textbf{H} & \textbf{Beschreibung} & \textbf{AWS/Spring} & \textbf{SAP CAP/IAS} & \textbf{Ergebnis} \\
-\hline
-$H_1$ & Autorisierungs-LOC & TODO & TODO & TODO \\
-\hline
-$H_2$ & Wartbarkeit (Dateien bei Rollenänderung) & TODO & TODO & TODO \\
-\hline
-$H_{3a}$ & Token-Validierung LOC & TODO & TODO & TODO \\
-\hline
-$H_{3b}$ & Unternehmensintegration (Schritte) & TODO & TODO & TODO \\
-\hline
-$H_4$ & Vendor-Kopplung (Dateien) & TODO & TODO & TODO \\
-\hline
-$H_5$ & Token-Validierung (manuell/auto) & TODO & TODO & TODO \\
-\hline
-$H_6$ & Benutzerregistrierung (Klicks) & TODO & TODO & TODO \\
-\hline
-$H_7$ & Passwort-Reset (LOC/Schritte) & TODO & TODO & TODO \\
-\hline
-$H_8$ & Integrierte Sicherheitsfeatures & TODO & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Übersicht der Hypothesen-Evaluation}
-\label{tab:hypothesen_uebersicht}
+    \centering
+    \small
+    \begin{tabular}{|l|p{4cm}|c|c|c|}
+        \hline
+        \textbf{H} & \textbf{Beschreibung} & \textbf{AWS/Spring} & \textbf{SAP CAP/IAS} & \textbf{Ergebnis} \\
+        \hline
+        $H_1$ & Autorisierungs-LOC & TODO & TODO & TODO \\
+        \hline
+        $H_2$ & Wartbarkeit (Dateien bei Rollenänderung) & TODO & TODO & TODO \\
+        \hline
+        $H_{3a}$ & Token-Validierung LOC & TODO & TODO & TODO \\
+        \hline
+        $H_{3b}$ & Unternehmensintegration (Schritte) & TODO & TODO & TODO \\
+        \hline
+        $H_4$ & Vendor-Kopplung (Dateien) & TODO & TODO & TODO \\
+        \hline
+        $H_5$ & Token-Validierung (manuell/auto) & TODO & TODO & TODO \\
+        \hline
+        $H_6$ & Benutzerregistrierung (Klicks) & TODO & TODO & TODO \\
+        \hline
+        $H_7$ & Passwort-Reset (LOC/Schritte) & TODO & TODO & TODO \\
+        \hline
+        $H_8$ & Integrierte Sicherheitsfeatures & TODO & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Übersicht der Hypothesen-Evaluation}
+    \label{tab:hypothesen_uebersicht}
 \end{table}
 
 \section{H1: Sicherheit der Autorisierungslogik}
@@ -52,22 +52,22 @@ Die Messung erfolgt durch statische Code-Analyse:
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-@PreAuthorize Annotationen & 5 & 0 \\
-\hline
-@restrict Annotationen & 0 & 4 \\
-\hline
-SecurityConfig LOC & 100 & 0 \\
-\hline
-Autorisierungs-LOC gesamt & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H1: Autorisierungslogik}
-\label{tab:h1_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        @PreAuthorize Annotationen & 5 & 0 \\
+        \hline
+        @restrict Annotationen & 0 & 4 \\
+        \hline
+        SecurityConfig LOC & 100 & 0 \\
+        \hline
+        Autorisierungs-LOC gesamt & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H1: Autorisierungslogik}
+    \label{tab:h1_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -90,20 +90,20 @@ Für den Test wurde eine neue Rolle \texttt{Observer} mit Leseberechtigung hinzu
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-Geänderte Dateien & TODO & 1 \\
-\hline
-Geänderte Methoden & TODO & 0 \\
-\hline
-LOC-Änderungen & TODO & 3 \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H2: Wartbarkeit}
-\label{tab:h2_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        Geänderte Dateien & TODO & 1 \\
+        \hline
+        Geänderte Methoden & TODO & 0 \\
+        \hline
+        LOC-Änderungen & TODO & 3 \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H2: Wartbarkeit}
+    \label{tab:h2_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -117,24 +117,24 @@ Hypothese $H_{3a}$ vergleicht den Code- und Konfigurationsaufwand für Token-Val
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Komponente} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-application.yaml/properties & TODO & 10 \\
-\hline
-SecurityConfig & 100 & 0 \\
-\hline
-JwtAuthenticationFilter & TODO & 0 \\
-\hline
-Custom JWT Converter & TODO & 0 \\
-\hline
-\textbf{Gesamt LOC} & TODO & $\sim$10 \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H3a: Token-Validierung}
-\label{tab:h3a_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Komponente} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        application.yaml/properties & TODO & 10 \\
+        \hline
+        SecurityConfig & 100 & 0 \\
+        \hline
+        JwtAuthenticationFilter & TODO & 0 \\
+        \hline
+        Custom JWT Converter & TODO & 0 \\
+        \hline
+        \textbf{Gesamt LOC} & TODO & $\sim$10 \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H3a: Token-Validierung}
+    \label{tab:h3a_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -158,18 +158,18 @@ Die Messung erfolgt in der Cloud-Umgebung:
 % TODO: Nach Cloud-Deployment die Schritte zählen und dokumentieren
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Metrik} & \textbf{AWS Cognito} & \textbf{SAP IAS} \\
-\hline
-Konfigurationsschritte & TODO & TODO \\
-\hline
-Code-Änderungen & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H3b: Unternehmensintegration}
-\label{tab:h3b_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Metrik} & \textbf{AWS Cognito} & \textbf{SAP IAS} \\
+        \hline
+        Konfigurationsschritte & TODO & TODO \\
+        \hline
+        Code-Änderungen & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H3b: Unternehmensintegration}
+    \label{tab:h3b_ergebnisse}
 \end{table}
 
 \section{H4: Vendor-Abhängigkeit und Framework-Kopplung}
@@ -187,20 +187,20 @@ Gezählt werden Dateien mit Framework-spezifischen Imports:
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-Dateien mit Security-Imports & 4 & 3 \\
-\hline
-Security-Import-Statements & 17 & 9 \\
-\hline
-@PreAuthorize in Controllern & 5 & 0 \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H4: Vendor-Kopplung}
-\label{tab:h4_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Metrik} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        Dateien mit Security-Imports & 4 & 3 \\
+        \hline
+        Security-Import-Statements & 17 & 9 \\
+        \hline
+        @PreAuthorize in Controllern & 5 & 0 \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H4: Vendor-Kopplung}
+    \label{tab:h4_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -214,20 +214,20 @@ Hypothese $H_5$ untersucht, ob die Token-Validierung automatisch oder manuell er
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Aspekt} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-Validierung & Manuell (JwtAuthenticationFilter) & Automatisch (Framework) \\
-\hline
-JWKS-Konfiguration & Manuell (application.yaml) & Automatisch (Service-Binding) \\
-\hline
-LOC für Validierung & TODO & 0 \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H5: Token-Validierung}
-\label{tab:h5_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Aspekt} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        Validierung & Manuell (JwtAuthenticationFilter) & Automatisch (Framework) \\
+        \hline
+        JWKS-Konfiguration & Manuell (application.yaml) & Automatisch (Service-Binding) \\
+        \hline
+        LOC für Validierung & TODO & 0 \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H5: Token-Validierung}
+    \label{tab:h5_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -245,28 +245,28 @@ Die Benutzererstellung wird in beiden Admin-Konsolen durchgeführt und die Anzah
 \subsection{Messergebnisse: Admin-Konsolen-Vergleich}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Schritt} & \textbf{AWS Cognito Console} & \textbf{SAP IAS Console} \\
-\hline
-1. Konsole öffnen & 1 & 1 \\
-\hline
-2. User Pool / Application auswählen & TODO & TODO \\
-\hline
-3. Users-Bereich navigieren & TODO & TODO \\
-\hline
-4. "Create User" klicken & TODO & TODO \\
-\hline
-5. Formular ausfüllen & TODO & TODO \\
-\hline
-6. Bestätigen & TODO & TODO \\
-\hline
-\textbf{Gesamt Klicks} & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Klick-Vergleich für Benutzererstellung}
-\label{tab:h6_klicks}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Schritt} & \textbf{AWS Cognito Console} & \textbf{SAP IAS Console} \\
+        \hline
+        1. Konsole öffnen & 1 & 1 \\
+        \hline
+        2. User Pool / Application auswählen & TODO & TODO \\
+        \hline
+        3. Users-Bereich navigieren & TODO & TODO \\
+        \hline
+        4. "Create User" klicken & TODO & TODO \\
+        \hline
+        5. Formular ausfüllen & TODO & TODO \\
+        \hline
+        6. Bestätigen & TODO & TODO \\
+        \hline
+        \textbf{Gesamt Klicks} & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Klick-Vergleich für Benutzererstellung}
+    \label{tab:h6_klicks}
 \end{table}
 
 \subsection{Zusätzliches Feature: Programmatische Registrierung}
@@ -274,22 +274,22 @@ Die Benutzererstellung wird in beiden Admin-Konsolen durchgeführt und die Anzah
 \ac{AWS} Cognito bietet zusätzlich die Möglichkeit einer programmatischen Registrierung via \ac{SDK}. Diese wurde im Spring Boot Backend implementiert und umfasst:
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Komponente} & \textbf{LOC} \\
-\hline
-CognitoService (Registrierung) & $\sim$80 \\
-\hline
-CognitoService (E-Mail-Verifizierung) & $\sim$40 \\
-\hline
-AuthController (Endpoints) & $\sim$30 \\
-\hline
-\textbf{Gesamt} & $\sim$150 \\
-\hline
-\end{tabular}
-\caption{LOC für programmatische Registrierung (nur AWS Cognito)}
-\label{tab:h6_sdk}
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Komponente} & \textbf{LOC} \\
+        \hline
+        CognitoService (Registrierung) & $\sim$80 \\
+        \hline
+        CognitoService (E-Mail-Verifizierung) & $\sim$40 \\
+        \hline
+        AuthController (Endpoints) & $\sim$30 \\
+        \hline
+        \textbf{Gesamt} & $\sim$150 \\
+        \hline
+    \end{tabular}
+    \caption{LOC für programmatische Registrierung (nur AWS Cognito)}
+    \label{tab:h6_sdk}
 \end{table}
 
 \textbf{Hinweis:} \ac{SAP IAS} unterstützt keine programmatische Benutzerregistrierung über eine Backend-API. Dies ist ein architektonischer Unterschied und kein direkter Vergleichspunkt.
@@ -301,22 +301,22 @@ Hypothese $H_7$ vergleicht den Implementierungsaufwand für den Passwort-Vergess
 \subsection{Messergebnisse}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Aspekt} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-Implementierungsart & Code-basiert & Link-basiert \\
-\hline
-Backend-LOC & TODO & 0 \\
-\hline
-API-Aufrufe erforderlich & 2 & 0 \\
-\hline
-Konfigurationsschritte & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Messergebnisse für H7: Passwort-Reset}
-\label{tab:h7_ergebnisse}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Aspekt} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        Implementierungsart & Code-basiert & Link-basiert \\
+        \hline
+        Backend-LOC & TODO & 0 \\
+        \hline
+        API-Aufrufe erforderlich & 2 & 0 \\
+        \hline
+        Konfigurationsschritte & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Messergebnisse für H7: Passwort-Reset}
+    \label{tab:h7_ergebnisse}
 \end{table}
 
 \subsection{Interpretation}
@@ -330,38 +330,38 @@ Hypothese $H_8$ quantifiziert die Anzahl standardmäßig integrierter Sicherheit
 \subsection{Feature-Checkliste}
 
 \begin{table}[h]
-\centering
-\small
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Feature} & \textbf{AWS Cognito} & \textbf{SAP IAS} \\
-\hline
-Rate-Limiting & $\circ$ Konfigurierbar & $\bullet$ Standard \\
-\hline
-Brute-Force-Schutz & $\circ$ Konfigurierbar & $\bullet$ Standard \\
-\hline
-Audit-Logging & $\bullet$ CloudTrail & $\bullet$ Standard \\
-\hline
-Token-Expiration & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
-\hline
-E-Mail-Verifizierung & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
-\hline
-Passwort-Policies & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
-\hline
-Account-Lockout & $\circ$ Manuell & $\bullet$ Standard \\
-\hline
-MFA-Unterstützung & $\bullet$ Standard & $\bullet$ Standard \\
-\hline
-\hline
-\textbf{Standard aktiviert} & TODO & TODO \\
-\hline
-\textbf{Konfigurierbar} & TODO & TODO \\
-\hline
-\textbf{Manuell} & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Feature-Checkliste für H8}
-\label{tab:h8_features}
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Feature} & \textbf{AWS Cognito} & \textbf{SAP IAS} \\
+        \hline
+        Rate-Limiting & $\circ$ Konfigurierbar & $\bullet$ Standard \\
+        \hline
+        Brute-Force-Schutz & $\circ$ Konfigurierbar & $\bullet$ Standard \\
+        \hline
+        Audit-Logging & $\bullet$ CloudTrail & $\bullet$ Standard \\
+        \hline
+        Token-Expiration & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
+        \hline
+        E-Mail-Verifizierung & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
+        \hline
+        Passwort-Policies & $\bullet$ Konfigurierbar & $\bullet$ Standard \\
+        \hline
+        Account-Lockout & $\circ$ Manuell & $\bullet$ Standard \\
+        \hline
+        MFA-Unterstützung & $\bullet$ Standard & $\bullet$ Standard \\
+        \hline
+        \hline
+        \textbf{Standard aktiviert} & TODO & TODO \\
+        \hline
+        \textbf{Konfigurierbar} & TODO & TODO \\
+        \hline
+        \textbf{Manuell} & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Feature-Checkliste für H8}
+    \label{tab:h8_features}
 \end{table}
 
 \textbf{Legende:} $\bullet$ = Standard/Verfügbar, $\circ$ = Konfiguration erforderlich
@@ -391,22 +391,22 @@ MFA-Unterstützung & $\bullet$ Standard & $\bullet$ Standard \\
 \subsection{Gesamtvergleich}
 
 \begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|}
-\hline
-\textbf{Kategorie} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
-\hline
-Sicherheits-LOC gesamt & TODO & TODO \\
-\hline
-Dateien mit Security-Code & TODO & TODO \\
-\hline
-Automatisierungsgrad & TODO & TODO \\
-\hline
-Integrierte Features & TODO & TODO \\
-\hline
-\end{tabular}
-\caption{Gesamtvergleich der Implementierungen}
-\label{tab:gesamtvergleich}
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Kategorie} & \textbf{AWS Cognito + Spring Boot} & \textbf{SAP CAP + SAP IAS} \\
+        \hline
+        Sicherheits-LOC gesamt & TODO & TODO \\
+        \hline
+        Dateien mit Security-Code & TODO & TODO \\
+        \hline
+        Automatisierungsgrad & TODO & TODO \\
+        \hline
+        Integrierte Features & TODO & TODO \\
+        \hline
+    \end{tabular}
+    \caption{Gesamtvergleich der Implementierungen}
+    \label{tab:gesamtvergleich}
 \end{table}
 
 \subsection{Limitationen der Studie}
