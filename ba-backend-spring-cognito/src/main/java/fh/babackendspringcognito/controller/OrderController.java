@@ -27,7 +27,6 @@ import java.util.List;
  * - POST /api/orders - ADMIN role required
  * - DELETE /api/orders/{id} - ADMIN role required
  *
- * Security Lines of Code: ~30 lines (annotations + authorization logic)
  */
 @Slf4j
 @RestController
@@ -43,7 +42,7 @@ public class OrderController {
      * H1, H2: Demonstrates basic authentication check.
      */
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'OBSERVER')")
     public ResponseEntity<List<Order>> getAllOrders() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -61,7 +60,7 @@ public class OrderController {
      * H1, H2: Demonstrates role-based access control.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'OBSERVER')")
     public ResponseEntity<Order> getOrderById(@PathVariable String id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -107,23 +106,6 @@ public class OrderController {
 
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Get orders by customer ID.
-     * Authorization: Any authenticated user.
-     */
-    @GetMapping("/customer/{customerId}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Order>> getOrdersByCustomer(@PathVariable String customerId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-
-        log.info("AUTHORIZATION_CHECK: endpoint=/api/orders/customer/{customerId}, method=GET, user={}, authorities={}",
-                username, auth.getAuthorities());
-
-        List<Order> orders = orderService.getOrdersByCustomer(customerId);
-        return ResponseEntity.ok(orders);
     }
 }
 

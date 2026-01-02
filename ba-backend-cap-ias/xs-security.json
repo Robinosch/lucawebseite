@@ -80,39 +80,29 @@
       "scope-references": [
         "$XSAPPNAME.Observer"
       ],
-      "attribute-references": [
-        "email"
-      ]
+      "attribute-references": ["email"]
     }
   ],
   "role-collections": [
     {
       "name": "BA_Admin",
       "description": "Bachelor Thesis - Admin Role Collection",
-      "role-template-references": [
-        "$XSAPPNAME.Admin"
-      ]
+      "role-template-references": ["$XSAPPNAME.Admin"]
     },
     {
       "name": "BA_Manager",
       "description": "Bachelor Thesis - Manager Role Collection",
-      "role-template-references": [
-        "$XSAPPNAME.Manager"
-      ]
+      "role-template-references": ["$XSAPPNAME.Manager"]
     },
     {
       "name": "BA_User",
       "description": "Bachelor Thesis - User Role Collection",
-      "role-template-references": [
-        "$XSAPPNAME.User"
-      ]
+      "role-template-references": ["$XSAPPNAME.User"]
     },
     {
       "name": "BA_Observer",
       "description": "Bachelor Thesis - Observer Role Collection (H2 Testing)",
-      "role-template-references": [
-        "$XSAPPNAME.Observer"
-      ]
+      "role-template-references": ["$XSAPPNAME.Observe"]
     }
   ],
   "oauth2-configuration": {
