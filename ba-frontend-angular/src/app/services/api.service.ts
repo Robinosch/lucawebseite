@@ -5,15 +5,6 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-/**
- * Unified API Service mit BFF-Pattern (Backend-for-Frontend).
- *
- * ARCHITEKTUR:
- * - Backend handhabt OAuth2/OIDC mit IdP (AWS Cognito / SAP IAS)
- * - Session-Management über HTTP-only Cookies
- * - Token-Validierung vollständig im Backend
- */
-
 export interface LoginRequest {
   username: string;
   password: string;
@@ -99,9 +90,8 @@ export class ApiService {
   }
 
   /**
-   * Holt Benutzerinfo vom Backend.
-   * Im Cloud-Modus wird der App Router User-API Service verwendet.
-   * Dieser gibt automatisch die Benutzerinfos aus dem XSUAA/IAS Token zurück.
+   * Retrieves user info from /user-api/currentUser endpoint
+   * this is relevant for SAP IAS / XSUAA authentication
    */
   fetchUserInfo(): Observable<any> {
     return this.http.get<any>('/user-api/currentUser', { withCredentials: true }).pipe(
@@ -125,11 +115,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * Extrahiert Rollen aus XSUAA Scopes.
-   * XSUAA Scopes haben das Format: appname.RoleName (z.B. ba-backend-cap-ias!t12345.Admin)
-   *
-   */
   private extractRolesFromScopes(scopes: string[]): string[] {
     if (!scopes || scopes.length === 0) {
       return ['User'];
@@ -159,12 +144,6 @@ export class ApiService {
     return roles;
   }
 
-  /**
-   * Erstellt HTTP-Headers mit Authorization Token/Basic Auth.
-   * - Cloud-Modus: Kein Header nötig (Cookie/Session via App Router)
-   * - Cognito: Bearer Token
-   * - SAP CAP lokal: Basic Auth
-   */
   private getHeaders(): HttpHeaders {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json'
@@ -187,7 +166,9 @@ export class ApiService {
   }
 
   /**
-   * Generic POST Request an Backend.
+   * Post request to backend
+   * @param endpoint API endpoint
+   * @param data request payload
    */
   post<T>(endpoint: string, data: any): Observable<T> {
     return this.http.post<T>(`${this.apiUrl}${endpoint}`, data, {
@@ -197,27 +178,8 @@ export class ApiService {
   }
 
   /**
-   * Generic GET Request an Backend.
-   */
-  get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}${endpoint}`, {
-      headers: this.getHeaders(),
-      withCredentials: true
-    });
-  }
-
-  /**
-   * Generic PUT Request an Backend.
-   */
-  put<T>(endpoint: string, data: any): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}${endpoint}`, data, {
-      headers: this.getHeaders(),
-      withCredentials: true
-    });
-  }
-
-  /**
-   * Generic DELETE Request an Backend.
+   * Delete request to backend
+   * @param endpoint API endpoint
    */
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.apiUrl}${endpoint}`, {
@@ -226,18 +188,11 @@ export class ApiService {
     });
   }
 
-  // ==========================================
-  // AUTHENTICATION METHODS
-  // ==========================================
-
   /**
-   * Login mit Username/Password.
-   * - Cognito: Backend handhabt OAuth2-Flow und gibt JWT-Token zurück
-   * - SAP CAP (lokal): Basic Auth direkt an OData-Endpoints
-   * - SAP CAP (Cloud): SAP IAS OAuth2/OIDC Flow
+   * Login user with credentials
+   * @param credentials login data
    */
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    // SAP CAP Backend: Basic Auth für lokale Entwicklung
     if (credentials.backend === 'sapias') {
       return this.loginSapCap(credentials);
     }
@@ -261,12 +216,6 @@ export class ApiService {
           }
 
           this.isAuthenticatedSubject$.next(true);
-
-          console.log('[DEBUG] Cognito Token gespeichert:', {
-            hasAccessToken: !!this.accessToken,
-            username: response.user?.username,
-            roles: response.user?.roles
-          });
         }
       }),
       catchError(error => {
@@ -281,20 +230,7 @@ export class ApiService {
     );
   }
 
-  /**
-   * Login für SAP CAP Backend.
-   *
-   * LOKAL (Basic Auth):
-   * - Speichert Credentials lokal
-   * - Basic Auth Header wird bei jedem Request mitgesendet
-   * - Keine separate Login-API nötig
-   *
-   * CLOUD (SAP IAS):
-   * - App Router leitet automatisch zu SAP IAS
-   * - Kein manueller Login nötig
-   */
   private loginSapCap(credentials: LoginRequest): Observable<AuthResponse> {
-    // Basic Auth Credentials Base64-kodieren
     const basicAuth = btoa(`${credentials.username}:${credentials.password}`);
 
     this.basicAuthCredentials = basicAuth;
@@ -328,12 +264,6 @@ export class ApiService {
     });
   }
 
-  /**
-   * Extrahiert Rollen aus dem Benutzernamen (Mock-User).
-   * admin@test.com -> ['Admin']
-   * manager@test.com -> ['Manager']
-   * user@test.com -> ['User']
-   */
   private extractRolesFromUsername(username: string): string[] {
     if (username.toLowerCase().includes('admin')) {
       return ['Admin'];
@@ -344,32 +274,27 @@ export class ApiService {
   }
 
   /**
-   * Registrierung eines neuen Benutzers.
-   * Backend kommuniziert mit IdP (AWS Cognito / SAP IAS).
+   * Register new user
+   * @param data registration data
    */
   register(data: RegisterRequest): Observable<AuthResponse> {
-    const startTime = performance.now();
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, data, {
       withCredentials: true
     }).pipe(
-      tap(() => {
-        const duration = performance.now() - startTime;
-        console.log(`[CASE_STUDY_METRIC] REGISTER_SUCCESS: backend=${data.backend}, duration_ms=${duration.toFixed(2)}, timestamp=${new Date().toISOString()}`);
-      }),
       catchError(error => {
-        const duration = performance.now() - startTime;
-        console.log(`[CASE_STUDY_METRIC] REGISTER_FAILED: backend=${data.backend}, duration_ms=${duration.toFixed(2)}, timestamp=${new Date().toISOString()}`);
         return throwError(() => error);
       })
     );
   }
 
   /**
-   * Email Verifizierung mit Code.
-   * H6 KRITISCH: Messbar für Registrierungs-Flow.
+   * verify user email with code
+   * @param email user email
+   * @param code verification code
+   * @param username name of the user
+   * @param backend backend to use (cognito or sapias)
    */
   verifyEmail(email: string, code: string, username: string, backend: 'cognito' | 'sapias'): Observable<AuthResponse> {
-    const startTime = performance.now();
     if (backend === 'cognito') {
       this.apiUrl = environment.cognitoBackendUrl;
     }
@@ -378,20 +303,17 @@ export class ApiService {
       username,
       verificationCode: code
     }, { withCredentials: true }).pipe(
-      tap(() => {
-        const duration = performance.now() - startTime;
-        console.log(`[CASE_STUDY_METRIC] EMAIL_VERIFICATION_SUCCESS: backend=${backend}, duration_ms=${duration.toFixed(2)}, timestamp=${new Date().toISOString()}`);
-      }),
       catchError(error => {
-        const duration = performance.now() - startTime;
-        console.log(`[CASE_STUDY_METRIC] EMAIL_VERIFICATION_FAILED: backend=${backend}, duration_ms=${duration.toFixed(2)}, timestamp=${new Date().toISOString()}`);
         return throwError(() => error);
       })
     );
   }
 
   /**
-   * Code erneut senden (für bessere UX).
+   * resend verification code to user email
+   * @param username name of the user
+   * @param email user email
+   * @param backend backend to use (cognito or sapias)
    */
   resendVerificationCode(username: string, email: string, backend: 'cognito' | 'sapias'): Observable<AuthResponse> {
     if (backend === 'cognito') {
@@ -401,33 +323,25 @@ export class ApiService {
       email: email,
       username: username
     }, { withCredentials: true }).pipe(
-      tap(() => {
-        console.log(`[CASE_STUDY_METRIC] RESEND_CODE_SUCCESS: email=${email}, backend=${backend}`);
-      }),
       catchError(error => {
-        console.log(`[CASE_STUDY_METRIC] RESEND_CODE_FAILED: email=${email}, backend=${backend}`);
         return throwError(() => error);
       })
     );
   }
 
   /**
-   * Passwort-Reset anfordern (Schritt 1).
-   * Sendet E-Mail mit Verifizierungscode oder Link.
-   *
-   * AWS Cognito: Code per E-Mail
-   * SAP IAS: Link per E-Mail
+   * Request password-reset from backend
    */
   requestPasswordReset(email: string, username?: string): Observable<AuthResponse> {
     return this.post<AuthResponse>(`${this.apiUrl}/auth/forgot-password`, { email, username });
   }
 
   /**
-   * Passwort-Reset bestätigen mit Code (Schritt 2 - nur für AWS Cognito).
+   * confirm passwort reset
    *
-   * @param email - Benutzer E-Mail
-   * @param code - Verifizierungscode aus E-Mail
-   * @param newPassword - Neues Passwort
+   * @param email - mail address of the user
+   * @param code - code received by email
+   * @param newPassword - new password to set
    */
   confirmPasswordReset(email: string, code: string, newPassword: string): Observable<AuthResponse> {
     return this.post<AuthResponse>(`${this.apiUrl}/auth/confirm-password-reset`, {
@@ -438,10 +352,9 @@ export class ApiService {
   }
 
   /**
-   * Logout: Backend invalidiert Session und lokal werden Token gelöscht.
+   * Logout current user
    */
   logout(): Observable<void> {
-    // Für SAP CAP: Kein Backend-Logout nötig bei Basic Auth
     if (this.currentBackend === 'sapias' && this.basicAuthCredentials) {
       this.clearLocalAuth();
       return new Observable(observer => {
@@ -457,16 +370,12 @@ export class ApiService {
         this.clearLocalAuth();
       }),
       catchError(error => {
-        // Auch bei Fehler lokal ausloggen
         this.clearLocalAuth();
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Löscht alle lokalen Auth-Daten.
-   */
   private clearLocalAuth(): void {
     this.accessToken = null;
     this.basicAuthCredentials = null;
@@ -479,35 +388,23 @@ export class ApiService {
     this.isAuthenticatedSubject$.next(false);
     this.userProfileSubject$.next(null);
 
-    // Im Cloud-Modus übernimmt App Router die Umleitung
     if (!this.isCloudMode) {
       this.router.navigate(['/login']);
     }
   }
 
   /**
-   * Prüft synchron, ob Benutzer authentifiziert ist.
+   * check if user is authenticated
    */
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject$.value;
   }
 
   /**
-   * Gibt das aktuelle Benutzerprofil zurück.
-   */
-  getUserProfile(): UserProfile | null {
-    return this.userProfileSubject$.value;
-  }
-
-  // ==========================================
-  // ORDER MANAGEMENT METHODS (Protected Resources)
-  // ==========================================
-
-  /**
-   * Holt alle Bestellungen.
-   * Cognito Backend: GET /api/orders (REST)
-   * SAP IAS Backend: GET /odata/v4/api/orders/Orders (OData V4)
-   * Authorization: Authenticated users only
+   * get all orders from backend
+   * Cognito Backend: GET /api/orders
+   * SAP IAS Backend: GET /odata/v4/api/orders/Orders
+   * Authorization: USER role required
    */
   getAllOrders(): Observable<any[]> {
     const url = this.getOrdersUrl();
@@ -516,17 +413,13 @@ export class ApiService {
       withCredentials: true
     }).pipe(
       map(response => {
-        // OData V4 Response hat .value Array
         if (response && response.value) {
           return response.value;
         }
-        // REST Response ist direkt das Array
         return response;
       }),
       catchError(error => {
-        // Bei 401/403: Credentials sind ungültig - Benutzer ausloggen
         if (error.status === 401 || error.status === 403) {
-          console.error('[DEBUG] Authentifizierung fehlgeschlagen:', error);
           this.clearLocalAuth();
         }
         return throwError(() => error);
@@ -534,26 +427,9 @@ export class ApiService {
     );
   }
 
-  /**
-   * Holt eine spezifische Bestellung nach ID.
-   * Cognito Backend: GET /api/orders/{id}
-   * SAP IAS Backend: GET /odata/v4/api/orders/Orders('<uuid>')
-   * Authorization: MANAGER role required
-   */
-  getOrderById(id: string): Observable<any> {
-    if (this.currentBackend === 'sapias') {
-      const encodedId = encodeURIComponent(id);
-      const url = `${environment.sapIasODataUrl}/Orders('${encodedId}')`;
-      return this.http.get<any>(url, {
-        headers: this.getHeaders(),
-        withCredentials: true
-      });
-    }
-    return this.get<any>(`/orders/${id}`);
-  }
 
   /**
-   * Erstellt eine neue Bestellung.
+   * Create new order
    * Cognito Backend: POST /api/orders
    * SAP IAS Backend: POST /odata/v4/api/orders/Orders
    * Authorization: ADMIN role required
@@ -570,7 +446,7 @@ export class ApiService {
   }
 
   /**
-   * Löscht eine Bestellung.
+   * delete an order by id
    * Cognito Backend: DELETE /api/orders/{id}
    * SAP IAS Backend: DELETE /odata/v4/api/orders/Orders('<uuid>')
    * Authorization: ADMIN role required
@@ -582,7 +458,6 @@ export class ApiService {
     }
 
     if (this.currentBackend === 'sapias') {
-      // OData V4: UUID in einfachen Anführungszeichen
       const url = `${environment.sapIasODataUrl}/Orders(${id})`;
 
       console.log('[DEBUG] DELETE URL:', url);
@@ -601,13 +476,11 @@ export class ApiService {
   }
 
   /**
-   * Setzt die Backend-URL (für Wechsel zwischen Backends).
-   * Löscht Auth-State bei Backend-Wechsel.
+   * set current backend based on url
    */
   setBackendUrl(url: string): void {
     const newBackend = url.includes('8081') ? 'cognito' : 'sapias';
 
-    // Bei Backend-Wechsel Auth-State clearen
     if (newBackend !== this.currentBackend) {
       this.accessToken = null;
       this.basicAuthCredentials = null;
@@ -623,8 +496,7 @@ export class ApiService {
   }
 
   /**
-   * Setzt Basic Auth Credentials für SAP CAP Backend.
-   * Browser-Maske wird beim ersten API-Call automatisch angezeigt.
+   * Set Basic Auth credentials for SAP CAP backend
    */
   setBasicAuth(username: string, password: string): void {
     const basicAuth = btoa(`${username}:${password}`);
@@ -633,7 +505,6 @@ export class ApiService {
     localStorage.setItem('basicAuthCredentials', basicAuth);
     localStorage.setItem('currentBackend', 'sapias');
 
-    // User Profile aus Username ableiten
     const userProfile: UserProfile = {
       username: username,
       email: username,
@@ -650,25 +521,15 @@ export class ApiService {
     });
   }
 
+  /**
+   * check if current backend is Cognito
+   */
   isCognitoBackend(): boolean {
     return this.currentBackend === 'cognito';
   }
 
-  /**
-   * Gibt das aktuelle Backend zurück.
-   */
-  getCurrentBackend(): 'cognito' | 'sapias' {
-    return this.currentBackend;
-  }
 
-  /**
-   * Gibt die korrekte Orders-URL basierend auf dem Backend zurück.
-   * - Cloud-Modus: Relative URL (App Router leitet weiter)
-   * - Cognito lokal: /api/orders (REST)
-   * - SAP IAS lokal: /odata/v4/api/orders/Orders (OData V4)
-   */
   private getOrdersUrl(): string {
-    // Cloud-Modus: Relative URL - App Router leitet an Backend weiter
     if (this.isCloudMode) {
       return '/odata/v4/api/orders/Orders';
     }

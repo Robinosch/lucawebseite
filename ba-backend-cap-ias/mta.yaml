@@ -15,7 +15,6 @@ build-parameters:
 modules:
   # --------------------- SERVER MODULE ------------------------
   - name: ba-backend-cap-ias-srv
-  # ------------------------------------------------------------
     type: java
     path: srv
     parameters:
@@ -42,7 +41,6 @@ modules:
 
   # --------------------- APP ROUTER (Angular + Auth) ----------
   - name: ba-backend-cap-ias-approuter
-  # ------------------------------------------------------------
     type: approuter.nodejs
     path: approuter
     parameters:
@@ -74,7 +72,6 @@ modules:
 
   # --------------------- FRONTEND BUILD -----------------------
   - name: ba-frontend-angular
-  # ------------------------------------------------------------
     type: html5
     path: ../ba-frontend-angular
     build-parameters:
@@ -86,9 +83,6 @@ modules:
       supported-platforms: []
 
 resources:
-  # --------------------- XSUAA SERVICE (erforderlich für App-Router) ----
-  # Der App-Router braucht XSUAA für OAuth2 Token Management
-  # SAP IAS wird über Trust-Konfiguration im BTP Cockpit als Identity Provider eingebunden
   - name: ba-backend-cap-ias-xsuaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -100,8 +94,6 @@ resources:
         tenant-mode: dedicated
 
   # --------------------- SAP IAS (Identity Service) ----
-  # Wird über Trust-Konfiguration mit XSUAA verbunden
-  # Die Benutzer-Authentifizierung erfolgt über SAP IAS
   - name: ba-backend-cap-ias-identity
     type: org.cloudfoundry.managed-service
     parameters:

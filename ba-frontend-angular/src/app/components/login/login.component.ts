@@ -41,13 +41,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
-
   /**
-   * Login-Handler: Sendet Credentials an Backend
-   * Backend handhabt OAuth2-Flow mit ausgewähltem IdP
-   *
-   * SAP IAS: Verwendet Basic Auth (Browser-Maske)
-   * AWS Cognito: Verwendet Custom Login-Endpoint
+   * Perform login based on selected backend
    */
   login(): void {
     if (!this.username || !this.password) {
@@ -91,7 +86,7 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Backend-Wechsel für Vergleich (AWS Cognito vs. SAP IAS)
+   * set new backend url based on selection
    */
   onBackendChange(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);

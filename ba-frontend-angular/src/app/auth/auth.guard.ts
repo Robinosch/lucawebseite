@@ -3,6 +3,9 @@ import { Router, CanActivateFn } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { environment } from '../../environments/environment';
 
+/**
+ * Authentication guard to protect routes
+ */
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const apiService = inject(ApiService);

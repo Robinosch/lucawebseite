@@ -3,9 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './components/toast/toast.component';
 
 /**
- * Root-Komponente der Angular-Anwendung.
- * Dient als konstante Frontend-Komponente für den Vergleich
- * zwischen SAP CAP/IAS und Spring Boot/AWS Cognito.
+ * Root-Komponente der Angular-Anwendung
  */
 @Component({
   selector: 'app-root',

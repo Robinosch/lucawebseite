@@ -5,11 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService, RegisterRequest } from '../../services/api.service';
 
 /**
- * Register-Component für BFF-Pattern.
+ * Register-Component
  *
- * ARCHITEKTUR:
- * - Sendet Registrierungsdaten an Backend
- * - Backend kommuniziert mit IdP (AWS Cognito / SAP IAS)
  */
 @Component({
   selector: 'app-register',
@@ -41,7 +38,7 @@ export class Register {
   }
 
   /**
-   * Custom Validator: Passwort und Bestätigung müssen übereinstimmen.
+   * Custom Validator for passwort to match confirmPassword
    */
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
@@ -55,8 +52,7 @@ export class Register {
   }
 
   /**
-   * Registrierungs-Handler: Sendet Daten an Backend.
-   * Backend handhabt IdP-Kommunikation (AWS Cognito / SAP IAS).
+   * handle registration process
    */
   onRegister(): void {
     if (this.registerForm.invalid) {
@@ -82,8 +78,6 @@ export class Register {
 
     this.apiService.register(registerData).subscribe({
       next: (response) => {
-        const registrationDuration = performance.now() - registrationStartTime;
-
         this.successMessage = response.message ||
           'Registrierung erfolgreich! Du wirst zur Email-Verifizierung weitergeleitet...';
 
@@ -102,7 +96,6 @@ export class Register {
           .catch(err => {});
       },
       error: (error) => {
-        const registrationDuration = performance.now() - registrationStartTime;
         console.error('Registrierungs-Fehler:', error);
         this.errorMessage = error.error?.message ||
           'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.';
@@ -112,7 +105,7 @@ export class Register {
   }
 
   /**
-   * Backend-Wechsel für Vergleich.
+   * change backend on selection
    */
   onBackendChange(): void {
     console.log(`Backend gewechselt zu: ${this.selectedBackend}`);
@@ -123,9 +116,6 @@ export class Register {
     this.apiService.setBackendUrl(backendUrls[this.selectedBackend]);
   }
 
-  /**
-   * Markiert alle Formular-Felder als "touched" für Validierung.
-   */
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);

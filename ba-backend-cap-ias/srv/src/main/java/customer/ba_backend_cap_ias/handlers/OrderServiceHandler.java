@@ -22,11 +22,6 @@ import java.time.Instant;
 
 /**
  * Handler für den OrderService.
- *
- * WICHTIG für Hypothesen H1, H2, H5:
- * - Autorisierung erfolgt AUTOMATISCH durch CDS @restrict Annotationen
- * - Keine manuellen @PreAuthorize Checks erforderlich
- * - Framework validiert JWT Tokens automatisch
  */
 @Component
 @ServiceName(OrderService_.CDS_NAME)
@@ -41,8 +36,7 @@ public class OrderServiceHandler implements EventHandler {
     }
 
     /**
-     * Before-Handler für Order-Erstellung.
-     * Setzt automatisch den createdBy Wert auf den aktuellen Benutzer.
+     * Before-Handler for CREATE Order.
      */
     @Before(event = "CREATE", entity = Orders_.CDS_NAME)
     public void beforeCreateOrder(CdsCreateEventContext context) {
@@ -50,7 +44,6 @@ public class OrderServiceHandler implements EventHandler {
         String username = auth != null ? auth.getName() : "anonymous";
 
         logger.info("ORDER_CREATE: user={}, timestamp={}", username, Instant.now());
-        logger.info("AUTHORIZATION_METHOD: AUTOMATIC_VIA_CDS_RESTRICT_ANNOTATION");
 
         context.getCqn().entries().forEach(entry -> {
             if (!entry.containsKey("createdBy")) {
@@ -60,8 +53,7 @@ public class OrderServiceHandler implements EventHandler {
     }
 
     /**
-     * Before-Handler für Order-Lesen.
-     * Logging für Metriken - Autorisierung erfolgt automatisch durch Framework.
+     * Before-Handler for READ Order.
      */
     @Before(event = "READ", entity = Orders_.CDS_NAME)
     public void beforeReadOrders(CdsReadEventContext context) {
@@ -71,12 +63,10 @@ public class OrderServiceHandler implements EventHandler {
         logger.info("ORDER_READ: user={}, roles={}",
                 username,
                 auth != null ? auth.getAuthorities() : "none");
-        logger.info("AUTHORIZATION_ENFORCEMENT: AUTOMATIC_BY_FRAMEWORK");
     }
 
     /**
-     * Action-Handler für Order-Abschluss.
-     * Nur Admin darf Orders abschließen (data-model.cds).
+     * Action-Handler für on complete Orders.
      */
     @On(event = CompleteOrderContext.CDS_NAME)
     public void onCompleteOrder(CompleteOrderContext context) {
@@ -85,7 +75,6 @@ public class OrderServiceHandler implements EventHandler {
         String orderId = context.getOrderId();
 
         logger.info("ORDER_COMPLETE: user={}, orderId={}", username, orderId);
-        logger.info("NO_MANUAL_AUTHORIZATION_CODE: Framework handled it automatically");
 
         var result = db.run(
             Update.entity(Orders_.class)
@@ -96,17 +85,16 @@ public class OrderServiceHandler implements EventHandler {
         CompleteOrderContext.ReturnType returnType = CompleteOrderContext.ReturnType.create();
         if (result.rowCount() > 0) {
             returnType.setSuccess(true);
-            returnType.setMessage("Order " + orderId + " wurde erfolgreich abgeschlossen");
+            returnType.setMessage("Order " + orderId + " successfully completed");
         } else {
             returnType.setSuccess(false);
-            returnType.setMessage("Order " + orderId + " wurde nicht gefunden");
+            returnType.setMessage("Order " + orderId + " not found");
         }
         context.setResult(returnType);
     }
 
     /**
-     * Action-Handler für Order-Stornierung.
-     * Admin oder Ersteller darf Order stornieren.
+     * Action-Handler for cancel Order.
      */
     @On(event = CancelOrderContext.CDS_NAME)
     public void onCancelOrder(CancelOrderContext context) {
@@ -125,10 +113,10 @@ public class OrderServiceHandler implements EventHandler {
         CancelOrderContext.ReturnType returnType = CancelOrderContext.ReturnType.create();
         if (result.rowCount() > 0) {
             returnType.setSuccess(true);
-            returnType.setMessage("Order " + orderId + " wurde erfolgreich storniert");
+            returnType.setMessage("Order " + orderId + " canceled successfully");
         } else {
             returnType.setSuccess(false);
-            returnType.setMessage("Order " + orderId + " wurde nicht gefunden");
+            returnType.setMessage("Order " + orderId + " not found");
         }
         context.setResult(returnType);
     }

@@ -12,15 +12,6 @@
             </PendingDiffInfo>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/ba-backend-spring-cognito/src/main/java/fh/babackendspringcognito/dto/AuthResponse.java">
-          <value>
-            <PendingDiffInfo>
-              <option name="filePath" value="$PROJECT_DIR$/ba-backend-spring-cognito/src/main/java/fh/babackendspringcognito/dto/AuthResponse.java" />
-              <option name="originalContent" value="package fh.babackendspringcognito.dto;&#10;&#10;import lombok.AllArgsConstructor;&#10;import lombok.Builder;&#10;import lombok.Data;&#10;import lombok.NoArgsConstructor;&#10;&#10;/**&#10; * DTO for authentication response containing JWT tokens.&#10; * Used for hypothesis H5 - Token validation measurement.&#10; */&#10;@Data&#10;@NoArgsConstructor&#10;@AllArgsConstructor&#10;@Builder&#10;public class AuthResponse {&#10;&#10;    private Boolean success;&#10;    private String accessToken;&#10;    private String idToken;&#10;    private String refreshToken;&#10;    private Integer expiresIn;&#10;    private String tokenType;&#10;    private String username;&#10;    private UserInfo user;&#10;&#10;    @Data&#10;    @NoArgsConstructor&#10;    @AllArgsConstructor&#10;    @Builder&#10;    public static class UserInfo {&#10;        private String username;&#10;        private String email;&#10;        private String[] roles;&#10;    }&#10;}&#10;&#10;" />
-              <option name="updatedContent" value="package fh.babackendspringcognito.dto;&#13;&#10;&#13;&#10;import lombok.AllArgsConstructor;&#13;&#10;import lombok.Builder;&#13;&#10;import lombok.Data;&#13;&#10;import lombok.NoArgsConstructor;&#13;&#10;&#13;&#10;/**&#10; * DTO for authentication response containing JWT tokens.&#10; * Used for hypothesis H5 - Token validation measurement.&#10; */&#10;@Data&#10;@NoArgsConstructor&#10;@AllArgsConstructor&#10;@Builder&#10;public class AuthResponse {&#10;&#10;    private Boolean success;&#10;    private String accessToken;&#10;    private String idToken;&#10;    private String refreshToken;&#10;    private Integer expiresIn;&#10;    private String tokenType;&#10;    private String username;&#10;    private UserInfo user;&#10;&#10;    @Data&#10;    @NoArgsConstructor&#10;    @AllArgsConstructor&#10;    @Builder&#10;    public static class UserInfo {&#10;        private String username;&#10;        private String email;&#10;        private String[] roles;&#10;    }&#10;}&#13;&#10;&#13;&#10;" />
-            </PendingDiffInfo>
-          </value>
-        </entry>
       </map>
     </option>
   </component>

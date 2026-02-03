@@ -6,13 +6,7 @@ import {environment} from '../../../environments/environment';
 import {ToastService} from '../../services/toast.service';
 
 /**
- * Dashboard-Component für BFF-Pattern.
- *
- * ARCHITEKTUR:
- * - Zeigt Benutzerdaten vom Backend
- * - Keine Token-Anzeige (Tokens sind im Backend)
- * - Session-basierte Authentifizierung
- * - Demonstriert rollenbasierte UI-Elemente
+ * Dashboard-Component for authenticated users
  */
 @Component({
   selector: 'app-dashboard',
@@ -50,9 +44,6 @@ export class Dashboard implements OnInit {
     }
   }
 
-  /**
-   * Lädt Benutzerinfo aus dem Cloud-Backend (nach SAP IAS Login).
-   */
   private loadCloudUserInfo(): void {
     this.apiService.fetchUserInfo().subscribe({
       next: (userInfo) => {
@@ -89,14 +80,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  /**
-   * Aktualisiert UI-Berechtigungen basierend auf Benutzerrollen.
-   * Orientiert sich an Spring Boot @PreAuthorize Annotationen:
-   * - GET /api/orders - isAuthenticated()
-   * - GET /api/orders/{id} - hasRole('MANAGER')
-   * - POST /api/orders - hasRole('ADMIN')
-   * - DELETE /api/orders/{id} - hasRole('ADMIN')
-   */
   private updatePermissions(): void {
     if (!this.userProfile || !this.userProfile.roles) {
       this.canViewOrders = false;
@@ -113,6 +96,10 @@ export class Dashboard implements OnInit {
     this.canDeleteOrders = roles.includes('ADMIN');
   }
 
+  /**
+   * check if user has specific role
+   * @param role role to check
+   */
   hasRole(role: string): boolean {
     if (!this.userProfile || !this.userProfile.roles) {
       return false;
@@ -121,14 +108,14 @@ export class Dashboard implements OnInit {
   }
 
   /**
-   * Gibt eine maskierte Token-Darstellung zurück (Session-basiert).
+   * get truncated token display
    */
   getTruncatedToken(): string {
     return 'Session-Cookie (HTTP-only)';
   }
 
   /**
-   * Logout: Backend invalidiert Session.
+   * logout current user
    */
   logout(): void {
     this.apiService.logout().subscribe({
@@ -142,7 +129,7 @@ export class Dashboard implements OnInit {
   }
 
   /**
-   * Navigation zu geschützter Orders-Seite.
+   * Navigate to Orders page
    */
   navigateToOrders(): void {
     this.router.navigate(['/orders']);

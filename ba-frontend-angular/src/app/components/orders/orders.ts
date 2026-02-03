@@ -8,9 +8,8 @@ import { ToastService } from '../../services/toast.service';
 import {environment} from '../../../environments/environment';
 
 /**
- * Orders-Komponente mit geschützten Ressourcen.
+ * Order-Component for protected resources
  *
- * Demonstriert rollenbasierte Autorisierung entsprechend Spring Boot Controller:
  * - GET /api/orders - isAuthenticated()
  * - GET /api/orders/{id} - hasRole('MANAGER')
  * - POST /api/orders - hasRole('ADMIN')
@@ -30,7 +29,6 @@ export class Orders implements OnInit {
 
   orders: any[] = [];
 
-  // BehaviorSubject für bessere Change Detection
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoadingSubject.asObservable();
 
@@ -38,7 +36,6 @@ export class Orders implements OnInit {
 
   userProfile: UserProfile | null = null;
 
-  // UI-State für Berechtigungen
   canViewOrders = false;
   canViewOrderDetails = false;
   canCreateOrders = false;
@@ -47,7 +44,6 @@ export class Orders implements OnInit {
 
   isCognitoBackend = true;
 
-  // Neues Bestellungs-Formular
   showCreateForm = false;
   newOrder = {
     customer: '',
@@ -71,9 +67,6 @@ export class Orders implements OnInit {
     this.loadOrders();
   }
 
-  /**
-   * Aktualisiert UI-Berechtigungen basierend auf Benutzerrollen.
-   */
   private updatePermissions(): void {
     if (!this.userProfile || !this.userProfile.roles) {
       this.canViewOrders = false;
@@ -93,10 +86,9 @@ export class Orders implements OnInit {
   }
 
   /**
-   * Lädt alle Bestellungen vom Backend.
+   * load all orders
    * Backend: GET /api/orders
    * Authorization: isAuthenticated()
-   *
    */
   loadOrders(): void {
     this.isLoadingSubject.next(true);
@@ -127,11 +119,9 @@ export class Orders implements OnInit {
   }
 
   /**
-   * Erstellt eine neue Bestellung.
+   * Create new order
    * Backend: POST /api/orders
    * Authorization: hasRole('ADMIN')
-   *
-   * HINWEIS: Frontend-Schutz entfernt - Backend entscheidet über Berechtigung
    */
   createOrder(): void {
     this.isLoadingSubject.next(true);
@@ -146,7 +136,6 @@ export class Orders implements OnInit {
       },
       error: (err) => {
         console.error('[ERROR] Fehler beim Erstellen der Bestellung:', err);
-        // Bei 403 zeige spezifische Fehlermeldung
         if (err.status === 403) {
           this.error = 'Keine Berechtigung zum Erstellen von Bestellungen (403 Forbidden). ADMIN-Rolle erforderlich!';
           this.toast.error('❌ Keine Berechtigung! ADMIN-Rolle erforderlich zum Erstellen von Bestellungen.');
@@ -162,11 +151,9 @@ export class Orders implements OnInit {
   }
 
   /**
-   * Löscht eine Bestellung.
+   * delete order by id
    * Backend: DELETE /api/orders/{id}
    * Authorization: hasRole('ADMIN')
-   *
-   * HINWEIS: Frontend-Schutz entfernt - Backend entscheidet über Berechtigung
    */
   deleteOrder(id: string): void {
     if (!confirm('Bestellung wirklich löschen?')) {
@@ -183,7 +170,6 @@ export class Orders implements OnInit {
       },
       error: (err) => {
         console.error('[ERROR] Fehler beim Löschen der Bestellung:', err);
-        // Bei 403 zeige spezifische Fehlermeldung
         if (err.status === 403) {
           this.error = 'Keine Berechtigung zum Löschen von Bestellungen (403 Forbidden). ADMIN-Rolle erforderlich!';
           this.toast.error('❌ Keine Berechtigung! ADMIN-Rolle erforderlich zum Löschen von Bestellungen.');
@@ -199,7 +185,7 @@ export class Orders implements OnInit {
   }
 
   /**
-   * Setzt das Formular zurück.
+   * reset form
    */
   resetForm(): void {
     this.newOrder = {
@@ -209,10 +195,17 @@ export class Orders implements OnInit {
     };
   }
 
+  /**
+   * navigate back to dashboard
+   */
   goBack(): void {
     this.router.navigate(['/dashboard']);
   }
 
+  /**
+   * get CSS class based on order status
+   * @param status order status
+   */
   getStatusClass(status: string): string {
     switch (status) {
       case 'COMPLETED':

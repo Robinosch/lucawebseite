@@ -18,35 +18,35 @@ export class ToastService {
   private nextId = 0;
 
   /**
-   * Zeigt eine Erfolgsmeldung
+   * Show a success message
    */
   success(message: string, duration = 4000): void {
     this.show(message, 'success', duration);
   }
 
   /**
-   * Zeigt eine Fehlermeldung
+   * Show an error message
    */
   error(message: string, duration = 6000): void {
     this.show(message, 'error', duration);
   }
 
   /**
-   * Zeigt eine Warnmeldung
+   * Show a warning message
    */
   warning(message: string, duration = 5000): void {
     this.show(message, 'warning', duration);
   }
 
   /**
-   * Zeigt eine Info-Meldung
+   * Show an info message
    */
   info(message: string, duration = 4000): void {
     this.show(message, 'info', duration);
   }
 
   /**
-   * Zeigt einen Toast
+   * show toast
    */
   private show(message: string, type: Toast['type'], duration: number): void {
     const toast: Toast = {
@@ -65,7 +65,7 @@ export class ToastService {
   }
 
   /**
-   * Entfernt einen Toast
+   * remove toast by id
    */
   remove(id: number): void {
     const currentToasts = this.toastsSubject.value;
@@ -73,7 +73,7 @@ export class ToastService {
   }
 
   /**
-   * Entfernt alle Toasts
+   * remove all toasts
    */
   clear(): void {
     this.toastsSubject.next([]);
