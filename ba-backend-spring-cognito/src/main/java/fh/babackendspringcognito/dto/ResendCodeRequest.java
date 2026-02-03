@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO for resending verification code.
- * H6: Email verification flow.
  */
 @Data
 @Builder

@@ -2,7 +2,6 @@ package fh.babackendspringcognito.exception;
 
 /**
  * Exception for registration failures.
- * Used for hypothesis H6 - Registration flow error handling.
  */
 public class RegistrationException extends RuntimeException {
 

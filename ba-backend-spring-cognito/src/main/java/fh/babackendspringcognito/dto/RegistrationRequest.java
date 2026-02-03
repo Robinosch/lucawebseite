@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO for user registration request.
- * Used for hypothesis H6 - Developer Experience measurement.
  */
 @Data
 @NoArgsConstructor

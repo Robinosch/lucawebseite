@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 /**
  * DTO for creating orders.
- * Used for testing role-based authorization (H1, H2).
  */
 @Data
 @NoArgsConstructor

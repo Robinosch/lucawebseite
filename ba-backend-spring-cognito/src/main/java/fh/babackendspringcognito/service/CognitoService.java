@@ -36,16 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * AWS Cognito Service for authentication and registration.
- * Relevant für Framework-Hypothesen:
- * - H3a: Token-Validierung LOC und zyklomatische Komplexität
- * - H5: Manuelle JWT Token-Validierung (CC=12)
- *
- * Hinweis: H6-H9 sind IdP-Hypothesen und werden in der AWS Console gemessen.
- * Die programmatische Registrierung ist ein zusätzliches Feature gegenüber SAP IAS.
- *
- * Lines of Code für Token Validation: ~150 Zeilen (manuelle JWKS-Validierung)
- * Zyklomatische Komplexität: CC=12
+ * AWS Cognito Service for authentication and registration
  */
 @Slf4j
 @Service
@@ -193,7 +184,7 @@ public class CognitoService {
      * 4. Extract user information and roles
      *
      * Access Tokens (for API calls) do NOT contain 'aud' claim!
-     * Only ID Tokens contain 'aud' (audience) claim with Client ID.
+     * Only ID Tokens contain 'aud' (audience) claim with ClientID.
      *
      * Lines of Code for this method: ~60 lines
      */
@@ -250,9 +241,6 @@ public class CognitoService {
                 log.debug("JWT_VALIDATION: token_use claim not found, skipping audience validation");
             }
 
-            long duration = System.currentTimeMillis() - startTime;
-            log.info("JWT_VALIDATION_SUCCESS: Token validated successfully in {}ms, token_use={}", duration, tokenUse);
-
             return claims;
 
         } catch (TokenExpiredException | InvalidTokenException e) {
@@ -300,7 +288,7 @@ public class CognitoService {
     }
 
     /**
-     * Initialize AWS Cognito client (lazy initialization).
+     * Initialize AWS Cognito client
      */
     private CognitoIdentityProviderClient getCognitoClient() {
         if (cognitoClient == null) {
@@ -313,7 +301,7 @@ public class CognitoService {
     }
 
     /**
-     * Initialize JWT processor with JWKS endpoint (lazy initialization).
+     * Initialize JWT processor with JWKS endpoint
      * This fetches public keys from AWS Cognito JWKS endpoint.
      */
     private ConfigurableJWTProcessor<SecurityContext> getJwtProcessor() {
@@ -341,7 +329,6 @@ public class CognitoService {
 
     /**
      * Verify user email with confirmation code.
-     * Teil der programmatischen Registrierung via AWS SDK.
      *
      * @param username Username to verify
      * @param code 6-digit verification code sent to user's email
@@ -363,10 +350,6 @@ public class CognitoService {
                     .build();
 
             ConfirmSignUpResponse response = client.confirmSignUp(confirmRequest);
-
-            long duration = System.currentTimeMillis() - startTime;
-            log.info("EMAIL_VERIFICATION_SUCCESS: username={}, duration={}ms, timestamp={}",
-                    username, duration, LocalDateTime.now());
         } catch (CodeMismatchException e) {
             log.error("EMAIL_VERIFICATION_ERROR: Invalid verification code for username={} - {}", username, e.getMessage());
             throw new AuthenticationException("Invalid verification code. Please check and try again.");
@@ -384,7 +367,6 @@ public class CognitoService {
 
     /**
      * Resend verification code to user's email.
-     * Teil der programmatischen Registrierung via AWS SDK.
      *
      * @param email Email address to resend code to
      */
@@ -405,9 +387,6 @@ public class CognitoService {
 
             ResendConfirmationCodeResponse response = client.resendConfirmationCode(resendRequest);
 
-            long duration = System.currentTimeMillis() - startTime;
-            log.info("RESEND_CODE_SUCCESS: email={}, duration={}ms, codeDelivery={}, timestamp={}",
-                    email, duration, response.codeDeliveryDetails().deliveryMedium(), LocalDateTime.now());
         } catch (LimitExceededException e) {
             log.error("RESEND_CODE_ERROR: Rate limit exceeded for email={} - {}", email, e.getMessage());
             throw new AuthenticationException("Too many requests. Please try again later.");
@@ -443,9 +422,6 @@ public class CognitoService {
 
             ForgotPasswordResponse response = client.forgotPassword(forgotPasswordRequest);
 
-            long duration = System.currentTimeMillis() - startTime;
-            log.info("FORGOT_PASSWORD_SUCCESS: email={}, duration={}ms, codeDelivery={}, timestamp={}",
-                    email, duration, response.codeDeliveryDetails().deliveryMedium(), LocalDateTime.now());
         } catch (UserNotFoundException e) {
             log.error("FORGOT_PASSWORD_ERROR: User not found for email={} - {}", email, e.getMessage());
             log.info("FORGOT_PASSWORD_USER_NOT_FOUND: email={}, but returning success for security", email);
@@ -460,7 +436,6 @@ public class CognitoService {
 
     /**
      * Confirm password reset with verification code and new password.
-     * AWS Cognito specific: requires the code sent via email.
      *
      * @param email User's email address
      * @param code Verification code from email
@@ -485,9 +460,6 @@ public class CognitoService {
 
             ConfirmForgotPasswordResponse response = client.confirmForgotPassword(confirmRequest);
 
-            long duration = System.currentTimeMillis() - startTime;
-            log.info("CONFIRM_PASSWORD_RESET_SUCCESS: email={}, duration={}ms, timestamp={}",
-                    email, duration, LocalDateTime.now());
         } catch (CodeMismatchException e) {
             log.error("CONFIRM_PASSWORD_RESET_ERROR: Invalid code for email={} - {}", email, e.getMessage());
             throw new AuthenticationException("Invalid verification code. Please check and try again.");

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO for authentication response containing JWT tokens.
- * Used for hypothesis H5 - Token validation measurement.
  */
 @Data
 @NoArgsConstructor

@@ -12,22 +12,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * Spring Security Configuration for AWS Cognito authentication.
- * CRITICAL for hypothesis testing:
- * - H1: Security implementation complexity
- * - H2: Role-based authorization
- * - H4: Security coupling measurement
- * - H5: JWT token validation setup
- *
- * Security Lines of Code: ~100 lines
+ * Spring Security Configuration for AWS Cognito authentication
  */
 @Slf4j
 @Configuration

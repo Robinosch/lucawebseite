@@ -2,7 +2,6 @@ package fh.babackendspringcognito.exception;
 
 /**
  * Base exception for authentication failures.
- * Used for hypothesis H5 - Token validation error handling.
  */
 public class AuthenticationException extends RuntimeException {
 

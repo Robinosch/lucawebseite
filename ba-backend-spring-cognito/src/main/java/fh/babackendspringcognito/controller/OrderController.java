@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Order Controller with role-based authorization.
- * - H1: Security implementation (imperative @PreAuthorize)
- * - H2: Role-based access control granularity
- * - H4: Security coupling (Spring Security dependency)
+ * Order Controller with role-based authorization
  *
  * Authorization rules:
  * - GET /api/orders - Authenticated users only
@@ -37,9 +34,7 @@ public class OrderController {
     private final OrderService orderService;
 
     /**
-     * Get all orders.
-     * Authorization: Any authenticated user.
-     * H1, H2: Demonstrates basic authentication check.
+     * Get all orders
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'OBSERVER')")
@@ -55,9 +50,7 @@ public class OrderController {
     }
 
     /**
-     * Get order by ID.
-     * Authorization: MANAGER role required.
-     * H1, H2: Demonstrates role-based access control.
+     * Get order by ID
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('MANAGER', 'OBSERVER')")
@@ -73,9 +66,7 @@ public class OrderController {
     }
 
     /**
-     * Create new order.
-     * Authorization: ADMIN role required.
-     * H1, H2: Demonstrates admin-level authorization.
+     * Create new order
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -91,9 +82,7 @@ public class OrderController {
     }
 
     /**
-     * Delete order.
-     * Authorization: ADMIN role required.
-     * H1, H2: Demonstrates admin-level authorization.
+     * Delete order
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

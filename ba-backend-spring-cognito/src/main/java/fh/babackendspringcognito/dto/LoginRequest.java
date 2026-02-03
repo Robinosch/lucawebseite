@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO for login request.
- * Used for hypothesis H3a - Time-to-First-Token measurement.
  */
 @Data
 @NoArgsConstructor

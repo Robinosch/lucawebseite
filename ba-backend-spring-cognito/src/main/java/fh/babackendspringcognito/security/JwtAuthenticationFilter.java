@@ -21,10 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JWT Authentication Filter for validating AWS Cognito tokens.
- * CRITICAL for H5 - demonstrates manual token validation complexity.
- *
- * Security Lines of Code: ~80 lines
+ * JWT Authentication Filter for validating AWS Cognito tokens
  */
 @Slf4j
 @Component

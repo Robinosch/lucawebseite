@@ -5,8 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * AWS Cognito configuration properties.
- * Used for all AWS Cognito integration (H3a, H5, H6).
+ * AWS Cognito configuration properties
  */
 @Configuration
 @ConfigurationProperties(prefix = "aws")

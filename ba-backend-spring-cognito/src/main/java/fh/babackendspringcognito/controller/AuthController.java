@@ -18,10 +18,6 @@ import java.util.Map;
 
 /**
  * Authentication Controller for AWS Cognito integration.
- * Implements programmatische Registrierung via AWS SDK.
- * Hinweis: Die IdP-Hypothese H6 (Benutzerregistrierung) wird über Klicks in der
- * AWS Console gemessen. Diese SDK-Implementierung ist ein zusätzliches Feature,
- * das SAP IAS nicht bietet.
  */
 @Slf4j
 @RestController
@@ -33,7 +29,6 @@ public class AuthController {
 
     /**
      * Register a new user via AWS SDK (programmatisch).
-     * Zusätzliches Feature gegenüber SAP IAS (nur Admin-Konsole).
      *
      * @param request Registration request with user details
      * @return Success message
@@ -90,7 +85,6 @@ public class AuthController {
 
     /**
      * Resend verification code to user's email.
-     * Teil der programmatischen Registrierung via AWS SDK.
      *
      * @param request Email address to resend code to
      * @return Success message
@@ -143,8 +137,6 @@ public class AuthController {
         String email = request.get("email");
         String code = request.get("verificationCode");
         String newPassword = request.get("newPassword");
-
-        log.info("CONFIRM_PASSWORD_RESET_REQUEST: email={}, timestamp={}", email, LocalDateTime.now());
 
         cognitoService.confirmPasswordReset(email, code, newPassword);
 
