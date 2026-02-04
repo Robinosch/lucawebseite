@@ -28,6 +28,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final String ROLE_PREFIX = "ROLE_";
+    private static final String COGNITO_GROUPS = "cognito:groups";
+    private static final String CUSTOM_ROLE = "custom:role";
     private final CognitoService cognitoService;
 
     @Override
@@ -47,7 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(authentication);
 
                 log.debug("JWT_AUTH_SUCCESS: username={}, authorities={}", username, authorities);
             }
@@ -73,34 +78,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         try {
-            Object groupsClaim = claims.getClaim("cognito:groups");
+            Object groupsClaim = claims.getClaim(COGNITO_GROUPS);
 
             if (groupsClaim instanceof List<?>) {
                 @SuppressWarnings("unchecked")
                 List<String> groups = (List<String>) groupsClaim;
 
                 for (String group : groups) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_" + group.toUpperCase()));
+                    authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + group.toUpperCase()));
                 }
             }
 
-            String customRole = claims.getStringClaim("custom:role");
+            String customRole = claims.getStringClaim(CUSTOM_ROLE);
             if (customRole != null) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + customRole.toUpperCase()));
+                authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX+ customRole.toUpperCase()));
             }
 
             if (authorities.isEmpty()) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "USER"));
             }
 
             log.debug("CLAIMS_MAPPING: Extracted authorities: {}", authorities);
 
         } catch (Exception e) {
             log.error("CLAIMS_MAPPING_ERROR: Failed to extract authorities - {}", e.getMessage());
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + "USER"));
         }
 
         return authorities;
     }
 }
-

@@ -189,14 +189,10 @@ public class CognitoService {
      * Lines of Code for this method: ~60 lines
      */
     public JWTClaimsSet validateToken(String token) {
-        long startTime = System.currentTimeMillis();
-        log.debug("JWT_VALIDATION_START: Validating token against JWKS");
-
         try {
             ConfigurableJWTProcessor<SecurityContext> processor = getJwtProcessor();
             JWTClaimsSet claims = processor.process(token, null);
 
-            log.debug("JWT_CLAIMS_PARSED: Successfully parsed token claims");
             log.debug("JWT_CLAIMS_ISSUER: {}", claims.getIssuer());
             log.debug("JWT_CLAIMS_AUDIENCE: {}", claims.getAudience());
             log.debug("JWT_CLAIMS_SUBJECT: {}", claims.getSubject());
@@ -218,8 +214,6 @@ public class CognitoService {
 
             String tokenUse = claims.getStringClaim("token_use");
             if (tokenUse != null) {
-                log.debug("JWT_TOKEN_USE: {}", tokenUse);
-
                 if ("id".equals(tokenUse)) {
                     if (claims.getAudience() == null || claims.getAudience().isEmpty()) {
                         log.error("JWT_VALIDATION_ERROR: ID Token missing audience claim");
@@ -231,7 +225,6 @@ public class CognitoService {
                         log.error("JWT_VALIDATION_ERROR: Invalid audience. Expected: {}, Got: {}", expectedAudience, audience);
                         throw new InvalidTokenException("Invalid token audience");
                     }
-                    log.debug("JWT_VALIDATION: ID Token audience validated: {}", audience);
                 }
 
                 if ("access".equals(tokenUse)) {
@@ -240,7 +233,6 @@ public class CognitoService {
             } else {
                 log.debug("JWT_VALIDATION: token_use claim not found, skipping audience validation");
             }
-
             return claims;
 
         } catch (TokenExpiredException | InvalidTokenException e) {
