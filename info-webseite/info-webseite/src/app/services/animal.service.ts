@@ -196,6 +196,26 @@ export class AnimalService {
       ]
     },
     {
+      id: 'nadjeschda-vom-weetfeld', name: 'Nadjeschda v. Weetfeld', category: 'mutterkuehe',
+      birthDate: '02.05.2011', origin: 'Eigene Nachzucht – Highlander vom Weetfeld', status: 'Aktive Mutterkuh',
+      description: 'Nadjeschda ist eine weitere Tochter aus eigener Nachzucht. Sie teilt das Geburtsdatum mit Narnia und ist ebenfalls für ihr ruhiges Temperament bekannt.',
+      offspring: 'Mehrere Kälber.',
+      lineageImageSrc: 'images/mutterkühe/nadjeschda-vom-weetfeld/abstammung-tabelle.jpg',
+      images: [
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-2600.jpg', alt: 'Nadjeschda v. Weetfeld – Hauptbild', placeholder: 'Nadjeschda v. Weetfeld', isPrimary: true, size: 'large' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-2600 (1).jpg', alt: 'Nadjeschda – Ansicht 2', placeholder: 'Nadjeschda', isPrimary: false, size: 'large' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-200 (1).jpeg', alt: 'Nadjeschda – Thumbnail 1', placeholder: 'Nadjeschda', isPrimary: false, size: 'small' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-200 (2).jpeg', alt: 'Nadjeschda – Thumbnail 2', placeholder: 'Nadjeschda', isPrimary: false, size: 'small' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-200 (4).jpeg', alt: 'Nadjeschda – Thumbnail 3', placeholder: 'Nadjeschda', isPrimary: false, size: 'small' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/picture-200 (5).jpeg', alt: 'Nadjeschda – Thumbnail 4', placeholder: 'Nadjeschda', isPrimary: false, size: 'small' },
+      ],
+      offspringImages: [
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/nachwuchs/picture-1600.jpeg', alt: 'Nachwuchs Nadjeschda 1', placeholder: 'Nachwuchs', isPrimary: true, size: 'medium' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/nachwuchs/picture-1600.jpg', alt: 'Nachwuchs Nadjeschda 2', placeholder: 'Nachwuchs', isPrimary: false, size: 'medium' },
+        { src: 'images/mutterkühe/nadjeschda-vom-weetfeld/nachwuchs/picture-1600 (1).jpg', alt: 'Nachwuchs Nadjeschda 3', placeholder: 'Nachwuchs', isPrimary: false, size: 'medium' },
+      ]
+    },
+    {
       id: 'amidala-vom-weetfeld', name: 'Amidala vom Weetfeld', category: 'mutterkuehe',
       birthDate: '02.05.2011', origin: 'Eigene Nachzucht – Highlander vom Weetfeld', status: 'Aktive Mutterkuh',
       description: 'Amidala trägt einen ungewöhnlichen Namen, der auf die Leidenschaft der Züchter für ihre Tiere hinweist. Sie ist Teil der starken Jahrgangsklasse 2011 der eigenen Nachzucht.',

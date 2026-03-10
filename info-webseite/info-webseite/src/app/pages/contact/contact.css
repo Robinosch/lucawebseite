@@ -40,9 +40,6 @@
   color: var(--btn-text-on-primary) !important;
   padding: 0 32px !important;
   font-size: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .submit-button:disabled {
