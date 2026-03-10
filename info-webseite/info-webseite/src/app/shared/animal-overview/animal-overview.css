@@ -1,0 +1,127 @@
+/* ===== Animal Overview – Responsive Card Grid ===== */
+
+.page-hero {
+  padding: 64px 24px 48px;
+}
+
+.page-subtitle {
+  max-width: 750px;
+  margin: 8px auto 0;
+  font-size: 1.1rem;
+}
+
+/* ----- Zurück-Navigation ----- */
+.back-nav {
+  padding: 16px 24px 0;
+}
+
+.back-button {
+  color: var(--color-primary) !important;
+  font-weight: 500;
+}
+
+/* ----- Animals Grid ----- */
+.animals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ----- Animal Card ----- */
+.animal-card {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--border-radius) !important;
+  overflow: hidden;
+}
+
+.animal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Bild-Platzhalter in der Card */
+.img-placeholder,
+.card-img-placeholder {
+  background-color: var(--color-cream-dark);
+  border-bottom: 2px dashed var(--color-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-style: italic;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 24px;
+  min-height: 220px;
+}
+
+/* Echte Bilder in Cards */
+.real-card-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--color-cream-dark);
+}
+
+.animal-card mat-card-header {
+  padding: 16px 16px 0;
+}
+
+.animal-card mat-card-content {
+  padding: 0 16px;
+  flex: 1;
+}
+
+.animal-short-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.animal-card mat-card-actions {
+  padding: 8px 16px 16px;
+}
+
+.detail-button {
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+}
+
+/* ----- Leerer Zustand ----- */
+.empty-state {
+  padding: 48px 24px;
+}
+
+.empty-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+
+.cta-contact {
+  margin-top: 16px;
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 1024px) {
+  .animals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .animals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-hero {
+    padding: 40px 16px 32px;
+  }
+}
+

@@ -1,0 +1,241 @@
+/* ===== App Shell Styles ===== */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ----- Toolbar ----- */
+.app-toolbar {
+  background-color: var(--toolbar-bg) !important;
+  color: var(--toolbar-text) !important;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--toolbar-text);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.brand-logo {
+  height: 38px;
+  width: auto;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+/* ----- Desktop Navigation ----- */
+.desktop-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.desktop-nav a {
+  color: var(--toolbar-text-muted) !important;
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.desktop-nav a:hover {
+  color: var(--toolbar-text) !important;
+  background-color: var(--toolbar-hover-bg);
+}
+
+.desktop-nav a.active-link {
+  color: var(--toolbar-text) !important;
+  background-color: var(--toolbar-active-bg);
+  border-bottom: 2px solid var(--toolbar-text);
+}
+
+/* ----- Sidenav ----- */
+.sidenav-container {
+  flex: 1;
+}
+
+.mobile-sidenav {
+  width: 280px;
+  background-color: var(--sidenav-bg) !important;
+  color: var(--sidenav-text);
+}
+
+.mobile-sidenav .active-link {
+  background-color: var(--color-primary-light) !important;
+  color: var(--color-primary-dark);
+}
+
+/* ----- Desktop Dropdown Navigation ----- */
+.nav-dropdown-trigger {
+  color: var(--toolbar-text-muted) !important;
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-dropdown-trigger:hover {
+  color: var(--toolbar-text) !important;
+  background-color: var(--toolbar-hover-bg);
+}
+
+.dropdown-label {
+  display: inline;
+}
+
+.dropdown-arrow {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  vertical-align: middle;
+  margin-left: 0 !important;
+  margin-right: -8px !important;
+}
+
+/* ----- Mobile Sidenav Untermenüs ----- */
+.submenu-trigger {
+  cursor: pointer;
+}
+
+.expand-icon {
+  transition: transform 0.2s ease;
+  margin-left: auto;
+}
+
+.expand-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.submenu-item {
+  padding-left: 32px !important;
+  font-size: 0.9rem;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* ----- Theme Toggle Button ----- */
+.theme-toggle {
+  color: var(--toolbar-text) !important;
+  margin-left: 4px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(30deg);
+}
+
+/* ----- Main Content ----- */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+main {
+  flex: 1;
+}
+
+/* ----- Footer ----- */
+.app-footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 48px 0 0;
+  margin-top: auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.footer-col h4 {
+  color: var(--footer-text);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.footer-col p {
+  color: var(--footer-text-muted);
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 6px;
+}
+
+.footer-links a {
+  color: var(--footer-text-muted);
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--footer-text);
+  text-decoration: none;
+}
+
+.footer-bio-badge {
+  margin-top: 12px !important;
+  font-size: 0.85rem !important;
+  color: var(--color-primary-light) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-bio-logo {
+  height: 32px;
+  width: auto;
+  border-radius: 4px;
+  background: white;
+  padding: 2px;
+}
+
+.footer-bottom {
+  margin-top: 32px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: var(--footer-text-muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* ----- Responsive Footer ----- */
+@media (max-width: 960px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+

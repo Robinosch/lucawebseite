@@ -1,0 +1,81 @@
+<!-- ===== TIER-ÜBERSICHT – Generisches Card-Grid ===== -->
+
+<!-- Seiten-Header -->
+<section class="page-hero section-cream">
+  <div class="container text-center">
+    <h1>{{ categoryLabel() }}</h1>
+    <p class="page-subtitle">{{ categoryDescription() }}</p>
+  </div>
+</section>
+
+<!-- Zurück-Button -->
+<section class="section section-white back-nav">
+  <div class="container">
+    <a mat-button routerLink="/unsere-highlander" class="back-button">
+      <mat-icon>arrow_back</mat-icon> Zurück zur Übersicht
+    </a>
+  </div>
+</section>
+
+<!-- Animal Cards Grid -->
+<section class="section section-white">
+  <div class="container">
+    @if (animals().length === 0) {
+      <div class="empty-state text-center">
+        <mat-icon class="empty-icon">info</mat-icon>
+        <h3>Aktuell keine Einzeltiere in dieser Kategorie hinterlegt</h3>
+        <p>
+          Informationen zu unseren {{ categoryLabel() }} finden Sie auf der jeweiligen
+          Übersichtsseite oder kontaktieren Sie uns direkt.
+        </p>
+        <a mat-raised-button routerLink="/kontakt" class="cta-contact">
+          <mat-icon>mail</mat-icon> Kontakt aufnehmen
+        </a>
+      </div>
+    } @else {
+      <div class="animals-grid">
+        @for (animal of animals(); track animal.id) {
+          <mat-card class="animal-card" appearance="outlined">
+            <!-- Tierbild -->
+            @if (getPrimaryImageSrc(animal.images); as imgSrc) {
+              <img class="card-img real-card-img"
+                   [src]="imgSrc"
+                   [alt]="animal.name"
+                   loading="lazy" />
+            } @else {
+              <div class="img-placeholder card-img-placeholder">
+                {{ getPrimaryImage(animal.images) }}
+              </div>
+            }
+
+            <mat-card-header>
+              <mat-card-title>{{ animal.name }}</mat-card-title>
+              @if (animal.birthDate) {
+                <mat-card-subtitle>{{ getBirthYear(animal.birthDate) }}</mat-card-subtitle>
+              }
+              @if (animal.status) {
+                <mat-card-subtitle>{{ animal.status }}</mat-card-subtitle>
+              }
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="animal-short-desc">
+                {{ animal.description.length > 150
+                    ? animal.description.substring(0, 150) + '…'
+                    : animal.description }}
+              </p>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <a mat-raised-button [routerLink]="resolvedBasePath() + '/' + animal.id"
+                 class="detail-button">
+                <mat-icon>visibility</mat-icon> Details ansehen
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  </div>
+</section>
+

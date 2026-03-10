@@ -1,0 +1,37 @@
+/* ===== Verarbeitung ===== */
+
+.page-hero { padding: 64px 24px 48px; }
+.page-subtitle { max-width: 700px; margin: 8px auto 0; font-size: 1.1rem; }
+.back-nav { padding: 16px 24px 0; }
+.back-button { color: var(--color-primary) !important; font-weight: 500; }
+
+.content-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.text-col h2 { margin-bottom: 16px; }
+
+.meat-detail-img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  max-height: 350px;
+}
+.text-col h3 { margin-top: 24px; margin-bottom: 8px; color: var(--color-primary-dark); }
+
+.cta-section p { max-width: 600px; margin: 8px auto 24px; }
+.cta-button {
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+  padding: 0 32px !important;
+}
+
+@media (max-width: 768px) {
+  .content-layout { grid-template-columns: 1fr; gap: 24px; }
+  .page-hero { padding: 40px 16px 32px; }
+}
+

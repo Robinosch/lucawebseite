@@ -1,0 +1,350 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* =====================================================
+   Globale Styles – Highlander vom Weetfeld
+   ===================================================== */
+
+/* ----- CSS Custom Properties (Design-Tokens) ----- */
+:root {
+  --color-primary: #2e7d32;        /* Dunkelgrün */
+  --color-primary-dark: #1b5e20;
+  --color-primary-light: #a5d6a7;
+  --color-accent: #6d4c41;         /* Braun */
+  --color-accent-dark: #4e342e;
+  --color-accent-light: #d7ccc8;
+  --color-highlight: #b71c1c;      /* Dunkelrot-Akzent */
+  --color-cream: #fdf6ec;          /* Creme-Hintergrund */
+  --color-cream-dark: #f5efe3;
+  --color-text: #3e2723;           /* Dunkelbraun Text */
+  --color-text-light: #5d4037;
+  --color-white: #ffffff;
+
+  /* Toolbar – helle Schrift auf dunklem Grün */
+  --toolbar-bg: #1b5e20;
+  --toolbar-text: #ffffff;
+  --toolbar-text-muted: rgba(255, 255, 255, 0.88);
+  --toolbar-hover-bg: rgba(255, 255, 255, 0.12);
+  --toolbar-active-bg: rgba(255, 255, 255, 0.18);
+
+  /* Sidenav */
+  --sidenav-bg: #fdf6ec;
+  --sidenav-text: #3e2723;
+
+  /* Footer */
+  --footer-bg: #4e342e;
+  --footer-text: #fdf6ec;
+  --footer-text-muted: #d7ccc8;
+
+  /* Surfaces */
+  --surface-card: #ffffff;
+  --surface-card-border: #e0e0e0;
+
+  /* Button-Text auf farbigem Hintergrund – bleibt immer weiß */
+  --btn-text-on-primary: #ffffff;
+
+  --font-heading: 'Merriweather', Georgia, serif;
+  --font-body: 'Roboto', 'Helvetica Neue', sans-serif;
+
+  --max-width: 1200px;
+  --section-padding: 64px 24px;
+  --section-padding-mobile: 40px 16px;
+  --border-radius: 12px;
+}
+
+/* ----- Dark Mode ----- */
+[data-theme="dark"] {
+  --color-primary: #66bb6a;
+  --color-primary-dark: #43a047;
+  --color-primary-light: #1b5e20;
+  --color-accent: #a1887f;
+  --color-accent-dark: #3e2723;
+  --color-accent-light: #5d4037;
+  --color-highlight: #ef5350;
+  --color-cream: #1e1e1e;
+  --color-cream-dark: #2a2a2a;
+  --color-text: #e0e0e0;
+  --color-text-light: #bdbdbd;
+  --color-white: #121212;
+
+  /* Toolbar im Dark Mode – dezentes Dunkelgrün */
+  --toolbar-bg: #1a3a1a;
+  --toolbar-text: #e0e0e0;
+  --toolbar-text-muted: rgba(224, 224, 224, 0.85);
+  --toolbar-hover-bg: rgba(255, 255, 255, 0.08);
+  --toolbar-active-bg: rgba(255, 255, 255, 0.14);
+
+  /* Sidenav */
+  --sidenav-bg: #1e1e1e;
+  --sidenav-text: #e0e0e0;
+
+  /* Footer */
+  --footer-bg: #121212;
+  --footer-text: #bdbdbd;
+  --footer-text-muted: #757575;
+
+  /* Surfaces */
+  --surface-card: #2a2a2a;
+  --surface-card-border: #424242;
+
+  /* Button-Text auf farbigem Hintergrund – bleibt auch im Dark Mode weiß */
+  --btn-text-on-primary: #ffffff;
+}
+
+/* ----- Globale Typografie ----- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+h1 { font-size: 2.5rem; font-weight: 700; }
+h2 { font-size: 2rem; font-weight: 700; }
+h3 { font-size: 1.5rem; font-weight: 400; }
+
+p, li, span, label {
+  font-family: var(--font-body);
+  color: var(--color-text-light);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+/* ----- Utility-Klassen ----- */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: var(--section-padding);
+}
+
+.section-cream {
+  background-color: var(--color-cream);
+}
+
+.section-white {
+  background-color: var(--color-white);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ----- Bild-Platzhalter ----- */
+.image-placeholder {
+  background-color: var(--color-cream-dark);
+  border: 2px dashed var(--color-accent-light);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px;
+  min-height: 200px;
+}
+
+.image-placeholder.hero {
+  min-height: 400px;
+  font-size: 1.1rem;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.2rem; }
+
+  .section {
+    padding: var(--section-padding-mobile);
+  }
+}
+
+/* ----- Globale Transitions für Theme-Wechsel ----- */
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, color 0.15s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ----- Dark Mode: Globale Overrides ----- */
+
+/* Cards im Dark Mode */
+[data-theme="dark"] .mat-mdc-card {
+  background-color: var(--surface-card) !important;
+  border-color: var(--surface-card-border) !important;
+  --mdc-elevated-card-container-color: var(--surface-card);
+  --mdc-outlined-card-container-color: var(--surface-card);
+  --mdc-outlined-card-outline-color: var(--surface-card-border);
+}
+
+/* Card-Texte im Dark Mode – alle hell und gut lesbar */
+[data-theme="dark"] .mat-mdc-card-title {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .mat-mdc-card-subtitle {
+  color: #bdbdbd !important;
+}
+
+/* Card-Content-Texte im Dark Mode */
+[data-theme="dark"] .mat-mdc-card-content,
+[data-theme="dark"] .mat-mdc-card-content p,
+[data-theme="dark"] .mat-mdc-card-content span,
+[data-theme="dark"] .mat-mdc-card-content li {
+  color: #bdbdbd !important;
+}
+
+/* mat-button (Text-Button) Label-Farbe im Dark Mode */
+[data-theme="dark"] .mat-mdc-button:not(.hero-btn-primary):not(.hero-btn-secondary):not(.cta-button):not(.submit-button) {
+  --mdc-text-button-label-text-color: var(--color-primary);
+}
+
+/* mat-raised-button im Dark Mode */
+[data-theme="dark"] .mat-mdc-raised-button:not(.hero-btn-primary):not(.cta-button):not(.submit-button) {
+  --mdc-filled-button-container-color: var(--color-primary);
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+/* Allgemeine Textfarben im Dark Mode */
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] span:not(.mat-mdc-button-touch-target),
+[data-theme="dark"] label {
+  color: var(--color-text-light);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: var(--color-text);
+}
+
+/* Chip-Set im Dark Mode */
+[data-theme="dark"] .mat-mdc-chip {
+  background-color: var(--color-cream-dark) !important;
+  --mdc-chip-label-text-color: #e0e0e0;
+}
+
+/* Mat-Form-Field im Dark Mode */
+[data-theme="dark"] .mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--surface-card-border);
+  --mdc-outlined-text-field-label-text-color: #bdbdbd;
+  --mdc-outlined-text-field-input-text-color: #e0e0e0;
+  --mdc-outlined-text-field-hover-outline-color: #757575;
+  --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--color-primary);
+}
+
+/* Mat-Tab im Dark Mode */
+[data-theme="dark"] .mat-mdc-tab {
+  --mdc-secondary-navigation-tab-container-color: transparent;
+  --mat-tab-header-active-label-text-color: var(--color-primary);
+  --mat-tab-header-inactive-label-text-color: #bdbdbd;
+}
+
+/* Mat-List im Dark Mode */
+[data-theme="dark"] .mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: #e0e0e0;
+  color: #e0e0e0 !important;
+}
+
+/* Bild-Platzhalter im Dark Mode */
+[data-theme="dark"] .image-placeholder,
+[data-theme="dark"] .img-placeholder {
+  background-color: var(--color-cream-dark);
+  border-color: var(--surface-card-border);
+  color: var(--color-text-light);
+}
+
+/* Bilder im Dark Mode leicht abdunkeln */
+[data-theme="dark"] img {
+  filter: brightness(0.9);
+  transition: filter 0.3s ease;
+}
+[data-theme="dark"] img:hover {
+  filter: brightness(1);
+}
+
+/* Scrollbar Dark Mode */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+}
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+/* Mat-Menu im Dark Mode */
+[data-theme="dark"] .mat-mdc-menu-panel {
+  background-color: var(--surface-card) !important;
+}
+
+/* MatSnackBar im Dark Mode */
+[data-theme="dark"] .mat-mdc-snack-bar-container {
+  background-color: var(--color-cream-dark) !important;
+}
+
+
+/* Hero-Buttons im Dark Mode – Angular Material MDC-Variablen überschreiben */
+[data-theme="dark"] .hero-btn-primary {
+  --mdc-filled-button-container-color: #ffffff !important;
+  --mdc-filled-button-label-text-color: #1b5e20 !important;
+  --mdc-protected-button-container-color: #ffffff !important;
+  --mdc-protected-button-label-text-color: #1b5e20 !important;
+  background-color: #ffffff !important;
+  color: #1b5e20 !important;
+}
+
+[data-theme="dark"] .hero-btn-primary .mdc-button__label,
+[data-theme="dark"] .hero-btn-primary .mat-icon {
+  color: #1b5e20 !important;
+}
+
+[data-theme="dark"] .hero-btn-secondary {
+  --mdc-outlined-button-label-text-color: #ffffff !important;
+  --mdc-outlined-button-outline-color: #ffffff !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .hero-btn-secondary .mdc-button__label,
+[data-theme="dark"] .hero-btn-secondary .mat-icon {
+  color: #ffffff !important;
+}
+
+/* Divider im Dark Mode */
+[data-theme="dark"] .mat-divider {
+  border-color: var(--surface-card-border) !important;
+}
+
+/* ----- Dropdown-Pfeil rechts neben dem Text im Navigations-Button ----- */
+.nav-dropdown-trigger .mdc-button__label {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Angular Material setzt auf mat-icon in Buttons: order: -1 → Icon links.
+   Wir überschreiben das für den Dropdown-Pfeil, damit er rechts steht. */
+.nav-dropdown-trigger .mat-icon.dropdown-arrow {
+  order: 1 !important;
+}
+

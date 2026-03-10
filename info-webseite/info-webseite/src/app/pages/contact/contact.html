@@ -1,0 +1,168 @@
+<!-- ===== KONTAKT ===== -->
+
+<!-- Seiten-Header -->
+<section class="page-hero section-cream">
+  <div class="container text-center">
+    <h1>Kontakt</h1>
+    <p class="page-subtitle">
+      Haben Sie Fragen zu unseren Highlandern, zum Fleischverkauf oder möchten Sie einen Besuch planen?
+      Wir freuen uns auf Ihre Nachricht.
+    </p>
+  </div>
+</section>
+
+<section class="section section-white">
+  <div class="container contact-grid">
+
+    <div class="contact-form-area">
+      <h2>Nachricht senden</h2>
+
+      @if (submitSuccess()) {
+        <mat-card appearance="outlined" class="success-card">
+          <mat-card-content>
+            <mat-icon class="success-icon">check_circle</mat-icon>
+            <h3>Vielen Dank für Ihre Nachricht!</h3>
+            <p>Wir haben Ihre Anfrage erhalten und melden uns schnellstmöglich bei Ihnen.</p>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ihr Name</mat-label>
+            <input matInput formControlName="name" placeholder="Max Mustermann">
+            <mat-icon matSuffix>person</mat-icon>
+            @if (contactForm.get('name')?.hasError('required') && contactForm.get('name')?.touched) {
+              <mat-error>Bitte geben Sie Ihren Namen ein.</mat-error>
+            }
+            @if (contactForm.get('name')?.hasError('minlength') && contactForm.get('name')?.touched) {
+              <mat-error>Der Name muss mindestens 2 Zeichen lang sein.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- E-Mail -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ihre E-Mail-Adresse</mat-label>
+            <input matInput formControlName="_replyto" placeholder="ihre.email@beispiel.de" type="email">
+            <mat-icon matSuffix>email</mat-icon>
+            @if (contactForm.get('_replyto')?.hasError('required') && contactForm.get('_replyto')?.touched) {
+              <mat-error>Bitte geben Sie Ihre E-Mail-Adresse ein.</mat-error>
+            }
+            @if (contactForm.get('_replyto')?.hasError('email') && contactForm.get('_replyto')?.touched) {
+              <mat-error>Bitte geben Sie eine gültige E-Mail-Adresse ein.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Betreff -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Betreff</mat-label>
+            <input matInput formControlName="_subject" placeholder="z. B. Anfrage Fleischverkauf">
+            <mat-icon matSuffix>subject</mat-icon>
+            @if (contactForm.get('_subject')?.hasError('required') && contactForm.get('_subject')?.touched) {
+              <mat-error>Bitte geben Sie einen Betreff ein.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Nachricht -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ihre Nachricht</mat-label>
+            <textarea matInput formControlName="message" rows="6"
+                      placeholder="Schreiben Sie uns Ihr Anliegen..."></textarea>
+            <mat-icon matSuffix>message</mat-icon>
+            @if (contactForm.get('message')?.hasError('required') && contactForm.get('message')?.touched) {
+              <mat-error>Bitte geben Sie eine Nachricht ein.</mat-error>
+            }
+            @if (contactForm.get('message')?.hasError('minlength') && contactForm.get('message')?.touched) {
+              <mat-error>Die Nachricht muss mindestens 10 Zeichen lang sein.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Datenschutz-Hinweis -->
+          <p class="privacy-note">
+            Mit dem Absenden des Formulars erklären Sie sich mit der Verarbeitung Ihrer Daten
+            gemäß unserer <a href="/datenschutz">Datenschutzerklärung</a> einverstanden.
+            Ihre Daten werden über den Dienst <strong>Formspree</strong> verarbeitet.
+          </p>
+
+          <!-- reCAPTCHA v2 Widget -->
+          <div class="recaptcha-wrapper">
+            <div #recaptchaContainer></div>
+            @if (captchaError()) {
+              <p class="recaptcha-error">
+                <mat-icon class="recaptcha-error-icon">warning</mat-icon>
+                Bitte bestätigen Sie, dass Sie kein Roboter sind.
+              </p>
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <button mat-raised-button type="submit" class="submit-button"
+                  [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              Wird gesendet...
+            } @else {
+              <ng-container>
+                <mat-icon>send</mat-icon>
+                Nachricht absenden
+              </ng-container>
+            }
+          </button>
+        </form>
+      }
+    </div>
+
+    <!-- Kontaktdaten -->
+    <div class="contact-info-area">
+      <h2>Kontaktdaten</h2>
+
+      <mat-card appearance="outlined" class="contact-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="contact-icon">location_on</mat-icon>
+          <mat-card-title>Adresse</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Familie Gebel<br>
+            Provinzialstraße 29<br>
+            59077 Hamm
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="contact-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="contact-icon">phone</mat-icon>
+          <mat-card-title>Telefon</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- HINWEIS: Echte Telefonnummern hier eintragen -->
+          <p>
+            Festnetz: <a href="tel:FESTNETZNUMMER">FESTNETZNUMMER</a><br>
+            Mobil: <a href="tel:MOBILNUMMER">MOBILNUMMER</a><br>
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="contact-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="contact-icon">email</mat-icon>
+          <mat-card-title>E-Mail</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- HINWEIS: Echte E-Mail-Adresse hier eintragen -->
+          <p>
+            <a href="mailto:EMAIL-ADRESSE">EMAIL-ADRESSE</a>
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Kartenplatzhalter -->
+      <div class="image-placeholder map-placeholder">
+        [Platzhalter: Google Maps oder OpenStreetMap-Einbettung – Standort Provinzialstraße 29, 59077 Hamm]
+      </div>
+    </div>
+
+  </div>
+</section>
+

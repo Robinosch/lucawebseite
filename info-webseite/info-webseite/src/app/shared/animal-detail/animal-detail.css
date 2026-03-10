@@ -1,0 +1,355 @@
+/* ===== Animal Detail – Tier-Profilseite ===== */
+
+/* ----- Zurück-Navigation ----- */
+.back-nav-section {
+  padding: 16px 24px 0;
+}
+
+.back-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.back-button {
+  color: var(--color-primary) !important;
+  font-weight: 500;
+}
+
+.animal-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-hint-right {
+  text-align: right;
+}
+
+/* ----- Hero-Bereich ----- */
+.hero-section {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.hero-image {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-img {
+  min-height: 360px;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+}
+
+/* Echte Bilder im Hero */
+.real-img {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.img-placeholder {
+  background-color: var(--color-cream-dark);
+  border: 2px dashed var(--color-accent-light);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-style: italic;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 24px;
+  min-height: 200px;
+}
+
+/* Bild-Steuerung */
+.image-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.image-counter {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+
+/* Thumbnail-Reihe */
+.thumbnail-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--color-accent-light);
+  border-radius: 8px;
+  background: var(--color-cream-dark);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnail.active {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.thumbnail:hover {
+  border-color: var(--color-primary);
+}
+
+.thumb-placeholder {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Hero-Text */
+.hero-text h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.animal-status {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ----- Profil-Layout ----- */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Steckbrief-Card */
+.profile-card {
+  border-radius: var(--border-radius) !important;
+}
+
+.profile-icon {
+  background-color: var(--color-primary);
+  color: var(--btn-text-on-primary) !important;
+  border-radius: 50%;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+/* Definition-Liste im Steckbrief */
+.profile-list {
+  margin: 16px 0;
+}
+
+.profile-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-cream-dark);
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-item dt {
+  font-weight: 600;
+  color: var(--color-text);
+  min-width: 130px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+.profile-item dd {
+  margin: 0;
+  color: var(--color-text-light);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+.quality-chips {
+  margin-top: 16px;
+}
+
+/* Beschreibungstext */
+.profile-text h2 {
+  margin-bottom: 12px;
+}
+
+.profile-text h3 {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--color-primary-dark);
+}
+
+.description-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* ----- Section-Heading-Icon ----- */
+.section-heading-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  color: var(--color-primary);
+}
+
+/* ----- Abstammungstabelle ----- */
+.lineage-image-wrapper {
+  max-width: 900px;
+  margin: 24px auto 0;
+  text-align: center;
+}
+
+.lineage-img {
+  width: 100%;
+  max-width: 900px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-cream-dark);
+}
+
+/* ----- Nachwuchs-Galerie ----- */
+.offspring-text {
+  max-width: 650px;
+  margin: 0 auto 24px;
+  font-size: 1.05rem;
+}
+
+.offspring-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.offspring-img-wrapper {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.offspring-img-wrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.offspring-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ----- CTA-Bereich ----- */
+.cta-section p {
+  max-width: 600px;
+  margin: 8px auto 24px;
+}
+
+.cta-button {
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+  padding: 0 32px !important;
+}
+
+/* ----- Nicht gefunden ----- */
+.not-found {
+  padding: 64px 24px;
+}
+
+.not-found-icon {
+  font-size: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 960px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .hero-text {
+    text-align: center;
+  }
+
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-img {
+    min-height: 240px;
+  }
+
+  .hero-text h1 {
+    font-size: 1.6rem;
+  }
+
+  .back-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .profile-item dt {
+    min-width: auto;
+  }
+}
+

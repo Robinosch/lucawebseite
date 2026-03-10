@@ -1,0 +1,80 @@
+<!-- ===== JUNGTIERE – Übersichtsseite ===== -->
+
+<!-- Seiten-Header -->
+<section class="page-hero section-cream">
+  <div class="container text-center">
+    <h1>Unsere Jungtiere</h1>
+    <p class="page-subtitle">
+      Färsen und Jungbullen aus eigener Nachzucht – die Zukunft unserer Herde.
+      Sie verkörpern die Zuchtziele des Betriebs: typvolles Erscheinungsbild,
+      ausgeglichenes Wesen und gute Körperkonstitution.
+    </p>
+  </div>
+</section>
+
+<!-- Zurück-Navigation -->
+<section class="section section-white back-nav">
+  <div class="container">
+    <a mat-button routerLink="/unsere-highlander" class="back-button">
+      <mat-icon>arrow_back</mat-icon> Zurück zur Übersicht
+    </a>
+  </div>
+</section>
+
+<!-- Zwei Kacheln: Färsen & Jungbullen -->
+<section class="section section-white">
+  <div class="container">
+    <div class="jungtiere-grid">
+      <!-- Färsen -->
+      <mat-card class="jungtiere-card" appearance="outlined">
+        <img class="jungtiere-card-img"
+             src="images/jungtiere/färsen/arianne-vom-weetfeld/picture-1600.jpg"
+             alt="Färse Arianne vom Weetfeld auf der Weide"
+             loading="lazy" />
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="card-icon">female</mat-icon>
+          <mat-card-title>Färsen</mat-card-title>
+          <mat-card-subtitle>Weibliche Jungtiere</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Die Färsen des Betriebs sind weibliche Jungtiere, die entweder als zukünftige
+            Zuchttiere im Bestand verbleiben oder als hochwertige Zuchttiere an andere
+            Züchter abgegeben werden. Aus eigener Nachzucht mit vollständig dokumentierter Abstammung.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-raised-button routerLink="/unsere-highlander/jungtiere/faersen" class="detail-button">
+            <mat-icon>visibility</mat-icon> Färsen ansehen
+          </a>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Jungbullen -->
+      <mat-card class="jungtiere-card" appearance="outlined">
+        <img class="jungtiere-card-img"
+             src="images/jungtiere/jungbullen/jerome-4-vom-weetfeld/picture-1600.jpg"
+             alt="Jungbulle Jerome 4 vom Weetfeld"
+             loading="lazy" />
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="card-icon">male</mat-icon>
+          <mat-card-title>Jungbullen</mat-card-title>
+          <mat-card-subtitle>Männliche Jungtiere</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Die Jungbullen sind männliche Nachzuchten aus dem Betrieb „vom Weetfeld".
+            Sie werden entweder als zukünftige Zuchtbullen gehalten oder zur
+            Direktvermarktung (Fleisch) vorgesehen. Rassetypisches, ausdrucksstarkes Erscheinungsbild.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-raised-button routerLink="/unsere-highlander/jungtiere/jungbullen" class="detail-button">
+            <mat-icon>visibility</mat-icon> Jungbullen ansehen
+          </a>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</section>
+

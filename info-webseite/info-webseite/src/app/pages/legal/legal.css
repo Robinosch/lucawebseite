@@ -1,0 +1,67 @@
+/* ===== Legal Pages Shared Styles ===== */
+
+.page-hero {
+  padding: 64px 24px 48px;
+}
+
+/* ----- Content ----- */
+.legal-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.legal-content h2 {
+  margin-top: 32px;
+  margin-bottom: 12px;
+  padding-top: 16px;
+}
+
+.legal-content h3 {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.legal-content p {
+  margin-bottom: 12px;
+}
+
+.legal-content ul {
+  margin: 8px 0 16px 24px;
+}
+
+.legal-content li {
+  margin-bottom: 4px;
+}
+
+.legal-content hr {
+  border: none;
+  border-top: 1px solid var(--color-accent-light);
+  margin: 32px 0;
+}
+
+.legal-content a {
+  word-break: break-word;
+}
+
+.legal-note {
+  background-color: var(--color-cream);
+  border-left: 4px solid var(--color-highlight);
+  padding: 16px 20px;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  margin: 32px 0;
+}
+
+.legal-note em {
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 40px 16px 32px;
+  }
+}
+

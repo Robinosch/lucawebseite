@@ -1,0 +1,179 @@
+<!-- ===== App Shell: Toolbar + Sidenav + Content + Footer ===== -->
+
+<!-- Top Toolbar -->
+<mat-toolbar class="app-toolbar" color="primary">
+  @if (isMobile()) {
+    <button mat-icon-button (click)="sidenav.toggle()" aria-label="Menü öffnen">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+
+  <a routerLink="/" class="toolbar-brand">
+    <img class="brand-logo"
+         src="images/startseite/logos/Logo-Haupt.jpg"
+         alt="Logo – Highlander vom Weetfeld" />
+    <span class="brand-text">{{ title() }}</span>
+  </a>
+
+  <span class="toolbar-spacer"></span>
+
+  <!-- Desktop-Navigation -->
+  @if (!isMobile()) {
+    <nav class="desktop-nav">
+      @for (link of navLinks; track link.path) {
+        @if (link.children) {
+          <!-- Eintrag mit Dropdown-Untermenü -->
+          <button mat-button [matMenuTriggerFor]="submenu"
+                  routerLinkActive="active-link"
+                  class="nav-dropdown-trigger">
+            <span class="dropdown-label">{{ link.label }}</span>
+          <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
+          </button>
+
+          <mat-menu #submenu="matMenu" class="nav-submenu">
+            <!-- Übersichtsseite als erster Eintrag -->
+            <a mat-menu-item [routerLink]="link.path">
+              <mat-icon>{{ link.icon }}</mat-icon>
+              <span>Übersicht {{ link.label }}</span>
+            </a>
+            <mat-divider></mat-divider>
+            @for (child of link.children; track child.path) {
+              <a mat-menu-item [routerLink]="child.path">
+                <mat-icon>{{ child.icon }}</mat-icon>
+                <span>{{ child.label }}</span>
+              </a>
+            }
+          </mat-menu>
+        } @else {
+          <!-- Einfacher Navigationslink -->
+          <a mat-button [routerLink]="link.path" routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{ exact: link.path === '/' }">
+            {{ link.label }}
+          </a>
+        }
+      }
+    </nav>
+  }
+
+  <!-- Dark Mode Toggle -->
+  <button mat-icon-button
+          (click)="themeService.toggle()"
+          [matTooltip]="themeService.isDark() ? 'Zum hellen Modus wechseln' : 'Zum dunklen Modus wechseln'"
+          class="theme-toggle"
+          aria-label="Dark Mode umschalten">
+    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Sidenav-Container -->
+<mat-sidenav-container class="sidenav-container">
+  <!-- Mobile Sidenav -->
+  <mat-sidenav #sidenav [mode]="isMobile() ? 'over' : 'side'" [opened]="false"
+               class="mobile-sidenav">
+    <mat-nav-list>
+      @for (link of navLinks; track link.path) {
+        @if (link.children) {
+          <!-- Aufklappbarer Menüpunkt mit Untermenü -->
+          <a mat-list-item (click)="toggleSubmenu(link.label)" class="submenu-trigger">
+            <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+            <span matListItemTitle>{{ link.label }}</span>
+            <mat-icon class="expand-icon" [class.expanded]="isExpanded(link.label)">
+              expand_more
+            </mat-icon>
+          </a>
+          @if (isExpanded(link.label)) {
+            <!-- Übersichtsseite -->
+            <a mat-list-item [routerLink]="link.path" class="submenu-item"
+               (click)="closeSidenav()">
+              <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+              <span matListItemTitle>Übersicht</span>
+            </a>
+            @for (child of link.children; track child.path) {
+              <a mat-list-item [routerLink]="child.path" class="submenu-item"
+                 routerLinkActive="active-link"
+                 (click)="closeSidenav()">
+                <mat-icon matListItemIcon>{{ child.icon }}</mat-icon>
+                <span matListItemTitle>{{ child.label }}</span>
+              </a>
+            }
+          }
+        } @else {
+          <!-- Einfacher Navigationslink -->
+          <a mat-list-item [routerLink]="link.path" routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+             (click)="closeSidenav()">
+            <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+            <span matListItemTitle>{{ link.label }}</span>
+          </a>
+        }
+      }
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/impressum" (click)="closeSidenav()">
+        <mat-icon matListItemIcon>gavel</mat-icon>
+        <span matListItemTitle>Impressum</span>
+      </a>
+      <a mat-list-item routerLink="/datenschutz" (click)="closeSidenav()">
+        <mat-icon matListItemIcon>privacy_tip</mat-icon>
+        <span matListItemTitle>Datenschutz</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Hauptinhalt -->
+  <mat-sidenav-content class="main-content">
+    <main>
+      <router-outlet />
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="container footer-grid">
+        <div class="footer-col">
+          <h4>Highlander vom Weetfeld</h4>
+          <p>Schottische Hochlandrinder<br>aus Hamm-Weetfeld</p>
+          <p class="footer-bio-badge">
+            <img class="footer-bio-logo"
+                 src="images/startseite/logos/öko-logo.jpg"
+                 alt="EU-Bio-Logo – DE-ÖKO-005"
+                 loading="lazy" />
+            Zertifizierter Bio-Betrieb (DE-ÖKO-005)
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            @for (link of navLinks; track link.path) {
+              <li><a [routerLink]="link.path">{{ link.label }}</a></li>
+            }
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontakt</h4>
+          <p>
+            Familie Gebel<br>
+            Provinzialstraße 29<br>
+            59077 Hamm
+          </p>
+          <!-- HINWEIS: Echte Telefonnummer und E-Mail hier eintragen -->
+          <p>
+            📞 <a href="tel:TELEFONNUMMER">TELEFONNUMMER <!-- HINWEIS: Echte Telefonnummer eintragen --></a><br>
+            ✉️ <a href="mailto:EMAIL-ADRESSE">EMAIL-ADRESSE <!-- HINWEIS: Echte E-Mail-Adresse eintragen --></a>
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Rechtliches</h4>
+          <ul class="footer-links">
+            <li><a routerLink="/impressum">Impressum</a></li>
+            <li><a routerLink="/datenschutz">Datenschutz</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; {{ currentYear }} Highlander vom Weetfeld – Familie Gebel. Alle Rechte vorbehalten.</p>
+      </div>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+

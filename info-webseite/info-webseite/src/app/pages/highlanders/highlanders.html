@@ -1,0 +1,154 @@
+<!-- ===== UNSERE HIGHLANDER ===== -->
+
+<!-- Seiten-Header -->
+<section class="page-hero section-cream">
+  <div class="container text-center">
+    <h1>Unsere Highlander</h1>
+    <p class="page-subtitle">
+      Typvolle, ausdrucksstarke Highland Cattle mit freundlichem Wesen und beeindruckender Ausstrahlung.
+    </p>
+  </div>
+</section>
+
+<!-- Zuchtziele -->
+<section class="section section-white">
+  <div class="container">
+    <h2>Unsere Zuchtziele</h2>
+    <p>
+      Bei der Zucht unserer Highland Cattle legen wir besonderen Wert auf die Kombination aus
+      einem ansprechenden Erscheinungsbild und einem guten, ruhigen Charakter. Unsere Zuchtziele
+      umfassen folgende Eigenschaften:
+    </p>
+
+    <div class="goals-grid">
+      <mat-card appearance="outlined" class="goal-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="goal-icon">favorite</mat-icon>
+          <mat-card-title>Freundliches Wesen</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Unsere Tiere sind durch den regelmäßigen, liebevollen Kontakt ausgesprochen
+            menschenbezogen, vertrauensvoll und sicher im Umgang.
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="goal-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="goal-icon">balance</mat-icon>
+          <mat-card-title>Ausgeglichener Charakter</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Ein ruhiges, gelassenes Temperament ist uns besonders wichtig –
+            sowohl für den täglichen Umgang als auch für die Zucht.
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="goal-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="goal-icon">fitness_center</mat-icon>
+          <mat-card-title>Korrekte Körperkonstitution</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Gesunde, kräftige Tiere mit korrektem Körperbau bilden die Grundlage
+            einer verantwortungsvollen Zucht.
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="goal-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="goal-icon">auto_awesome</mat-icon>
+          <mat-card-title>Beeindruckende Ausstrahlung</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Typvolle, ausdrucksstarke Highlander mit einem ansprechenden
+            Erscheinungsbild – das ist unser Anspruch.
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<!-- Abstammung & Gesundheit -->
+<section class="section section-cream">
+  <div class="container">
+    <div class="quality-grid">
+      <div class="quality-text">
+        <h2>Abstammung & Gesundheit</h2>
+        <p>
+          Alle unsere Tiere verfügen über nachweisbare, hochwertige Abstammungen.
+          Ein vollständiger Gesundheitsstatus liegt für jedes Tier vor. Damit gewährleisten
+          wir Transparenz und Qualität in unserer Zucht.
+        </p>
+        <mat-chip-set>
+          <mat-chip highlighted>
+            <mat-icon matChipAvatar>verified</mat-icon>
+            Nachweisbare Abstammung
+          </mat-chip>
+          <mat-chip highlighted>
+            <mat-icon matChipAvatar>health_and_safety</mat-icon>
+            Vollständiger Gesundheitsstatus
+          </mat-chip>
+          <mat-chip highlighted>
+            <mat-icon matChipAvatar>eco</mat-icon>
+            Bio-zertifiziert (DE-ÖKO-005)
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+      <div class="quality-image">
+        <img class="quality-img"
+             src="images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg"
+             alt="Nahaufnahme einer Highland-Cattle-Stammkuh – Anthea Fox of Blocken"
+             loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Unsere Tiere (Kategorie-Kacheln mit Links zu Unterseiten) -->
+<section class="section section-white">
+  <div class="container">
+    <h2 class="text-center">Unsere Tiere im Überblick</h2>
+    <p class="text-center page-subtitle">
+      Lernen Sie unsere Highlander kennen – von den Stammkühen über die
+      Zuchtbullen und Mutterkühe bis zu den Kälbern und Jungtieren.
+    </p>
+
+    <div class="category-grid">
+      @for (cat of categories; track cat.slug) {
+        <mat-card class="category-card" appearance="outlined">
+          @if (cat.imageSrc) {
+            <img class="category-card-img"
+                 [src]="cat.imageSrc"
+                 [alt]="cat.label"
+                 loading="lazy" />
+          } @else {
+            <div class="image-placeholder card-img">
+              {{ cat.imagePlaceholder }}
+            </div>
+          }
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="category-icon">{{ cat.icon }}</mat-icon>
+            <mat-card-title>{{ cat.label }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ cat.description }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <a mat-raised-button [routerLink]="cat.routerLink" class="category-button">
+              <mat-icon>arrow_forward</mat-icon> {{ cat.label }} ansehen
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  </div>
+</section>
+

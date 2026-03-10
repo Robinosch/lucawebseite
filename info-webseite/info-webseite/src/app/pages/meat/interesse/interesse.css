@@ -1,0 +1,63 @@
+/* ===== Interesse/Anfrage ===== */
+
+.page-hero { padding: 64px 24px 48px; }
+.page-subtitle { max-width: 700px; margin: 8px auto 0; font-size: 1.1rem; }
+.back-nav { padding: 16px 24px 0; }
+.back-button { color: var(--color-primary) !important; font-weight: 500; }
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.step-card {
+  transition: transform 0.2s ease;
+  border-radius: var(--border-radius) !important;
+}
+
+.step-card:hover { transform: translateY(-3px); }
+
+.step-number {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+}
+
+.info-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: var(--color-primary);
+  margin-bottom: 12px;
+}
+
+.info-text {
+  max-width: 650px;
+  margin: 8px auto 0;
+  font-size: 1.05rem;
+}
+
+.cta-section p { max-width: 600px; margin: 8px auto 24px; font-size: 1.05rem; }
+
+.cta-primary {
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+  padding: 0 32px !important;
+  font-size: 1rem !important;
+}
+
+@media (max-width: 768px) {
+  .steps-grid { grid-template-columns: 1fr; }
+  .page-hero { padding: 40px 16px 32px; }
+}
+

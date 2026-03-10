@@ -1,0 +1,231 @@
+<!-- ===== TIER-DETAILSEITE – Gemeinsam für alle Kategorien ===== -->
+
+@if (animal(); as animal) {
+  <!-- Zurück-Navigation -->
+  <section class="section section-white back-nav-section">
+    <div class="container back-nav">
+      <a mat-button [routerLink]="backPath()" class="back-button">
+        <mat-icon>arrow_back</mat-icon> Zurück zu {{ categoryLabel() }}
+      </a>
+
+      <!-- Vor/Zurück-Navigation zwischen Tieren -->
+      <div class="animal-nav">
+        @if (adjacentAnimals().prev; as prev) {
+          <a mat-icon-button
+             [routerLink]="backPath() + '/' + prev.id"
+             [title]="'Vorheriges Tier: ' + prev.name">
+            <mat-icon>chevron_left</mat-icon>
+          </a>
+          <span class="nav-hint">{{ prev.name }}</span>
+        }
+        @if (adjacentAnimals().next; as next) {
+          <span class="nav-hint nav-hint-right">{{ next.name }}</span>
+          <a mat-icon-button
+             [routerLink]="backPath() + '/' + next.id"
+             [title]="'Nächstes Tier: ' + next.name">
+            <mat-icon>chevron_right</mat-icon>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Hero-Bereich mit Hauptbild -->
+  <section class="section section-cream hero-section">
+    <div class="container hero-layout">
+      <!-- Hauptbild -->
+      <div class="hero-image">
+        @if (images().length > 0) {
+          @if (images()[currentImageIndex()].src) {
+            <img class="hero-img real-img"
+                 [src]="images()[currentImageIndex()].src"
+                 [alt]="images()[currentImageIndex()].alt"
+                 loading="lazy" />
+          } @else {
+            <div class="img-placeholder hero-img">
+              {{ images()[currentImageIndex()].placeholder }}
+            </div>
+          }
+
+          <!-- Bild-Navigation (wenn mehrere Bilder) -->
+          @if (images().length > 1) {
+            <div class="image-controls">
+              <button mat-icon-button (click)="prevImage()" aria-label="Vorheriges Bild">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <span class="image-counter">
+                {{ currentImageIndex() + 1 }} / {{ images().length }}
+              </span>
+              <button mat-icon-button (click)="nextImage()" aria-label="Nächstes Bild">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          }
+
+          <!-- Thumbnail-Reihe -->
+          @if (images().length > 1) {
+            <div class="thumbnail-row">
+              @for (img of images(); track $index; let i = $index) {
+                <button class="thumbnail"
+                        [class.active]="i === currentImageIndex()"
+                        (click)="showImage(i)"
+                        [attr.aria-label]="'Bild ' + (i + 1) + ' anzeigen'">
+                  @if (img.src) {
+                    <img class="thumb-img" [src]="img.src" [alt]="img.alt" loading="lazy" />
+                  } @else {
+                    <div class="thumb-placeholder">{{ i + 1 }}</div>
+                  }
+                </button>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Tiername als Hero-Text -->
+      <div class="hero-text">
+        <h1>{{ animal.name }}</h1>
+        @if (animal.status) {
+          <p class="animal-status">{{ animal.status }}</p>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Steckbrief-Bereich -->
+  <section class="section section-white">
+    <div class="container profile-layout">
+      <!-- Steckbrief-Card -->
+      <mat-card class="profile-card" appearance="outlined">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="profile-icon">badge</mat-icon>
+          <mat-card-title>Steckbrief</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <dl class="profile-list">
+            <div class="profile-item">
+              <dt>Name</dt>
+              <dd>{{ animal.name }}</dd>
+            </div>
+            @if (animal.birthDate) {
+              <div class="profile-item">
+                <dt>Geburtsdatum</dt>
+                <dd>{{ animal.birthDate }}</dd>
+              </div>
+            }
+            @if (animal.origin) {
+              <div class="profile-item">
+                <dt>Herkunft / Züchter</dt>
+                <dd>{{ animal.origin }}</dd>
+              </div>
+            }
+            @if (animal.status) {
+              <div class="profile-item">
+                <dt>Status</dt>
+                <dd>{{ animal.status }}</dd>
+              </div>
+            }
+            <div class="profile-item">
+              <dt>Kategorie</dt>
+              <dd>{{ categoryLabel() }}</dd>
+            </div>
+          </dl>
+
+          <!-- Qualitäts-Chips -->
+          <mat-chip-set class="quality-chips">
+            <mat-chip highlighted>
+              <mat-icon matChipAvatar>verified</mat-icon>
+              Nachweisbare Abstammung
+            </mat-chip>
+            <mat-chip highlighted>
+              <mat-icon matChipAvatar>health_and_safety</mat-icon>
+              Gesundheitsstatus
+            </mat-chip>
+            <mat-chip highlighted>
+              <mat-icon matChipAvatar>eco</mat-icon>
+              Bio-Betrieb (DE-ÖKO-005)
+            </mat-chip>
+          </mat-chip-set>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Beschreibung -->
+      <div class="profile-text">
+        <h2>Über {{ animal.name }}</h2>
+        <p class="description-text">{{ animal.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstammungstabelle (falls vorhanden) -->
+  @if (animal.lineageImageSrc) {
+    <section class="section section-cream">
+      <div class="container">
+        <h2 class="text-center">
+          <mat-icon class="section-heading-icon">account_tree</mat-icon>
+          Abstammung
+        </h2>
+        <div class="lineage-image-wrapper">
+          <img class="lineage-img"
+               [src]="animal.lineageImageSrc"
+               [alt]="'Abstammungstabelle – ' + animal.name"
+               loading="lazy" />
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Nachkommen (Text + Bilder) -->
+  @if (animal.offspring || (animal.offspringImages && animal.offspringImages.length > 0)) {
+    <section class="section section-white">
+      <div class="container">
+        <h2 class="text-center">
+          <mat-icon class="section-heading-icon">family_restroom</mat-icon>
+          Nachkommen
+        </h2>
+
+        @if (animal.offspring) {
+          <p class="text-center offspring-text">{{ animal.offspring }}</p>
+        }
+
+        @if (animal.offspringImages && animal.offspringImages.length > 0) {
+          <div class="offspring-gallery">
+            @for (img of animal.offspringImages; track $index) {
+              @if (img.src) {
+                <div class="offspring-img-wrapper">
+                  <img class="offspring-img"
+                       [src]="img.src"
+                       [alt]="img.alt"
+                       loading="lazy" />
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- CTA-Bereich -->
+  <section class="section section-cream cta-section">
+    <div class="container text-center">
+      <h3>Haben Sie Fragen zu {{ animal.name }}?</h3>
+      <p>Kontaktieren Sie uns gerne für weitere Informationen zu unseren Tieren.</p>
+      <a mat-raised-button routerLink="/kontakt" class="cta-button">
+        <mat-icon>mail</mat-icon> Jetzt Kontakt aufnehmen
+      </a>
+    </div>
+  </section>
+} @else {
+  <!-- Tier nicht gefunden -->
+  <section class="section section-white">
+    <div class="container text-center not-found">
+      <mat-icon class="not-found-icon">search_off</mat-icon>
+      <h2>Tier nicht gefunden</h2>
+      <p>Das gesuchte Tier konnte leider nicht gefunden werden.</p>
+      <a mat-raised-button [routerLink]="backPath()" class="cta-button">
+        <mat-icon>arrow_back</mat-icon> Zurück zur Übersicht
+      </a>
+    </div>
+  </section>
+}

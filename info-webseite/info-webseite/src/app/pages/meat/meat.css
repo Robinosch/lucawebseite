@@ -1,0 +1,110 @@
+/* ===== Meat Page Styles ===== */
+
+.page-hero {
+  padding: 64px 24px 48px;
+}
+
+.page-subtitle {
+  max-width: 700px;
+  margin: 8px auto 0;
+  font-size: 1.1rem;
+}
+
+/* ----- Intro Grid ----- */
+.meat-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.meat-text h2 {
+  margin-bottom: 16px;
+}
+
+.meat-text p {
+  margin-bottom: 12px;
+}
+
+/* ----- Features Grid ----- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.feature-card {
+  transition: transform 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+}
+
+.feature-icon {
+  background-color: var(--color-highlight);
+  color: var(--btn-text-on-primary) !important;
+  border-radius: 50%;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+/* ----- Product Gallery ----- */
+.product-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.product-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.product-img:hover {
+  transform: scale(1.02);
+}
+
+.meat-img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  max-height: 400px;
+}
+
+/* ----- CTA ----- */
+.cta-meat p {
+  max-width: 600px;
+  margin: 8px auto 24px;
+  font-size: 1.05rem;
+}
+
+.cta-button {
+  background-color: var(--color-primary) !important;
+  color: var(--btn-text-on-primary) !important;
+  padding: 0 32px !important;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 768px) {
+  .meat-intro-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .page-hero {
+    padding: 40px 16px 32px;
+  }
+}
+
