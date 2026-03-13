@@ -23,7 +23,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(27, 94, 32, 0.85) 0%, rgba(46, 125, 50, 0.7) 100%);
   z-index: 2;
   display: flex;
   align-items: center;
