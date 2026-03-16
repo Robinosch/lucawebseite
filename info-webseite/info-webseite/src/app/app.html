@@ -120,8 +120,8 @@
   </mat-sidenav>
 
   <!-- Hauptinhalt -->
-  <mat-sidenav-content class="main-content">
-    <main>
+  <mat-sidenav-content #contentHost class="main-content">
+    <main (click)="openImageZoomFromMain($event)">
       <router-outlet />
     </main>
 

@@ -133,6 +133,12 @@ export const routes: Routes = [
     ]
   },
 
+  // ===== Interaktiver Stammbaum =====
+  {
+    path: 'stammbaum',
+    loadComponent: () => import('./pages/stammbaum/stammbaum').then(m => m.Stammbaum),
+    title: 'Stammbaum unserer Highlander – Highlander vom Weetfeld'
+  },
   // ===== Fleisch & Direktvermarktung (mit 3 Unterseiten) =====
   {
     path: 'fleisch',

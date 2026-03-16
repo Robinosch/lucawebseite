@@ -1,0 +1,73 @@
+<section class="page-hero section-cream">
+  <div class="container text-center">
+    <h1>Stammbaum unserer Highlander</h1>
+    <p class="page-subtitle">
+      Entdecken Sie die Abstammung unserer Highlander mit Bildvorschau, Zoom und direkter Navigation durch Vater- und Mutterlinie.
+    </p>
+  </div>
+</section>
+
+<section class="section section-white">
+  <div class="container">
+    <mat-card appearance="outlined" class="controls-card">
+      <div class="controls-grid">
+        <mat-form-field appearance="outline" class="control-field">
+          <mat-label>Tier auswaehlen</mat-label>
+          <mat-select [ngModel]="selectedId()" (ngModelChange)="onAnimalChange($event)">
+            @for (animal of highlightedAnimals(); track animal.id) {
+              <mat-option [value]="animal.id">{{ animal.id }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="control-field depth-field">
+          <mat-label>Maximale Tiefe</mat-label>
+          <mat-select [ngModel]="maxDepth()" (ngModelChange)="onDepthChange($event)">
+            @for (depth of [2, 3, 4, 5, 6]; track depth) {
+              <mat-option [value]="depth">{{ depth }} Generationen</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="zoom-controls">
+          <button mat-stroked-button type="button" (click)="zoomOut()">
+            <mat-icon>zoom_out</mat-icon>
+            Verkleinern
+          </button>
+          <button mat-stroked-button type="button" (click)="zoomIn()">
+            <mat-icon>zoom_in</mat-icon>
+            Vergroessern
+          </button>
+          <button mat-raised-button type="button" color="primary" (click)="resetView()">
+            <mat-icon>center_focus_strong</mat-icon>
+            Zentrieren
+          </button>
+        </div>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-highlight"></span>
+          Tiere aus dem Bestand / vom Weetfeld
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-external"></span>
+          Externe Linien
+        </span>
+      </div>
+    </mat-card>
+
+    @if (loading()) {
+      <mat-card class="status-card">Daten werden geladen ...</mat-card>
+    }
+
+    @if (error()) {
+      <mat-card class="status-card status-card-error">{{ error() }}</mat-card>
+    }
+
+    <mat-card appearance="outlined" class="tree-card">
+      <div #treeContainer class="tree-container"></div>
+    </mat-card>
+  </div>
+</section>
+

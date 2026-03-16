@@ -1,0 +1,163 @@
+.page-hero {
+  padding: 64px 24px 44px;
+}
+
+.page-subtitle {
+  max-width: 820px;
+  margin: 10px auto 0;
+  font-size: 1.06rem;
+}
+
+.controls-card {
+  padding: 18px;
+  border-radius: var(--border-radius);
+  margin-bottom: 18px;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.control-field {
+  width: 100%;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.zoom-controls button {
+  white-space: nowrap;
+}
+
+.legend-row {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-light);
+  font-size: 0.94rem;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot-highlight {
+  background: #e7f4ea;
+  border: 2px solid #2e7d32;
+}
+
+.legend-dot-external {
+  background: #f5f5f5;
+  border: 2px solid #a9a9a9;
+}
+
+.tree-card {
+  border-radius: var(--border-radius);
+}
+
+.tree-container {
+  width: 100%;
+  min-height: 820px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--surface-card-border);
+  background: linear-gradient(180deg, #fcfffb 0%, #f6f7f8 100%);
+}
+
+.status-card {
+  margin-top: 12px;
+  padding: 18px;
+}
+
+.status-card-error {
+  color: #a11212;
+}
+
+:host ::ng-deep .pedigree-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+:host ::ng-deep .node-title {
+  font-size: 12px;
+  font-weight: 700;
+  fill: #1e1e1e;
+}
+
+:host ::ng-deep .node-relation {
+  font-size: 11px;
+  font-weight: 500;
+  fill: #2e7d32;
+}
+
+:host ::ng-deep .node-info {
+  font-size: 10px;
+  fill: #555;
+}
+
+:host-context([data-theme="dark"]) .tree-container {
+  background: #000000;
+  border-color: #2d2d2d;
+}
+
+:host-context([data-theme="dark"]) ::ng-deep .node-title {
+  fill: #f0f0f0;
+}
+
+:host-context([data-theme="dark"]) ::ng-deep .node-relation {
+  fill: #8ad38e;
+}
+
+:host-context([data-theme="dark"]) ::ng-deep .node-info {
+  fill: #d0d0d0;
+}
+
+:host-context([data-theme="dark"]) .legend-dot-highlight {
+  background: #173024;
+  border-color: #7fd48d;
+}
+
+:host-context([data-theme="dark"]) .legend-dot-external {
+  background: #212121;
+  border-color: #616161;
+}
+
+@media (max-width: 1024px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .zoom-controls {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 44px 16px 30px;
+  }
+
+  .tree-container {
+    min-height: 700px;
+  }
+}
+
+

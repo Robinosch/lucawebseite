@@ -1,0 +1,31 @@
+<section class="zoom-dialog-shell" (wheel)="onWheel($event)">
+  <header class="zoom-header">
+    <p class="zoom-title">{{ data.alt || 'Bildansicht' }}</p>
+    <div class="zoom-actions">
+      <button mat-icon-button type="button" (click)="zoomOut()" aria-label="Verkleinern">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <span class="zoom-value">{{ (zoom() * 100).toFixed(0) }}%</span>
+      <button mat-icon-button type="button" (click)="zoomIn()" aria-label="Vergroessern">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-button type="button" (click)="resetView()">Zoom zurücksetzen</button>
+      <button mat-icon-button type="button" (click)="close()" aria-label="Schliessen">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <div class="zoom-stage"
+       [class.is-zoomed]="zoom() > 1"
+       [class.is-dragging]="isDragging()"
+       (mousedown)="onDragStart($event)"
+       (mousemove)="onDragMove($event)"
+       (mouseleave)="onDragEnd()">
+    <img [src]="data.src"
+         [alt]="data.alt || 'Vergroesserte Bildansicht'"
+         [style.transform]="transformStyle()"
+         draggable="false" />
+  </div>
+</section>
+

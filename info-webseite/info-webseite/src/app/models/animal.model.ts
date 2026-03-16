@@ -5,6 +5,8 @@
 
 /** Bild-Platzhalter für ein Tier */
 export interface AnimalImage {
+  /** Name der Kuh */
+  name?: string,
   /** Beschreibender Text, was das Bild zeigt */
   placeholder: string;
   /** Alt-Text für Barrierefreiheit */

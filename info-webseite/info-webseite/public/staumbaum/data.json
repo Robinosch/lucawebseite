@@ -1,0 +1,527 @@
+[
+  {
+    "id": "Gilka von der Rehhecke",
+    "sire": "Saturn von der Voralp",
+    "dam": "Gina",
+    "info": "8/7/7/g - rot",
+    "highlight": true
+  },
+  {
+    "id": "Giovanna vom Weetfeld",
+    "sire": "Lux vom schönen Felde",
+    "dam": "Gilka von der Rehhecke",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Gwenda vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Gaia vom Weetfeld",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Max vom Holschenhof",
+    "sire": "Mac Mark II. von Schöneck",
+    "dam": "Chelsea vom Augustenhof",
+    "info": "8/8/8/m - brindle",
+    "highlight": true
+  },
+  {
+    "id": "Nadjeschda vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Niseag Fox of Blocken",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Namika vom Weetfeld",
+    "sire": "Lux vom schönen Felde",
+    "dam": "Niseag Fox of Blocken",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Adriana vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Anthea Fox of Blocken",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Amidala vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Anthea Fox of Blocken",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Anthea Fox of Blocken",
+    "sire": "Piobaire of Balmoral",
+    "dam": "Ada Fox of Blocken",
+    "info": "8/7/7/g - gelb",
+    "highlight": true
+  },
+  {
+    "id": "Antigone vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Anthea Fox of Blocken",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Gaia vom Weetfeld",
+    "sire": "Prive of Greenfield",
+    "dam": "Gilka von der Rehhecke",
+    "info": "8/8/8/g - rot",
+    "highlight": true
+  },
+  {
+    "id": "Niseag Fox of Blocken",
+    "sire": "Piobaire of Balmoral",
+    "dam": "Nigheanag Fox of Blocken",
+    "info": "8/7/8/g - rot",
+    "highlight": true
+  },
+  {
+    "id": "Narnia vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Niseag Fox of Blocken",
+    "info": "7/7/7/g - rot",
+    "highlight": true
+  },
+  {
+    "id": "Natascha vom Weetfeld",
+    "sire": "Leroy vom Weetfeld",
+    "dam": "Narnia vom Weetfeld",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Nikaja vom Weetfeld",
+    "sire": "Lux vom schönen Felde",
+    "dam": "Niobe vom Weetfeld",
+    "info": null,
+    "highlight": true
+  },
+  {
+    "id": "Leroy vom Weetfeld",
+    "sire": "Lux vom schönen Felde",
+    "dam": "Gilka von der Rehhecke",
+    "info": "8/8/8/g - schwarz",
+    "highlight": true
+  },
+  {
+    "id": "Niobe vom Weetfeld",
+    "sire": "Max vom Holschenhof",
+    "dam": "Niseag Fox of Blocken",
+    "info": "8/8/7g - rot",
+    "highlight": true
+  },
+  {
+    "id": "Saturn von der Voralp",
+    "sire": "Starav of Achnacloich",
+    "dam": "Jeanette of Craycombe",
+    "info": "8/8 - rot",
+    "highlight": false
+  },
+  {
+    "id": "Gina",
+    "sire": "Andrus",
+    "dam": "Gia",
+    "info": "8/7/7/m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Lux vom schönen Felde",
+    "sire": "Lagavulin vom Augustenhof",
+    "dam": "An-Uiseag 7te von Hackenstedt",
+    "info": "8/8/7/g - dun",
+    "highlight": false
+  },
+  {
+    "id": "Prive of Greenfield",
+    "sire": "Piobaire 8te Fox of Blocken",
+    "dam": "Bonny of Greenfield",
+    "info": "8/8/7/m - schwarz",
+    "highlight": false
+  },
+  {
+    "id": "Mac Mark II. von Schöneck",
+    "sire": "Mr. Mac Mark",
+    "dam": "Shona of Iomroll",
+    "info": "7/7/7 m - brindle",
+    "highlight": false
+  },
+  {
+    "id": "Chelsea vom Augustenhof",
+    "sire": "Uilleam Dubh of Barnaigh",
+    "dam": "Cilly von der Ostert",
+    "info": "8/8/7 g - gelb",
+    "highlight": false
+  },
+  {
+    "id": "Piobaire of Balmoral",
+    "sire": "Angus Mac Domhnull 1st of Easton",
+    "dam": "Connachat 22nd of Balmoral",
+    "info": "8/8 - gelb",
+    "highlight": false
+  },
+  {
+    "id": "Ada Fox of Blocken",
+    "sire": "Othello vom Kiehnshof",
+    "dam": "Aille Buidhe 3rd of Cullerne",
+    "info": "7/7/6 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Starav of Achnacloich",
+    "sire": "Prionnsa 4th of Leys",
+    "dam": "Proiseag Ruadh 24th of Achnacloich",
+    "info": "7/5/7/m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Jeanette of Craycombe",
+    "sire": "Philip of Strathallan",
+    "dam": "Jehudith 1st of Craycombe",
+    "info": "-",
+    "highlight": false
+  },
+  {
+    "id": "Andrus",
+    "sire": "Anndra 1 st of Auch",
+    "dam": "Malda 43rd of Achnacloich",
+    "info": "7/7/6/m- rot",
+    "highlight": false
+  },
+  {
+    "id": "Gia",
+    "sire": "Bhaltair 2nd of Hungerhill",
+    "dam": "Gesche",
+    "info": "7/5/6 m -",
+    "highlight": false
+  },
+  {
+    "id": "Lagavulin vom Augustenhof",
+    "sire": "Lachlan Geal vom Oberberg",
+    "dam": "Falballa von Westerwede",
+    "info": "8/8/7 - silverdun",
+    "highlight": false
+  },
+  {
+    "id": "An-Uiseag 7te von Hackenstedt",
+    "sire": "Jock 4th von Hackenstedt",
+    "dam": "An-Uiseag 2te von Hackenstedt",
+    "info": "8/7/7 m - schwarz",
+    "highlight": false
+  },
+  {
+    "id": "Mr. Mac Mark",
+    "sire": "Mario I. vom Waldwiesenhof",
+    "dam": "Princess 17th",
+    "info": "9/8/7 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Shona of Iomroll",
+    "sire": "Diplomat of Glengorm",
+    "dam": "Sheena of Iomroll",
+    "info": "7/7/6 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Uilleam Dubh of Barnaigh",
+    "sire": "Dubh Seamus 1st of Keilberg",
+    "dam": "Beitidh of Rhum",
+    "info": "7/8/7 k - schwarz",
+    "highlight": false
+  },
+  {
+    "id": "Cilly von der Ostert",
+    "sire": "Lümmel von der Wiesenau",
+    "dam": "A Gael Aillidh of Cullerne",
+    "info": "7/7/8 g - rot",
+    "highlight": false
+  },
+  {
+    "id": "Nigheanag Fox of Blocken",
+    "sire": "Phillip of Hungerhill",
+    "dam": "Nighean Ruadh 2nd of Leys",
+    "info": "7/7/8 g - rot",
+    "highlight": false
+  },
+  {
+    "id": "Angus Mac Domhnull 1st of Easton",
+    "sire": "Mac Domhnull of Douneside",
+    "dam": "Muff 2nd of Braes of Greenock",
+    "info": "- gelb",
+    "highlight": false
+  },
+  {
+    "id": "Connachat 22nd of Balmoral",
+    "sire": "Beinn Fhionnlaidh of Scone Palace",
+    "dam": "Connachat 4th of Balmoral",
+    "info": "-rot",
+    "highlight": false
+  },
+  {
+    "id": "Othello vom Kiehnshof",
+    "sire": "Ovid",
+    "dam": "Mairi of Douneside",
+    "info": "- rot",
+    "highlight": false
+  },
+  {
+    "id": "Aille Buidhe 3rd of Cullerne",
+    "sire": "Coirneal Ile",
+    "dam": "Princess Mathilda 30th of Strathallan",
+    "info": "7/7/7 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Phillip of Hungerhill",
+    "sire": "Philip of Strathallan",
+    "dam": "Leitis 18th of Leys",
+    "info": "8/7/7 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Nighean Ruadh 2nd of Leys",
+    "sire": "Brogach Alex of Glenfintaig",
+    "dam": "Nighean Ruadh 18nd of Leys",
+    "info": "7/6/6 m - rot",
+    "highlight": false
+  },
+  {
+    "id": "Prionnsa 4th of Leys",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Proiseag Ruadh 24th of Achnacloich",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Philip of Strathallan",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Jehudith 1st of Craycombe",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Anndra 1 st of Auch",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Malda 43rd of Achnacloich",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Bhaltair 2nd of Hungerhill",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Gesche",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Lachlan Geal vom Oberberg",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Falballa von Westerwede",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Jock 4th von Hackenstedt",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "An-Uiseag 2te von Hackenstedt",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Piobaire 8te Fox of Blocken",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Bonny of Greenfield",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Mario I. vom Waldwiesenhof",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Princess 17th",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Diplomat of Glengorm",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Sheena of Iomroll",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Dubh Seamus 1st of Keilberg",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Beitidh of Rhum",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Lümmel von der Wiesenau",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "A Gael Aillidh of Cullerne",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Mac Domhnull of Douneside",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Muff 2nd of Braes of Greenock",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Beinn Fhionnlaidh of Scone Palace",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Connachat 4th of Balmoral",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Ovid",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Mairi of Douneside",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Coirneal Ile",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Princess Mathilda 30th of Strathallan",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Leitis 18th of Leys",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Brogach Alex of Glenfintaig",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  },
+  {
+    "id": "Nighean Ruadh 18nd of Leys",
+    "sire": null,
+    "dam": null,
+    "info": null,
+    "highlight": false
+  }
+]
