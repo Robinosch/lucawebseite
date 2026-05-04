@@ -78,5 +78,25 @@
         "isPrimary": true
       }
     ]
+  },
+  {
+    "id": "Morris-vom-Kappenstein",
+    "name": "Morris vom Kappenstein",
+    "category": "zuchtbullen",
+    "birthDate": "2020",
+    "origin": "vom Kappenstein",
+    "status": "Zuchtbulle",
+    "description": "Morris",
+    "offspring": "Morris_2",
+    "lineageImageSrc": "",
+    "images": [
+      {
+        "src": "images/zuchtbullen/Morris-vom-Kappenstein/Morris-vom-Kappenstein-06-24-1.jpeg",
+        "alt": "Morris-vom-Kappenstein – Hauptbild",
+        "placeholder": "Morris-vom-Kappenstein",
+        "isPrimary": true,
+        "size": "Medium"
+      }
+    ]
   }
 ]
