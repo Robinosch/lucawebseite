@@ -122,5 +122,36 @@
         "size": "small"
       }
     ]
+  },
+  {
+    "id": "Marley-vom-weetfeld",
+    "name": "Marley vom Weetfeld",
+    "category": "jungbullen",
+    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
+    "status": "Jungbulle",
+    "description": "Marley vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
+    "images": [
+      {
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld.jpeg",
+        "alt": "Marley – Hauptbild",
+        "placeholder": "Marley",
+        "isPrimary": true,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld2.jpeg",
+        "alt": "Marley – Ansicht 2",
+        "placeholder": "Marley",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld3.jpeg",
+        "alt": "Marley – Thumbnail",
+        "placeholder": "Marley",
+        "isPrimary": false,
+        "size": "medium"
+      }
+    ]
   }
 ]
