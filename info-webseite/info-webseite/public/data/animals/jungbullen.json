@@ -132,22 +132,36 @@
     "description": "Marley vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
     "images": [
       {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld.jpeg",
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-1.jpeg",
         "alt": "Marley – Hauptbild",
         "placeholder": "Marley",
         "isPrimary": true,
         "size": "medium"
       },
       {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld2.jpeg",
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-2.jpeg",
         "alt": "Marley – Ansicht 2",
         "placeholder": "Marley",
         "isPrimary": false,
         "size": "medium"
       },
       {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld3.jpeg",
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-3.jpeg",
         "alt": "Marley – Thumbnail",
+        "placeholder": "Marley",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-10-24-1.jpeg",
+        "alt": "Marley - 1",
+        "placeholder": "Marley",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-06-24-1.jpeg",
+        "alt": "Marley - 2",
         "placeholder": "Marley",
         "isPrimary": false,
         "size": "medium"
