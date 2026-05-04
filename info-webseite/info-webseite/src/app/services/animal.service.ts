@@ -1,4 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, forkJoin, map, of } from 'rxjs';
 import {Animal, AnimalCategory, AnimalCategoryInfo} from '../models/animal.model';
 
 /**
@@ -12,8 +15,19 @@ import {Animal, AnimalCategory, AnimalCategoryInfo} from '../models/animal.model
  */
 @Injectable({providedIn: 'root'})
 export class AnimalService {
+  private readonly http = inject(HttpClient);
 
-  readonly categories: AnimalCategoryInfo[] = [
+  private readonly dataPaths = {
+    categories: '/data/animals/categories.json',
+    stammkuehe: '/data/animals/stammkuehe.json',
+    mutterkuehe: '/data/animals/mutterkuehe.json',
+    zuchtbullen: '/data/animals/zuchtbullen.json',
+    kaelber: '/data/animals/kaelber.json',
+    faersen: '/data/animals/faersen.json',
+    jungbullen: '/data/animals/jungbullen.json'
+  };
+
+  private readonly fallbackCategories: AnimalCategoryInfo[] = [
     {
       slug: 'stammkuehe',
       label: 'Stammkühe',
@@ -1376,25 +1390,48 @@ export class AnimalService {
     }
   ];
 
+  private readonly fallbackAnimals: Animal[] = [
+    ...this.stammkuehe,
+    ...this.mutterkuehe,
+    ...this.zuchtbullen,
+    ...this.kaelber,
+    ...this.faersen,
+    ...this.jungbullen
+  ];
+
+  private readonly externalData = toSignal(
+    forkJoin({
+      categories: this.http.get<AnimalCategoryInfo[]>(this.dataPaths.categories),
+      stammkuehe: this.http.get<Animal[]>(this.dataPaths.stammkuehe),
+      mutterkuehe: this.http.get<Animal[]>(this.dataPaths.mutterkuehe),
+      zuchtbullen: this.http.get<Animal[]>(this.dataPaths.zuchtbullen),
+      kaelber: this.http.get<Animal[]>(this.dataPaths.kaelber),
+      faersen: this.http.get<Animal[]>(this.dataPaths.faersen),
+      jungbullen: this.http.get<Animal[]>(this.dataPaths.jungbullen)
+    }).pipe(
+      map(({ categories, stammkuehe, mutterkuehe, zuchtbullen, kaelber, faersen, jungbullen }) => ({
+        categories,
+        animals: [...stammkuehe, ...mutterkuehe, ...zuchtbullen, ...kaelber, ...faersen, ...jungbullen]
+      })),
+      catchError(() => of(null))
+    ),
+    { initialValue: null }
+  );
+
+  private readonly data = computed(() => {
+    const external = this.externalData();
+    return {
+      categories: external?.categories?.length ? external.categories : this.fallbackCategories,
+      animals: external?.animals?.length ? external.animals : this.fallbackAnimals
+    };
+  });
+
+  readonly categories = computed(() => this.data().categories);
+
   // ===== Öffentliche Methoden =====
 
   getAnimalsByCategory(category: AnimalCategory): Animal[] {
-    switch (category) {
-      case 'stammkuehe':
-        return this.stammkuehe;
-      case 'mutterkuehe':
-        return this.mutterkuehe;
-      case 'zuchtbullen':
-        return this.zuchtbullen;
-      case 'kaelber':
-        return this.kaelber;
-      case 'faersen':
-        return this.faersen;
-      case 'jungbullen':
-        return this.jungbullen;
-      default:
-        return [];
-    }
+    return this.data().animals.filter(animal => animal.category === category);
   }
 
   getAnimalById(category: AnimalCategory, id: string): Animal | undefined {
@@ -1402,15 +1439,15 @@ export class AnimalService {
   }
 
   getCategoryLabel(category: AnimalCategory): string {
-    const labels: Record<AnimalCategory, string> = {
+    const fallbackLabels: Record<AnimalCategory, string> = {
       stammkuehe: 'Stammkühe', mutterkuehe: 'Mutterkühe', zuchtbullen: 'Zuchtbullen',
       kaelber: 'Kälber', faersen: 'Färsen', jungbullen: 'Jungbullen'
     };
-    return labels[category] || category;
+    return this.data().categories.find(c => c.slug === category)?.label || fallbackLabels[category] || category;
   }
 
   getCategoryDescription(category: AnimalCategory): string {
-    const descriptions: Record<AnimalCategory, string> = {
+    const fallbackDescriptions: Record<AnimalCategory, string> = {
       stammkuehe: 'Die Stammkühe sind die Basis der Zucht „Highlander vom Weetfeld". Sie sind die Gründungstiere des Bestands und prägen maßgeblich die Zuchtziele und die genetische Grundlage aller Nachkommen.',
       mutterkuehe: 'Die Mutterkühe „vom Weetfeld" sind die aktive Zuchtbasis des Betriebs. Sie sind überwiegend aus eigener Nachzucht entstanden und tragen das „vom Weetfeld"-Namenssuffix.',
       zuchtbullen: 'Die Zuchtbullen spielen eine zentrale Rolle in der Zucht „Highlander vom Weetfeld". Sie werden sorgfältig ausgewählt und müssen dem Zuchtideal in Typ, Charakter und Abstammung entsprechen.',
@@ -1418,7 +1455,7 @@ export class AnimalService {
       faersen: 'Die Färsen des Betriebs sind weibliche Jungtiere, die entweder als zukünftige Zuchttiere im Bestand verbleiben oder als hochwertige Zuchttiere an andere Züchter abgegeben werden.',
       jungbullen: 'Die Jungbullen sind männliche Nachzuchten aus dem Betrieb „vom Weetfeld". Sie werden entweder als zukünftige Zuchtbullen gehalten oder zur Direktvermarktung (Fleisch) vorgesehen.'
     };
-    return descriptions[category] || '';
+    return this.data().categories.find(c => c.slug === category)?.description || fallbackDescriptions[category] || '';
   }
 
   getCategoryRoute(category: AnimalCategory): string {
