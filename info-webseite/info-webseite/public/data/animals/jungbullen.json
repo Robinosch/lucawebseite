@@ -65,7 +65,7 @@
         "placeholder": "Calvin",
         "isPrimary": false,
         "size": "medium"
-      },
+      }
     ]
   },
   {
@@ -100,7 +100,7 @@
         "placeholder": "Cruise",
         "isPrimary": false,
         "size": "medium"
-      },
+      }
     ]
   }
 ]
