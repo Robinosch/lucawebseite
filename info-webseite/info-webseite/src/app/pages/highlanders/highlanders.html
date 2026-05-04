@@ -146,7 +146,7 @@
     </p>
 
     <div class="category-grid">
-      @for (cat of categories; track cat.slug) {
+      @for (cat of categories(); track cat.slug) {
         <mat-card class="category-card" appearance="outlined">
           @if (cat.imageSrc) {
             <img class="category-card-img"
