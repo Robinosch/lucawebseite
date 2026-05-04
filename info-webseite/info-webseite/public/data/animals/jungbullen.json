@@ -1,0 +1,126 @@
+[
+  {
+    "id": "jackson-3-vom-weetfeld",
+    "name": "Jackson 3 vom Weetfeld",
+    "category": "jungbullen",
+    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
+    "status": "Jungbulle",
+    "description": "Jackson 3 vom Weetfeld ist ein Jungbulle aus eigener Nachzucht mit rassetypischem, ausdrucksstarkem Erscheinungsbild und ruhigem Grundtemperament.",
+    "images": [
+      {
+        "src": "images/jungtiere/jungbullen/jackson-3-vom-weetfeld/picture-200 (3).jpeg",
+        "alt": "Jackson 3 – Ansicht 1",
+        "placeholder": "Jackson 3",
+        "isPrimary": true,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jackson-3-vom-weetfeld/picture-200 (4).jpeg",
+        "alt": "Jackson 3 – Ansicht 2",
+        "placeholder": "Jackson 3",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jackson-3-vom-weetfeld/picture-200 (5).jpeg",
+        "alt": "Jackson 3 – Ansicht 3",
+        "placeholder": "Jackson 3",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ]
+  },
+  {
+    "id": "jaimen-vom-weetfeld",
+    "name": "Jaimen vom Weetfeld",
+    "category": "jungbullen",
+    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
+    "status": "Jungbulle",
+    "description": "Jaimen vom Weetfeld ist ein Jungbulle mit vollständig dokumentierter Abstammung und Gesundheitsstatus.",
+    "images": [
+      {
+        "src": "images/jungtiere/jungbullen/jaimen-vom-weetfeld/picture-200 (6).jpeg",
+        "alt": "Jaimen – Ansicht 1",
+        "placeholder": "Jaimen",
+        "isPrimary": true,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jaimen-vom-weetfeld/picture-200 (7).jpeg",
+        "alt": "Jaimen – Ansicht 2",
+        "placeholder": "Jaimen",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jaimen-vom-weetfeld/picture-200 (8).jpeg",
+        "alt": "Jaimen – Ansicht 3",
+        "placeholder": "Jaimen",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ]
+  },
+  {
+    "id": "janish-vom-weetfeld",
+    "name": "Janish vom Weetfeld",
+    "category": "jungbullen",
+    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
+    "status": "Jungbulle",
+    "description": "Janish vom Weetfeld ist ein Jungbulle aus der eigenen Nachzucht des Betriebs.",
+    "images": [
+      {
+        "src": "images/jungtiere/jungbullen/janish-vom-weetfeld/picture-200 (9).jpeg",
+        "alt": "Janish – Ansicht 1",
+        "placeholder": "Janish",
+        "isPrimary": true,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/janish-vom-weetfeld/picture-200 (10).jpeg",
+        "alt": "Janish – Ansicht 2",
+        "placeholder": "Janish",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/janish-vom-weetfeld/picture-200 (11).jpeg",
+        "alt": "Janish – Ansicht 3",
+        "placeholder": "Janish",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ]
+  },
+  {
+    "id": "jerome-4-vom-weetfeld",
+    "name": "Jerome 4 vom Weetfeld",
+    "category": "jungbullen",
+    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
+    "status": "Jungbulle",
+    "description": "Jerome 4 vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
+    "images": [
+      {
+        "src": "images/jungtiere/jungbullen/jerome-4-vom-weetfeld/picture-1600.jpg",
+        "alt": "Jerome 4 – Hauptbild",
+        "placeholder": "Jerome 4",
+        "isPrimary": true,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jerome-4-vom-weetfeld/picture-1600.jpeg",
+        "alt": "Jerome 4 – Ansicht 2",
+        "placeholder": "Jerome 4",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/jungtiere/jungbullen/jerome-4-vom-weetfeld/picture-200 (2).jpeg",
+        "alt": "Jerome 4 – Thumbnail",
+        "placeholder": "Jerome 4",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ]
+  }
+]

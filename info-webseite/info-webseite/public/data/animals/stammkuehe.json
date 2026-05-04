@@ -1,0 +1,327 @@
+[
+  {
+    "id": "anthea-fox-of-blocken",
+    "name": "Anthea Fox of Blocken",
+    "category": "stammkuehe",
+    "birthDate": "04.09.1997",
+    "origin": "Fox of Blocken (schottische Abstammung)",
+    "status": "Stammkuh – Gründungstier der Zucht vom Weetfeld",
+    "description": "Anthea Fox of Blocken ist eine der ursprünglichen Stammkühe der Zucht. Sie steht für die typische schottische Hochlandkuh-Linie mit ausgeprägtem Typ und gutem Fundament.",
+    "offspring": "Mehrere Nachkommen, die als Mutterkühe oder Zuchttiere im Bestand verblieben sind.",
+    "lineageImageSrc": "images/stammkühe/anthea-fox-of-blocken/anthea-fox-of-blocken-abstammungstabelle.jpg",
+    "images": [
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg",
+        "alt": "Anthea Fox of Blocken – Hauptbild",
+        "placeholder": "Anthea Fox of Blocken",
+        "isPrimary": true,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/picture-2600 (1).jpg",
+        "alt": "Anthea Fox of Blocken – weitere Ansicht",
+        "placeholder": "Anthea Fox of Blocken",
+        "isPrimary": false,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/picture-200 (1).jpeg",
+        "alt": "Anthea Fox of Blocken – Thumbnail 1",
+        "placeholder": "Anthea Fox of Blocken",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/picture-200 (2).jpeg",
+        "alt": "Anthea Fox of Blocken – Thumbnail 2",
+        "placeholder": "Anthea Fox of Blocken",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/picture-200 (3).jpeg",
+        "alt": "Anthea Fox of Blocken – Thumbnail 3",
+        "placeholder": "Anthea Fox of Blocken",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ],
+    "offspringImages": [
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600.jpg",
+        "alt": "Nachwuchs Anthea – Bild 1",
+        "placeholder": "Nachwuchs",
+        "isPrimary": true,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (1).jpg",
+        "alt": "Nachwuchs Anthea – Bild 2",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (2).jpg",
+        "alt": "Nachwuchs Anthea – Bild 3",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (3).jpg",
+        "alt": "Nachwuchs Anthea – Bild 4",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (4).jpg",
+        "alt": "Nachwuchs Anthea – Bild 5",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (5).jpg",
+        "alt": "Nachwuchs Anthea – Bild 6",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (6).jpg",
+        "alt": "Nachwuchs Anthea – Bild 7",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (7).jpg",
+        "alt": "Nachwuchs Anthea – Bild 8",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (8).jpg",
+        "alt": "Nachwuchs Anthea – Bild 9",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600 (9).jpg",
+        "alt": "Nachwuchs Anthea – Bild 10",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      }
+    ]
+  },
+  {
+    "id": "gilka-von-der-rehhecke",
+    "name": "Gilka von der Rehhecke",
+    "category": "stammkuehe",
+    "birthDate": "02.04.1999",
+    "origin": "von der Rehhecke",
+    "status": "Stammkuh",
+    "description": "Gilka von der Rehhecke ist eine weitere Stammkuh der Zucht „vom Weetfeld\". Sie zeichnet sich durch einen harmonischen Körperbau, ein ruhiges Wesen und gute Muttereigenschaften aus. Ihre Nachkommen sind regelmäßig im Bestand vertreten.",
+    "offspring": "Mehrere Nachkommen im Bestand bekannt.",
+    "lineageImageSrc": "images/stammkühe/gilka-von-der-rehhecke/gilka-von-der-rehhecke-abstammungstabelle.jpg",
+    "images": [
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/picture-2600.jpg",
+        "alt": "Gilka von der Rehhecke – Hauptbild",
+        "placeholder": "Gilka von der Rehhecke",
+        "isPrimary": true,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/picture-2600 (1).jpg",
+        "alt": "Gilka von der Rehhecke – weitere Ansicht",
+        "placeholder": "Gilka von der Rehhecke",
+        "isPrimary": false,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/picture-200 (1).jpeg",
+        "alt": "Gilka – Thumbnail 1",
+        "placeholder": "Gilka",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/picture-200 (3).jpeg",
+        "alt": "Gilka – Thumbnail 2",
+        "placeholder": "Gilka",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/picture-200 (4).jpeg",
+        "alt": "Gilka – Thumbnail 3",
+        "placeholder": "Gilka",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ],
+    "offspringImages": [
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600.jpg",
+        "alt": "Nachwuchs Gilka – Bild 1",
+        "placeholder": "Nachwuchs",
+        "isPrimary": true,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600 (1).jpg",
+        "alt": "Nachwuchs Gilka – Bild 2",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600 (2).jpg",
+        "alt": "Nachwuchs Gilka – Bild 3",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600 (3).jpg",
+        "alt": "Nachwuchs Gilka – Bild 4",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600 (4).jpg",
+        "alt": "Nachwuchs Gilka – Bild 5",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600 (5).jpg",
+        "alt": "Nachwuchs Gilka – Bild 6",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      }
+    ]
+  },
+  {
+    "id": "niseag-fox-of-blocken",
+    "name": "Niseag Fox of Blocken",
+    "category": "stammkuehe",
+    "birthDate": "04.09.1997",
+    "origin": "Fox of Blocken (schottische Abstammung)",
+    "status": "Stammkuh – Gründungstier der Zucht vom Weetfeld",
+    "description": "Niseag Fox of Blocken ist, wie Anthea, eine der Gründungstiere der Zucht „vom Weetfeld\" und stammt ebenfalls aus der schottischen Linie Fox of Blocken. Sie ist bekannt für ihre typische Erscheinung und ihr ausgeglichenes Temperament.",
+    "offspring": "Mehrere Nachkommen im Bestand.",
+    "lineageImageSrc": "images/stammkühe/niseag-fox-of-blocken/niseag-fox-of-blocken-abstammungstabelle.jpg",
+    "images": [
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/picture-2600.jpg",
+        "alt": "Niseag Fox of Blocken – Hauptbild",
+        "placeholder": "Niseag Fox of Blocken",
+        "isPrimary": true,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/picture-2600 (1).jpg",
+        "alt": "Niseag Fox of Blocken – weitere Ansicht",
+        "placeholder": "Niseag Fox of Blocken",
+        "isPrimary": false,
+        "size": "large"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/picture-200 (2).jpeg",
+        "alt": "Niseag – Thumbnail 1",
+        "placeholder": "Niseag",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/picture-200 (3).jpeg",
+        "alt": "Niseag – Thumbnail 2",
+        "placeholder": "Niseag",
+        "isPrimary": false,
+        "size": "small"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/picture-200 (4).jpeg",
+        "alt": "Niseag – Thumbnail 3",
+        "placeholder": "Niseag",
+        "isPrimary": false,
+        "size": "small"
+      }
+    ],
+    "offspringImages": [
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600.jpg",
+        "alt": "Nachwuchs Niseag – Bild 1",
+        "placeholder": "Nachwuchs",
+        "isPrimary": true,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (1).jpg",
+        "alt": "Nachwuchs Niseag – Bild 2",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (2).jpg",
+        "alt": "Nachwuchs Niseag – Bild 3",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (3).jpg",
+        "alt": "Nachwuchs Niseag – Bild 4",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (4).jpg",
+        "alt": "Nachwuchs Niseag – Bild 5",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (5).jpg",
+        "alt": "Nachwuchs Niseag – Bild 6",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (6).jpg",
+        "alt": "Nachwuchs Niseag – Bild 7",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (7).jpg",
+        "alt": "Nachwuchs Niseag – Bild 8",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      },
+      {
+        "src": "images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600 (8).jpg",
+        "alt": "Nachwuchs Niseag – Bild 9",
+        "placeholder": "Nachwuchs",
+        "isPrimary": false,
+        "size": "medium"
+      }
+    ]
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "stammkuehe",
+    "label": "Stammkühe",
+    "description": "Die Gründungstiere unserer Zucht – sie prägen die genetische Grundlage aller Nachkommen.",
+    "icon": "star",
+    "routerLink": "/unsere-highlander/stammkuehe",
+    "imagePlaceholder": "Stammkühe auf der Weide",
+    "imageSrc": "images/stammkühe/stammkühe-auf-weide.jpg"
+  },
+  {
+    "slug": "mutterkuehe",
+    "label": "Mutterkühe",
+    "description": "Unsere aktive Zuchtbasis – überwiegend aus eigener Nachzucht mit hervorragenden Muttereigenschaften.",
+    "icon": "favorite",
+    "routerLink": "/unsere-highlander/mutterkuehe",
+    "imagePlaceholder": "Mutterkühe auf der Weide",
+    "imageSrc": "images/mutterkühe/narnia-vom-weetfeld/picture-2600.jpg"
+  },
+  {
+    "slug": "zuchtbullen",
+    "label": "Zuchtbullen",
+    "description": "Sorgfältig ausgewählte Bullen mit nachgewiesener Abstammung und ausgeglichenem Wesen.",
+    "icon": "shield",
+    "routerLink": "/unsere-highlander/zuchtbullen",
+    "imagePlaceholder": "Zuchtbulle – imposante Erscheinung",
+    "imageSrc": "images/zuchtbullen/max-vom-holschenhof/picture-2600.jpg"
+  },
+  {
+    "slug": "kaelber",
+    "label": "Kälber",
+    "description": "Unsere jüngsten Herdemitglieder – robust, neugierig und naturnah bei der Mutter aufgezogen.",
+    "icon": "child_care",
+    "routerLink": "/unsere-highlander/kaelber",
+    "imagePlaceholder": "Highland-Cattle-Kälber auf der Weide",
+    "imageSrc": "images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600.jpg"
+  },
+  {
+    "slug": "jungtiere",
+    "label": "Jungtiere",
+    "description": "Färsen und Jungbullen aus eigener Nachzucht – die Zukunft unserer Herde.",
+    "icon": "trending_up",
+    "routerLink": "/unsere-highlander/jungtiere",
+    "imagePlaceholder": "Jungtiere auf der Weide",
+    "imageSrc": "images/jungtiere/färsen/arianne-vom-weetfeld/picture-1600.jpg"
+  }
+]
