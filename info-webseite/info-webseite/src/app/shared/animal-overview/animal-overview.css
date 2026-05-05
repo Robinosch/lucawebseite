@@ -108,6 +108,50 @@
   color: var(--btn-text-on-primary) !important;
 }
 
+/* ----- Filterleiste (nur Mutterkühe) ----- */
+.overview-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0 0 16px;
+}
+
+.filter-toggle {
+  background: var(--color-cream-light);
+  border-radius: 999px;
+}
+
+/* ----- Inaktive Mutterkühe ----- */
+.inactive-section {
+  margin: 32px 0 16px;
+}
+
+.inactive-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 12px;
+  color: var(--color-accent-dark);
+}
+
+.inactive-heading mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.inactive-grid {
+  opacity: 0.85;
+}
+
+.inactive-card {
+  border-color: var(--color-cream-dark);
+}
+
+.inactive-card .detail-button {
+  background-color: var(--color-accent-dark) !important;
+}
+
 /* ----- Responsive ----- */
 @media (max-width: 1024px) {
   .animals-grid {
@@ -123,5 +167,8 @@
   .page-hero {
     padding: 40px 16px 32px;
   }
-}
 
+  .overview-toolbar {
+    justify-content: center;
+  }
+}
