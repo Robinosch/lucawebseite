@@ -1,102 +1,44 @@
-[
-  {
-    "id": "jason-of-woodneuk",
-    "name": "Jason of Woodneuk",
-    "category": "zuchtbullen",
-    "origin": "of Woodneuk (schottische Abstammungslinie)",
-    "status": "Zuchtbulle",
-    "description": "Jason of Woodneuk ist ein Bulle schottischer Herkunft. Die Linie „of Woodneuk\" ist bekannt für hochwertige Tiere mit gutem Typ und solidem Fundament. Jason wurde gezielt zur Verbesserung von Typ und Ausdruck im Bestand eingesetzt.",
-    "offspring": "Mehrere Nachkommen im Bestand „vom Weetfeld\".",
-    "images": [
-      {
-        "placeholder": "Jason of Woodneuk – Foto folgt",
-        "alt": "Jason of Woodneuk – Zuchtbulle",
-        "isPrimary": true
-      }
-    ]
-  },
-  {
-    "id": "max-vom-holschenhof",
-    "name": "Max vom Holschenhof",
-    "category": "zuchtbullen",
-    "birthDate": "05.08.1997",
-    "origin": "vom Holschenhof",
-    "status": "Zuchtbulle (historisch, einer der ersten Bullen)",
-    "description": "Max vom Holschenhof war einer der frühen Zuchtbullen des Betriebs und hat die genetische Grundlage der heutigen Herde maßgeblich mitgeprägt. Er zeichnete sich durch eine korrekte Körperkonstitution, ein ansprechendes Erscheinungsbild und ein ruhiges Wesen aus.",
-    "offspring": "Zahlreiche Nachkommen, die das Fundament der heutigen Mutterkuhherde bilden.",
-    "lineageImageSrc": "images/zuchtbullen/max-vom-holschenhof/max-vom-holschenhof-abstammungstabelle.jpg",
-    "images": [
-      {
-        "src": "images/zuchtbullen/max-vom-holschenhof/picture-2600.jpg",
-        "alt": "Max vom Holschenhof – Hauptbild",
-        "placeholder": "Max vom Holschenhof",
-        "isPrimary": true,
-        "size": "large"
-      },
-      {
-        "src": "images/zuchtbullen/max-vom-holschenhof/picture-2600 (1).jpg",
-        "alt": "Max vom Holschenhof – Ansicht 2",
-        "placeholder": "Max vom Holschenhof",
-        "isPrimary": false,
-        "size": "large"
-      },
-      {
-        "src": "images/zuchtbullen/max-vom-holschenhof/200px-images/picture-200.jpeg",
-        "alt": "Max – Thumbnail 1",
-        "placeholder": "Max",
-        "isPrimary": false,
-        "size": "small"
-      },
-      {
-        "src": "images/zuchtbullen/max-vom-holschenhof/200px-images/picture-200 (1).jpeg",
-        "alt": "Max – Thumbnail 2",
-        "placeholder": "Max",
-        "isPrimary": false,
-        "size": "small"
-      },
-      {
-        "src": "images/zuchtbullen/max-vom-holschenhof/200px-images/picture-200 (2).jpeg",
-        "alt": "Max – Thumbnail 3",
-        "placeholder": "Max",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "lux-vom-schoenen-felde",
-    "name": "Lux vom schönen Felde",
-    "category": "zuchtbullen",
-    "origin": "vom schönen Felde",
-    "status": "Zuchtbulle (aktiv)",
-    "description": "Lux vom schönen Felde ist ein weiterer Zuchtbulle, der im Betrieb eingesetzt wurde bzw. wird. Er steht für die konsequente Fortführung der Zuchtrichtung „vom Weetfeld\" und ergänzt das Zuchtprogramm um frisches Blut aus externer, hochwertiger Zucht.",
-    "offspring": "Nachkommen im Bestand vorhanden.",
-    "images": [
-      {
-        "placeholder": "Lux vom schönen Felde – Foto folgt",
-        "alt": "Lux vom schönen Felde – Zuchtbulle",
-        "isPrimary": true
-      }
-    ]
-  },
-  {
-    "id": "Morris-vom-Kappenstein",
-    "name": "Morris vom Kappenstein",
-    "category": "zuchtbullen",
-    "birthDate": "2020",
-    "origin": "vom Kappenstein",
-    "status": "Zuchtbulle",
-    "description": "Morris",
-    "offspring": "Morris_2",
-    "lineageImageSrc": "",
-    "images": [
-      {
-        "src": "images/zuchtbullen/Morris-vom-Kappenstein/Morris-vom-Kappenstein-06-24-1.jpeg",
-        "alt": "Morris-vom-Kappenstein – Hauptbild",
-        "placeholder": "Morris-vom-Kappenstein",
-        "isPrimary": true,
-        "size": "Medium"
-      }
-    ]
-  }
+﻿[
+    {
+        "id":  "jason-of-woodneuk",
+        "name":  "Jason of Woodneuk",
+        "category":  "zuchtbullen",
+        "origin":  "of Woodneuk (schottische Abstammungslinie)",
+        "status":  "Zuchtbulle",
+        "description":  "Jason of Woodneuk ist ein Bulle schottischer Herkunft. Die Linie â€žof Woodneuk\" ist bekannt fÃ¼r hochwertige Tiere mit gutem Typ und solidem Fundament. Jason wurde gezielt zur Verbesserung von Typ und Ausdruck im Bestand eingesetzt.",
+        "offspring":  "Mehrere Nachkommen im Bestand â€žvom Weetfeld\".",
+        "images":  "/images/zuchtbullen/jason-of-woodneuk"
+    },
+    {
+        "id":  "max-vom-holschenhof",
+        "name":  "Max vom Holschenhof",
+        "category":  "zuchtbullen",
+        "birthDate":  "05.08.1997",
+        "origin":  "vom Holschenhof",
+        "status":  "Zuchtbulle (historisch, einer der ersten Bullen)",
+        "description":  "Max vom Holschenhof war einer der frÃ¼hen Zuchtbullen des Betriebs und hat die genetische Grundlage der heutigen Herde maÃŸgeblich mitgeprÃ¤gt. Er zeichnete sich durch eine korrekte KÃ¶rperkonstitution, ein ansprechendes Erscheinungsbild und ein ruhiges Wesen aus.",
+        "offspring":  "Zahlreiche Nachkommen, die das Fundament der heutigen Mutterkuhherde bilden.",
+        "images":  "/images/zuchtbullen/max-vom-holschenhof"
+    },
+    {
+        "id":  "lux-vom-schoenen-felde",
+        "name":  "Lux vom schÃ¶nen Felde",
+        "category":  "zuchtbullen",
+        "origin":  "vom schÃ¶nen Felde",
+        "status":  "Zuchtbulle (aktiv)",
+        "description":  "Lux vom schÃ¶nen Felde ist ein weiterer Zuchtbulle, der im Betrieb eingesetzt wurde bzw. wird. Er steht fÃ¼r die konsequente FortfÃ¼hrung der Zuchtrichtung â€žvom Weetfeld\" und ergÃ¤nzt das Zuchtprogramm um frisches Blut aus externer, hochwertiger Zucht.",
+        "offspring":  "Nachkommen im Bestand vorhanden.",
+        "images":  "/images/zuchtbullen/lux-vom-schoenen-felde"
+    },
+    {
+        "id":  "Morris-vom-Kappenstein",
+        "name":  "Morris vom Kappenstein",
+        "category":  "zuchtbullen",
+        "birthDate":  "2020",
+        "origin":  "vom Kappenstein",
+        "status":  "Zuchtbulle",
+        "description":  "Morris",
+        "offspring":  "Morris_2",
+        "images":  "/images/zuchtbullen/Morris-vom-Kappenstein"
+    }
 ]

@@ -23,7 +23,7 @@ public/
 
 ## Tiere
 
-Jede Kategorie-Datei ist ein Array aus `Animal`-Objekten. Beispiel:
+Jede Kategorie-Datei ist ein Array aus `AnimalRaw`-Objekten. Bilder werden nur als Ordnerpfad angegeben; die App baut daraus die Bildliste.
 
 ```json
 [
@@ -36,31 +36,33 @@ Jede Kategorie-Datei ist ein Array aus `Animal`-Objekten. Beispiel:
     "status": "Stammkuh",
     "description": "Kurzbeschreibung...",
     "offspring": "Optionaler Text",
-    "images": [
-      {
-        "placeholder": "Anthea Fox of Blocken",
-        "alt": "Anthea Fox of Blocken – Hauptbild",
-        "isPrimary": true,
-        "src": "images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg",
-        "size": "large"
-      }
-    ],
-    "lineageImageSrc": "images/stammkühe/anthea-fox-of-blocken/anthea-fox-of-blocken-abstammungstabelle.jpg",
-    "offspringImages": [
-      {
-        "placeholder": "Nachwuchs",
-        "alt": "Nachwuchs Anthea – Bild 1",
-        "isPrimary": true,
-        "src": "images/stammkühe/anthea-fox-of-blocken/nachwuchs/picture-1600.jpg",
-        "size": "medium"
-      }
-    ]
+    "images": "/images/stammkühe/anthea-fox-of-blocken",
+    "offspringImages": "/images/stammkühe/anthea-fox-of-blocken/nachwuchs"
   }
 ]
+```
+
+## Bild-Manifest (image-index.json)
+
+Die App kann statische Verzeichnisse nicht dynamisch auflisten. Deshalb gibt es ein Manifest:
+
+- `image-index.json` mappt Ordnerpfade auf Dateinamen.
+- Die App erzeugt daraus `alt`, `placeholder`, `isPrimary` und `size`.
+- Dateien mit `abstammungstabelle` werden als Abstammungsbild erkannt.
+
+Beispielauszug:
+
+```json
+{
+  "/images/stammkühe/anthea-fox-of-blocken": [
+    "anthea-fox-of-blocken-abstammungstabelle.jpg",
+    "picture-2600.jpg",
+    "picture-200 (1).jpeg"
+  ]
+}
 ```
 
 ## Hinweis zur Migration
 
 Solange die JSON-Dateien leer sind, nutzt die App weiterhin die bisherigen In-Memory-Daten im `AnimalService`.
 Sobald du Daten in die JSON-Dateien eintraegst, werden diese automatisch geladen und verwendet.
-

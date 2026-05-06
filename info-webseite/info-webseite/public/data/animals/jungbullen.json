@@ -1,249 +1,110 @@
-[
-  {
-    "id": "Marley-vom-weetfeld",
-    "name": "Marley vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Marley vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Marley – Hauptbild",
-        "placeholder": "Marley",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Marley – Ansicht 2",
-        "placeholder": "Marley",
-        "isPrimary": false,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-05-26-3.jpeg",
-        "alt": "Marley – Thumbnail",
-        "placeholder": "Marley",
-        "isPrimary": false,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-10-24-2.jpeg",
-        "alt": "Marley - 1",
-        "placeholder": "Marley",
-        "isPrimary": false,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Marley-vom-Weetfeld/Marley-vom-Weetfeld-06-24-1.jpeg",
-        "alt": "Marley - 2",
-        "placeholder": "Marley",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Calvin-vom-Weetfeld",
-    "name": "Calvin vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Calvin vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Calvin-vom-Weetfeld/Calvin-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Calvin – Hauptbild",
-        "placeholder": "Calvin",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Calvin-vom-Weetfeld/Calvin-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Calvin – Hauptbild",
-        "placeholder": "Calvin",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Caleb-vom-Weetfeld",
-    "name": "Caleb vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Caleb vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-
-    ]
-  },
-  {
-    "id": "Cruise-vom-Weetfeld",
-    "name": "Cruise vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Cruise vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Cruise-vom-Weetfeld/Cruise-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Cruise– Hauptbild",
-        "placeholder": "Cruise",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Cruise-vom-Weetfeld/Cruise-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Cruise – Hauptbild",
-        "placeholder": "Cruise",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Connor-vom-Weetfeld",
-    "name": "Connor vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Connor vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Connor-vom-Weetfeld/Connor-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Connor – Hauptbild",
-        "placeholder": "Connor",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Connor-vom-Weetfeld/Connor-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Connor – Hauptbild",
-        "placeholder": "Connor",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Maverick-2-vom-Weetfeld",
-    "name": "Maverick 2. vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Maverick 2. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Maverick-2-vom-Weetfeld/Maverick-2-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Maverick 2 – Hauptbild",
-        "placeholder": "Maverick 2",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Maverick-2-vom-Weetfeld/Maverick-2-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Maverick 2 – Hauptbild",
-        "placeholder": "Maverick 2",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Caine-vom-Weetfeld",
-    "name": "Caine vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Caine. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-    ]
-  },
-  {
-    "id": "Caleb-vom-Weetfeld",
-    "name": "Caleb 2. vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Caleb 2. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-    ]
-  },
-  {
-    "id": "Milan-vom-Weetfeld",
-    "name": "Milan vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Milan. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-    ]
-  },
-  {
-    "id": "Calvin-2-vom-Weetfeld",
-    "name": "Calvin 2. vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Calvin 2. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Calvin-2-vom-Weetfeld/Calvin-2-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Calvin 2– Hauptbild",
-        "placeholder": "Calvin 2",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Calvin-2-vom-Weetfeld/Calvin-2-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Calvin 2 – Hauptbild",
-        "placeholder": "Calvin 2",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Connor-2-vom-Weetfeld",
-    "name": "Connor 2. vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Connor 2. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Connor-2-vom-Weetfeld/Connor-2-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Connor 2 – Hauptbild",
-        "placeholder": "Connor 2",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/jungbullen/Connor-2-vom-Weetfeld/Connor-2-vom-Weetfeld-05-26-2.jpeg",
-        "alt": "Connor 2 – Hauptbild",
-        "placeholder": "Connor 2",
-        "isPrimary": false,
-        "size": "medium"
-      }
-    ]
-  },
-  {
-    "id": "Caine-2-vom-Weetfeld",
-    "name": "Caine 2. vom Weetfeld",
-    "category": "jungbullen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Jungbulle",
-    "description": "Caine 2. vom Weetfeld ist ein Jungbulle mit kräftigem Körperbau und zuchttauglichem Potenzial.",
-    "images": [
-      {
-        "src": "images/jungtiere/jungbullen/Caine-2-vom-Weetfeld/Caine-2-vom-Weetfeld-05-26-1.jpeg",
-        "alt": "Caine 2 – Hauptbild",
-        "placeholder": "Caine 2",
-        "isPrimary": true,
-        "size": "medium"
-      }
-    ]
-  }
+﻿[
+    {
+        "id":  "Marley-vom-weetfeld",
+        "name":  "Marley vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Marley vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Marley-vom-weetfeld"
+    },
+    {
+        "id":  "Calvin-vom-Weetfeld",
+        "name":  "Calvin vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Calvin vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Calvin-vom-Weetfeld"
+    },
+    {
+        "id":  "Caleb-vom-Weetfeld",
+        "name":  "Caleb vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Caleb vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Caleb-vom-Weetfeld"
+    },
+    {
+        "id":  "Cruise-vom-Weetfeld",
+        "name":  "Cruise vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Cruise vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Cruise-vom-Weetfeld"
+    },
+    {
+        "id":  "Connor-vom-Weetfeld",
+        "name":  "Connor vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Connor vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Connor-vom-Weetfeld"
+    },
+    {
+        "id":  "Maverick-2-vom-Weetfeld",
+        "name":  "Maverick 2. vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Maverick 2. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Maverick-2-vom-Weetfeld"
+    },
+    {
+        "id":  "Caine-vom-Weetfeld",
+        "name":  "Caine vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Caine. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Caine-vom-Weetfeld"
+    },
+    {
+        "id":  "Caleb-vom-Weetfeld",
+        "name":  "Caleb 2. vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Caleb 2. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Caleb-vom-Weetfeld"
+    },
+    {
+        "id":  "Milan-vom-Weetfeld",
+        "name":  "Milan vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Milan. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Milan-vom-Weetfeld"
+    },
+    {
+        "id":  "Calvin-2-vom-Weetfeld",
+        "name":  "Calvin 2. vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Calvin 2. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Calvin-2-vom-Weetfeld"
+    },
+    {
+        "id":  "Connor-2-vom-Weetfeld",
+        "name":  "Connor 2. vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Connor 2. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Connor-2-vom-Weetfeld"
+    },
+    {
+        "id":  "Caine-2-vom-Weetfeld",
+        "name":  "Caine 2. vom Weetfeld",
+        "category":  "jungbullen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "Jungbulle",
+        "description":  "Caine 2. vom Weetfeld ist ein Jungbulle mit krÃ¤ftigem KÃ¶rperbau und zuchttauglichem Potenzial.",
+        "images":  "/images/jungtiere\\jungbullen/Caine-2-vom-Weetfeld"
+    }
 ]

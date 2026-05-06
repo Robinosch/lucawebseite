@@ -1,205 +1,65 @@
-[
-  {
-    "id": "amalia-vom-weetfeld",
-    "name": "Amalia vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Amalia vom Weetfeld ist eine Färse aus eigener Nachzucht. Sie verbindet typvolles Erscheinungsbild mit ruhigem, handzahmem Temperament durch regelmäßigen Menschenkontakt.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/amalia-vom-weetfeld/picture-200 (11).jpeg",
-        "alt": "Amalia vom Weetfeld – Ansicht 1",
-        "placeholder": "Amalia",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/amalia-vom-weetfeld/picture-200 (12).jpeg",
-        "alt": "Amalia vom Weetfeld – Ansicht 2",
-        "placeholder": "Amalia",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "arianne-vom-weetfeld",
-    "name": "Arianne vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Arianne vom Weetfeld ist eine Färse aus eigener Nachzucht mit vollständig dokumentierter Abstammung.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/arianne-vom-weetfeld/picture-1600.jpg",
-        "alt": "Arianne vom Weetfeld – Hauptbild",
-        "placeholder": "Arianne",
-        "isPrimary": true,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/färsen/arianne-vom-weetfeld/picture-1600.jpeg",
-        "alt": "Arianne – Ansicht 2",
-        "placeholder": "Arianne",
-        "isPrimary": false,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/färsen/arianne-vom-weetfeld/picture-1600 (1).jpg",
-        "alt": "Arianne – Ansicht 3",
-        "placeholder": "Arianne",
-        "isPrimary": false,
-        "size": "medium"
-      },
-      {
-        "src": "images/jungtiere/färsen/arianne-vom-weetfeld/picture-200 (1).jpeg",
-        "alt": "Arianne – Thumbnail",
-        "placeholder": "Arianne",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "aywa-vom-weetfeld",
-    "name": "Aywa vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Aywa vom Weetfeld ist eine weitere Färse des Betriebs mit rassetypischem Erscheinungsbild.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/aywa-vom-weetfeld/picture-200 (3).jpeg",
-        "alt": "Aywa vom Weetfeld – Ansicht 1",
-        "placeholder": "Aywa",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/aywa-vom-weetfeld/picture-200 (4).jpeg",
-        "alt": "Aywa – Ansicht 2",
-        "placeholder": "Aywa",
-        "isPrimary": false,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/aywa-vom-weetfeld/picture-200 (5).jpeg",
-        "alt": "Aywa – Ansicht 3",
-        "placeholder": "Aywa",
-        "isPrimary": false,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/aywa-vom-weetfeld/picture-200 (6).jpeg",
-        "alt": "Aywa – Ansicht 4",
-        "placeholder": "Aywa",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "nabilah-vom-weetfeld",
-    "name": "Nabilah vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Nabilah vom Weetfeld ist eine Färse aus eigener Nachzucht mit dokumentierter Abstammung und Gesundheitsstatus.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/nabilah-vom-weetfeld/picture-200 (9).jpeg",
-        "alt": "Nabilah vom Weetfeld – Ansicht 1",
-        "placeholder": "Nabilah",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/nabilah-vom-weetfeld/picture-200 (10).jpeg",
-        "alt": "Nabilah – Ansicht 2",
-        "placeholder": "Nabilah",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "nadja-vom-weetfeld",
-    "name": "Nadja vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Nadja vom Weetfeld ist eine Färse mit ruhigem Temperament und ansprechendem Erscheinungsbild.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/nadja-vom-weetfeld/picture-200 (13).jpeg",
-        "alt": "Nadja vom Weetfeld – Ansicht 1",
-        "placeholder": "Nadja",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/nadja-vom-weetfeld/picture-200 (14).jpeg",
-        "alt": "Nadja – Ansicht 2",
-        "placeholder": "Nadja",
-        "isPrimary": false,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/nadja-vom-weetfeld/picture-200 (15).jpeg",
-        "alt": "Nadja – Ansicht 3",
-        "placeholder": "Nadja",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "nahla-vom-weetfeld",
-    "name": "Nahla vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Nahla vom Weetfeld ist eine Färse, die die Zuchtziele des Betriebs in Typ und Charakter widerspiegelt.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/nahla-vom-weetfeld/picture-200 (7).jpeg",
-        "alt": "Nahla vom Weetfeld – Ansicht 1",
-        "placeholder": "Nahla",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/nahla-vom-weetfeld/picture-200 (8).jpeg",
-        "alt": "Nahla – Ansicht 2",
-        "placeholder": "Nahla",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  },
-  {
-    "id": "niala-vom-weetfeld",
-    "name": "Niala vom Weetfeld",
-    "category": "faersen",
-    "origin": "Eigene Nachzucht – Highlander vom Weetfeld",
-    "status": "Färse (weibliches Jungtier)",
-    "description": "Niala vom Weetfeld ist eine Färse aus dem eigenen Zuchtprogramm.",
-    "images": [
-      {
-        "src": "images/jungtiere/färsen/niala-vom-weetfeld/picture-200 (16).jpeg",
-        "alt": "Niala vom Weetfeld – Ansicht 1",
-        "placeholder": "Niala",
-        "isPrimary": true,
-        "size": "small"
-      },
-      {
-        "src": "images/jungtiere/färsen/niala-vom-weetfeld/picture-200 (17).jpeg",
-        "alt": "Niala – Ansicht 2",
-        "placeholder": "Niala",
-        "isPrimary": false,
-        "size": "small"
-      }
-    ]
-  }
+﻿[
+    {
+        "id":  "amalia-vom-weetfeld",
+        "name":  "Amalia vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Amalia vom Weetfeld ist eine FÃ¤rse aus eigener Nachzucht. Sie verbindet typvolles Erscheinungsbild mit ruhigem, handzahmem Temperament durch regelmÃ¤ÃŸigen Menschenkontakt.",
+        "images":  "/images/jungtiere\\färsen/amalia-vom-weetfeld"
+    },
+    {
+        "id":  "arianne-vom-weetfeld",
+        "name":  "Arianne vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Arianne vom Weetfeld ist eine FÃ¤rse aus eigener Nachzucht mit vollstÃ¤ndig dokumentierter Abstammung.",
+        "images":  "/images/jungtiere\\färsen/arianne-vom-weetfeld"
+    },
+    {
+        "id":  "aywa-vom-weetfeld",
+        "name":  "Aywa vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Aywa vom Weetfeld ist eine weitere FÃ¤rse des Betriebs mit rassetypischem Erscheinungsbild.",
+        "images":  "/images/jungtiere\\färsen/aywa-vom-weetfeld"
+    },
+    {
+        "id":  "nabilah-vom-weetfeld",
+        "name":  "Nabilah vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Nabilah vom Weetfeld ist eine FÃ¤rse aus eigener Nachzucht mit dokumentierter Abstammung und Gesundheitsstatus.",
+        "images":  "/images/jungtiere\\färsen/nabilah-vom-weetfeld"
+    },
+    {
+        "id":  "nadja-vom-weetfeld",
+        "name":  "Nadja vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Nadja vom Weetfeld ist eine FÃ¤rse mit ruhigem Temperament und ansprechendem Erscheinungsbild.",
+        "images":  "/images/jungtiere\\färsen/nadja-vom-weetfeld"
+    },
+    {
+        "id":  "nahla-vom-weetfeld",
+        "name":  "Nahla vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Nahla vom Weetfeld ist eine FÃ¤rse, die die Zuchtziele des Betriebs in Typ und Charakter widerspiegelt.",
+        "images":  "/images/jungtiere\\färsen/nahla-vom-weetfeld"
+    },
+    {
+        "id":  "niala-vom-weetfeld",
+        "name":  "Niala vom Weetfeld",
+        "category":  "faersen",
+        "origin":  "Eigene Nachzucht â€“ Highlander vom Weetfeld",
+        "status":  "FÃ¤rse (weibliches Jungtier)",
+        "description":  "Niala vom Weetfeld ist eine FÃ¤rse aus dem eigenen Zuchtprogramm.",
+        "images":  "/images/jungtiere\\färsen/niala-vom-weetfeld"
+    }
 ]

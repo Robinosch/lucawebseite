@@ -54,6 +54,17 @@ export interface Animal {
   offspringImages?: AnimalImage[];
 }
 
+/**
+ * Rohdatenformat aus JSON-Dateien (Bilder werden nur als Ordner referenziert).
+ * Diese Struktur wird im Service in das UI-Modell Animal hydratisiert.
+ */
+export interface AnimalRaw extends Omit<Animal, 'images' | 'offspringImages' | 'lineageImageSrc'> {
+  /** Bildordner relativ zu /images, z. B. /images/mutterkühe/antigone-vom-weetfeld */
+  images?: string;
+  /** Bildordner für Nachwuchs relativ zu /images, z. B. /images/.../nachwuchs */
+  offspringImages?: string;
+}
+
 /** Metadaten für eine Tierkategorie (für die Übersichtsseite /unsere-highlander) */
 export interface AnimalCategoryInfo {
   /** URL-Slug der Kategorie */
@@ -71,4 +82,3 @@ export interface AnimalCategoryInfo {
   /** Pfad zum echten Kategorie-Bild (optional) */
   imageSrc?: string;
 }
-

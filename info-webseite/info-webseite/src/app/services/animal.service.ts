@@ -2,7 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, forkJoin, map, of } from 'rxjs';
-import {Animal, AnimalCategory, AnimalCategoryInfo} from '../models/animal.model';
+import { Animal, AnimalCategory, AnimalCategoryInfo, AnimalImage, AnimalRaw } from '../models/animal.model';
 
 /**
  * AnimalService – Statischer Datendienst für alle Tierdaten der Zucht „Highlander vom Weetfeld".
@@ -15,66 +15,51 @@ import {Animal, AnimalCategory, AnimalCategoryInfo} from '../models/animal.model
  */
 @Injectable({providedIn: 'root'})
 export class AnimalService {
-  private readonly http = inject(HttpClient);
+   private readonly http = inject(HttpClient);
 
-  private readonly dataPaths = {
-    categories: '/data/animals/categories.json',
-    stammkuehe: '/data/animals/stammkuehe.json',
-    mutterkuehe: '/data/animals/mutterkuehe.json',
-    zuchtbullen: '/data/animals/zuchtbullen.json',
-    kaelber: '/data/animals/kaelber.json',
-    faersen: '/data/animals/faersen.json',
-    jungbullen: '/data/animals/jungbullen.json'
-  };
+   private readonly dataPaths = {
+     categories: '/data/animals/categories.json',
+     stammkuehe: '/data/animals/stammkuehe.json',
+     mutterkuehe: '/data/animals/mutterkuehe.json',
+     zuchtbullen: '/data/animals/zuchtbullen.json',
+     kaelber: '/data/animals/kaelber.json',
+     faersen: '/data/animals/faersen.json',
+     jungbullen: '/data/animals/jungbullen.json',
+     imageIndex: '/data/animals/image-index.json'
+   };
 
-  private readonly fallbackCategories: AnimalCategoryInfo[] = [];
+   private readonly fallbackImageIndex: Record<string, string[]> = {};
 
-  // ===== STAMMKÜHE =====
-  private readonly stammkuehe: Animal[] = [];
-
-  // ===== MUTTERKÜHE =====
-  private readonly mutterkuehe: Animal[] = [];
-
-  // ===== ZUCHTBULLEN =====
-  private readonly zuchtbullen: Animal[] = [];
-
-  // ===== KÄLBER (keine Einzeltiere) =====
-  private readonly kaelber: Animal[] = [];
-
-  // ===== FÄRSEN =====
-  private readonly faersen: Animal[] = [];
-
-  // ===== JUNGBULLEN =====
-  private readonly jungbullen: Animal[] = [];
-
-  private readonly fallbackAnimals: Animal[] = [];
-
-  private readonly externalData = toSignal(
-    forkJoin({
+   private readonly externalData = toSignal(
+     forkJoin({
       categories: this.http.get<AnimalCategoryInfo[]>(this.dataPaths.categories),
-      stammkuehe: this.http.get<Animal[]>(this.dataPaths.stammkuehe),
-      mutterkuehe: this.http.get<Animal[]>(this.dataPaths.mutterkuehe),
-      zuchtbullen: this.http.get<Animal[]>(this.dataPaths.zuchtbullen),
-      kaelber: this.http.get<Animal[]>(this.dataPaths.kaelber),
-      faersen: this.http.get<Animal[]>(this.dataPaths.faersen),
-      jungbullen: this.http.get<Animal[]>(this.dataPaths.jungbullen)
-    }).pipe(
-      map(({ categories, stammkuehe, mutterkuehe, zuchtbullen, kaelber, faersen, jungbullen }) => ({
+      stammkuehe: this.http.get<AnimalRaw[]>(this.dataPaths.stammkuehe),
+      mutterkuehe: this.http.get<AnimalRaw[]>(this.dataPaths.mutterkuehe),
+      zuchtbullen: this.http.get<AnimalRaw[]>(this.dataPaths.zuchtbullen),
+      kaelber: this.http.get<AnimalRaw[]>(this.dataPaths.kaelber),
+      faersen: this.http.get<AnimalRaw[]>(this.dataPaths.faersen),
+      jungbullen: this.http.get<AnimalRaw[]>(this.dataPaths.jungbullen),
+      imageIndex: this.http.get<Record<string, string[]>>(this.dataPaths.imageIndex)
+     }).pipe(
+      map(({ categories, stammkuehe, mutterkuehe, zuchtbullen, kaelber, faersen, jungbullen, imageIndex }) => ({
         categories,
+        imageIndex,
         animals: [...stammkuehe, ...mutterkuehe, ...zuchtbullen, ...kaelber, ...faersen, ...jungbullen]
       })),
-      catchError(() => of(null))
-    ),
-    { initialValue: null }
-  );
+       catchError(() => of(null))
+     ),
+     { initialValue: null }
+   );
 
-  private readonly data = computed(() => {
-    const external = this.externalData();
-    return {
+   private readonly data = computed(() => {
+     const external = this.externalData();
+    const imageIndex = external?.imageIndex ?? this.fallbackImageIndex;
+    const rawAnimals = external?.animals ?? [];
+     return {
       categories: external?.categories ?? [],
-      animals: external?.animals ?? []
-    };
-  });
+      animals: rawAnimals.map(animal => this.hydrateAnimal(animal, imageIndex))
+     };
+   });
 
   readonly categories = computed(() => this.data().categories);
 
@@ -118,11 +103,96 @@ export class AnimalService {
   }
 
   getAdjacentAnimals(category: AnimalCategory, id: string): { prev?: Animal; next?: Animal } {
-    const animals = this.getAnimalsByCategory(category);
-    const index = animals.findIndex(a => a.id === id);
+      const animals = this.getAnimalsByCategory(category);
+      const index = animals.findIndex(a => a.id === id);
+      return {
+        prev: index > 0 ? animals[index - 1] : undefined,
+        next: index < animals.length - 1 ? animals[index + 1] : undefined
+      };
+    }
+
+  private hydrateAnimal(animal: AnimalRaw, imageIndex: Record<string, string[]>): Animal {
+    const imagesDir = this.normalizeDir(animal.images);
+    const offspringDir = this.normalizeDir(animal.offspringImages);
+
+    const { images, lineageImageSrc } = this.buildAnimalImages(imagesDir, imageIndex);
+    const offspringImages = this.buildImageList(offspringDir, imageIndex);
+
     return {
-      prev: index > 0 ? animals[index - 1] : undefined,
-      next: index < animals.length - 1 ? animals[index + 1] : undefined
+      ...animal,
+      images,
+      lineageImageSrc,
+      offspringImages: offspringImages.length > 0 ? offspringImages : undefined
+    } as Animal;
+  }
+
+  private normalizeDir(dir?: string): string | null {
+    if (!dir) return null;
+    return dir.startsWith('/') ? dir : `/${dir}`;
+  }
+
+  private buildAnimalImages(imagesDir: string | null, imageIndex: Record<string, string[]>): {
+    images: AnimalImage[];
+    lineageImageSrc?: string;
+  } {
+    if (!imagesDir) {
+      return { images: [] };
+    }
+
+    const files = this.sortImageFiles(imageIndex[imagesDir] ?? []);
+    const lineageFile = files.find(file => this.isLineageTable(file));
+    const imageFiles = files.filter(file => !this.isLineageTable(file));
+
+    return {
+      images: this.mapFilesToImages(imagesDir, imageFiles),
+      lineageImageSrc: lineageFile ? `${imagesDir}/${lineageFile}` : undefined
     };
   }
-}
+
+  private buildImageList(imagesDir: string | null, imageIndex: Record<string, string[]>): AnimalImage[] {
+    if (!imagesDir) return [];
+    const files = this.sortImageFiles(imageIndex[imagesDir] ?? []);
+    return this.mapFilesToImages(imagesDir, files);
+  }
+
+  private mapFilesToImages(imagesDir: string, files: string[]): AnimalImage[] {
+    return files.map((file, index) => {
+      const baseName = file.replace(/\.[^.]+$/, '');
+      return {
+        placeholder: baseName,
+        alt: baseName,
+        isPrimary: index === 0,
+        src: `${imagesDir}/${file}`,
+        size: this.inferImageSize(file)
+      };
+    });
+  }
+
+  private inferImageSize(file: string): 'small' | 'medium' | 'large' | undefined {
+    const lower = file.toLowerCase();
+    if (lower.includes('200')) return 'small';
+    if (lower.includes('1600')) return 'medium';
+    if (lower.includes('2600')) return 'large';
+    return undefined;
+  }
+
+  private sortImageFiles(files: string[]): string[] {
+    const rank = (file: string): number => {
+      const lower = file.toLowerCase();
+      if (lower.includes('2600')) return 0;
+      if (lower.includes('1600')) return 1;
+      if (lower.includes('200')) return 2;
+      return 3;
+    };
+
+    return [...files].sort((a, b) => {
+      const rankDiff = rank(a) - rank(b);
+      if (rankDiff !== 0) return rankDiff;
+      return a.localeCompare(b, 'de');
+    });
+  }
+
+  private isLineageTable(file: string): boolean {
+    return file.toLowerCase().includes('abstammungstabelle');
+  }
+ }
