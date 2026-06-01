@@ -35,11 +35,7 @@
 }
 
 .hero-logo {
-  width: 140px;
-  height: auto;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  display: none; /* Versteckt das Logo im Hero-Bereich endgültig */
 }
 
 .hero-content h1 {
@@ -75,17 +71,44 @@
   color: #1b5e20 !important;
 }
 
+/* EDLER DESIGN-UPDATE: Transparenter Outline-Button für Kontakt */
 .hero-btn-secondary {
+  background-color: transparent !important;
   color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.hero-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
   border-color: #ffffff !important;
 }
 
 :host-context([data-theme="dark"]) .hero-btn-secondary {
+  background-color: transparent !important;
   color: #ffffff !important;
   border-color: #ffffff !important;
 }
 
-/* ----- Intro ----- */
+/* ----- Intro (Premium Update für Farben & Kontrast) ----- */
+.section-dark-premium {
+  background-color: #141b17 !important; /* Tiefes Anthrazit-Naturgrün */
+  padding: 80px 0;
+}
+
+.section-dark-premium h2 {
+  color: #ffffff !important;
+  font-size: 2.25rem;
+  margin-bottom: 24px;
+}
+
+.premium-text {
+  color: #d6d3d1 !important; /* Weiches Steingrau/Creme für entspanntes Lesen */
+  font-size: 1.1rem;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
 .intro-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -104,7 +127,7 @@
 .intro-img {
   width: 100%;
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   object-fit: cover;
   max-height: 400px;
 }
@@ -178,4 +201,3 @@
     padding: 48px 16px;
   }
 }
-
