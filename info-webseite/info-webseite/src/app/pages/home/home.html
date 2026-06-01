@@ -1,6 +1,3 @@
-<!-- ===== STARTSEITE – Highlander vom Weetfeld ===== -->
-
-<!-- Hero-Bereich -->
 <section class="hero-section">
   <img class="hero-bg-img"
        src="images/startseite/beispiel-kuh-2k.JPG"
@@ -8,16 +5,13 @@
        loading="eager" />
   <div class="hero-overlay">
     <div class="container hero-content">
-      <img class="hero-logo"
-           src="images/startseite/logos/Logo-Haupt.jpg"
-           alt="Logo – Highlander vom Weetfeld" />
       <h1>Highlander vom Weetfeld</h1>
       <p class="hero-subtitle">Schottische Hochlandrinder aus Hamm-Weetfeld – seit 1998 mit Herz und Leidenschaft gezüchtet.</p>
       <div class="hero-actions">
         <a mat-raised-button routerLink="/unsere-highlander" class="hero-btn-primary">
           <mat-icon>pets</mat-icon> Unsere Highlander entdecken
         </a>
-        <a mat-stroked-button routerLink="/kontakt" class="hero-btn-primary">
+        <a mat-stroked-button routerLink="/kontakt" class="hero-btn-secondary" style="color: white; border-color: white;">
           <mat-icon>mail</mat-icon> Kontakt aufnehmen
         </a>
       </div>
@@ -25,22 +19,21 @@
   </div>
 </section>
 
-<!-- Kurzvorstellung -->
-<section class="section section-white">
+<section class="section section-dark-premium">
   <div class="container intro-section">
     <div class="intro-text">
       <h2>Willkommen auf unserem Hof</h2>
-      <p>
+      <p class="premium-text">
         Seit 1998 züchten wir auf unserem Hof in Hamm-Weetfeld schottische Hochlandrinder – die faszinierenden
         Highland Cattle. Was einst als Landschaftspflege begann, ist heute weit mehr: Die tägliche Arbeit
         mit den Tieren ist für uns ein bewusster Ausgleich zum Alltag und eine echte Herzensangelegenheit.
       </p>
-      <p>
+      <p class="premium-text">
         Durch den regelmäßigen, liebevollen Umgang sind unsere Highlander ausgesprochen menschenbezogen,
         vertrauensvoll und sicher im Umgang. Wir sind als <strong>Bio-Betrieb zertifiziert (DE-ÖKO-005)</strong>
         und legen größten Wert auf artgerechte Haltung.
       </p>
-      <a mat-button routerLink="/bio-betrieb" color="primary">
+      <a mat-button routerLink="/bio-betrieb" style="color: #8c6239;">
         Mehr zum Bio-Betrieb <mat-icon>arrow_forward</mat-icon>
       </a>
     </div>
@@ -53,13 +46,11 @@
   </div>
 </section>
 
-<!-- Teaser-Karten -->
 <section class="section section-cream">
   <div class="container">
     <h2 class="text-center">Was uns ausmacht</h2>
     <div class="teaser-grid">
 
-      <!-- Karte: Unsere Highlander -->
       <mat-card class="teaser-card" appearance="outlined">
         <img class="teaser-img"
              src="images/stammkühe/stammkühe-auf-weide.jpg"
@@ -81,7 +72,6 @@
         </mat-card-actions>
       </mat-card>
 
-      <!-- Karte: Bio-Betrieb -->
       <mat-card class="teaser-card" appearance="outlined">
         <img class="teaser-img"
              src="images/startseite/logos/öko-logo.jpg"
@@ -103,7 +93,6 @@
         </mat-card-actions>
       </mat-card>
 
-      <!-- Karte: Fleisch & Verkauf -->
       <mat-card class="teaser-card" appearance="outlined">
         <img class="teaser-img"
              src="images/fleisch/fleischbild.jpg"
@@ -125,7 +114,6 @@
         </mat-card-actions>
       </mat-card>
 
-      <!-- Karte: Besuch & Beratung -->
       <mat-card class="teaser-card" appearance="outlined">
         <img class="teaser-img"
              src="images/startseite/beispiel-kuh.jpg"
@@ -151,7 +139,6 @@
   </div>
 </section>
 
-<!-- Call-to-Action -->
 <section class="section section-white cta-section">
   <div class="container text-center">
     <h2>Interesse geweckt?</h2>
@@ -164,4 +151,3 @@
     </a>
   </div>
 </section>
-
