@@ -1,5 +1,7 @@
 <!-- ===== App Shell: Toolbar + Sidenav + Content + Footer ===== -->
 
+<a class="skip-link" href="#main-content">Zum Hauptinhalt springen</a>
+
 <!-- Top Toolbar -->
 <mat-toolbar class="app-toolbar" color="primary">
   @if (isMobile()) {
@@ -121,7 +123,7 @@
 
   <!-- Hauptinhalt -->
   <mat-sidenav-content #contentHost class="main-content">
-    <main (click)="openImageZoomFromMain($event)">
+    <main id="main-content" tabindex="-1" (click)="openImageZoomFromMain($event)">
       <router-outlet />
     </main>
 
@@ -169,11 +171,13 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; {{ currentYear }} Highlander vom Weetfeld – Familie Gebel. Alle Rechte vorbehalten.</p>
+        <div class="footer-bottom-inner">
+          <p>&copy; {{ currentYear }} Highlander vom Weetfeld – Familie Gebel. Alle Rechte vorbehalten.</p>
+          <a routerLink="/kontakt">Nachricht senden <mat-icon>arrow_forward</mat-icon></a>
+        </div>
       </div>
     </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
 
 

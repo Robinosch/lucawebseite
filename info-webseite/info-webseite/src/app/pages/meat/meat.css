@@ -1,7 +1,7 @@
 /* ===== Meat Page Styles ===== */
 
 .page-hero {
-  padding: 64px 24px 48px;
+  padding: 82px 24px 60px;
 }
 
 .page-subtitle {
@@ -36,6 +36,8 @@
 
 .feature-card {
   transition: transform 0.2s ease;
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-sm);
 }
 
 .feature-card:hover {
@@ -67,7 +69,7 @@
   height: 220px;
   object-fit: cover;
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease;
 }
 
@@ -107,4 +109,3 @@
     padding: 40px 16px 32px;
   }
 }
-

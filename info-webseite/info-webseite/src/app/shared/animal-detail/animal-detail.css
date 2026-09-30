@@ -145,8 +145,13 @@
 
 /* Hero-Text */
 .hero-text h1 {
-  font-size: 2.2rem;
+  margin-top: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
   margin-bottom: 8px;
+}
+
+.hero-text .eyebrow {
+  margin-bottom: 14px;
 }
 
 .animal-status {
@@ -154,6 +159,12 @@
   color: var(--color-primary);
   font-weight: 500;
   font-style: italic;
+}
+
+.tree-link {
+  margin-top: 22px;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-dark) !important;
 }
 
 /* ----- Profil-Layout ----- */
@@ -166,7 +177,8 @@
 
 /* Steckbrief-Card */
 .profile-card {
-  border-radius: var(--border-radius) !important;
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-icon {
@@ -276,6 +288,10 @@
 }
 
 .offspring-img-wrapper:hover {
+  transform: translateY(-3px) scale(1.01);
+}
+
+.offspring-img-wrapper:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
@@ -352,4 +368,3 @@
     min-width: auto;
   }
 }
-

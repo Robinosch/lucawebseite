@@ -3,6 +3,9 @@ import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { AnimalService } from '../../services/animal.service';
@@ -15,7 +18,17 @@ import { AnimalCategory } from '../../models/animal.model';
  */
 @Component({
   selector: 'app-animal-overview',
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, MatButtonToggleModule, MatDividerModule],
+  imports: [
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonToggleModule,
+    MatDividerModule
+  ],
   templateUrl: './animal-overview.html',
   styleUrl: './animal-overview.css'
 })
@@ -30,6 +43,8 @@ export class AnimalOverview {
 
   /** Filterzustand für Mutterkühe */
   statusFilter = signal<'active' | 'all'>('active');
+  searchTerm = signal('');
+  sortMode = signal<'name' | 'birth'>('name');
 
   /** Tiere dieser Kategorie */
   allAnimals = computed(() => this.animalService.getAnimalsByCategory(this.category()));
@@ -51,20 +66,32 @@ export class AnimalOverview {
   /** Gefilterte Tiere (nur aktiv bei Mutterkühen) */
   filteredAnimals = computed(() => {
     const animals = this.allAnimals();
-    if (!this.showStatusFilter() || this.statusFilter() === 'all') {
-      return animals;
-    }
-    return animals.filter(animal => this.isActiveMutterkuh(animal.status));
+    const search = this.searchTerm().trim().toLocaleLowerCase('de');
+    const filtered = animals.filter(animal => {
+      const matchesStatus = !this.showStatusFilter() || this.statusFilter() === 'all'
+        || this.isActiveMutterkuh(animal.status);
+      const matchesSearch = !search
+        || animal.name.toLocaleLowerCase('de').includes(search)
+        || animal.id.toLocaleLowerCase('de').includes(search);
+      return matchesStatus && matchesSearch;
+    });
+
+    return [...filtered].sort((a, b) => {
+      if (this.sortMode() === 'birth') {
+        return (a.birthDate ?? '').localeCompare(b.birthDate ?? '', 'de');
+      }
+      return a.name.localeCompare(b.name, 'de');
+    });
   });
 
   /** Nur aktive Mutterkühe (für getrennte Anzeige bei "Alle") */
   activeMutterkuehe = computed(() =>
-    this.allAnimals().filter(animal => this.isActiveMutterkuh(animal.status))
+    this.filteredAnimals().filter(animal => this.isActiveMutterkuh(animal.status))
   );
 
   /** Nur inaktive Mutterkühe (für getrennte Anzeige bei "Alle") */
   inactiveMutterkuehe = computed(() =>
-    this.allAnimals().filter(animal => this.isInactiveMutterkuh(animal.status))
+    this.filteredAnimals().filter(animal => this.isInactiveMutterkuh(animal.status))
   );
 
   /** Gibt es überhaupt Tiere in der Kategorie? */
@@ -75,6 +102,14 @@ export class AnimalOverview {
 
   setStatusFilter(value: 'active' | 'all' | null) {
     this.statusFilter.set(value ?? 'active');
+  }
+
+  setSearchTerm(value: string): void {
+    this.searchTerm.set(value);
+  }
+
+  setSortMode(value: 'name' | 'birth'): void {
+    this.sortMode.set(value);
   }
 
   private isActiveMutterkuh(status?: string): boolean {

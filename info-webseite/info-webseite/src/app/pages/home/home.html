@@ -17,10 +17,32 @@
         <a mat-raised-button routerLink="/unsere-highlander" class="hero-btn-primary">
           <mat-icon>pets</mat-icon> Unsere Highlander entdecken
         </a>
-        <a mat-stroked-button routerLink="/kontakt" class="hero-btn-primary">
-          <mat-icon>mail</mat-icon> Kontakt aufnehmen
+        <a mat-stroked-button routerLink="/besuch" class="hero-btn-secondary">
+          <mat-icon>place</mat-icon> Hofbesuch planen
         </a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vertrauensmerkmale -->
+<section class="trust-strip" aria-label="Unsere wichtigsten Merkmale">
+  <div class="container trust-grid">
+    <div class="trust-item">
+      <mat-icon>calendar_month</mat-icon>
+      <div><strong>Seit 1998</strong><span>Erfahrung in der Zucht</span></div>
+    </div>
+    <div class="trust-item">
+      <mat-icon>eco</mat-icon>
+      <div><strong>Bio-zertifiziert</strong><span>DE-ÖKO-005</span></div>
+    </div>
+    <div class="trust-item">
+      <mat-icon>favorite</mat-icon>
+      <div><strong>Mit Herz</strong><span>Artgerechte Haltung</span></div>
+    </div>
+    <div class="trust-item">
+      <mat-icon>location_on</mat-icon>
+      <div><strong>Hamm-Weetfeld</strong><span>Direkt vom Hof</span></div>
     </div>
   </div>
 </section>
@@ -56,7 +78,11 @@
 <!-- Teaser-Karten -->
 <section class="section section-cream">
   <div class="container">
-    <h2 class="text-center">Was uns ausmacht</h2>
+    <div class="section-heading">
+      <span class="eyebrow">Unser Hof auf einen Blick</span>
+      <h2>Was uns ausmacht</h2>
+      <p>Tradition, Transparenz und eine enge Verbindung zu unseren Tieren.</p>
+    </div>
     <div class="teaser-grid">
 
       <!-- Karte: Unsere Highlander -->
@@ -84,7 +110,7 @@
       <!-- Karte: Bio-Betrieb -->
       <mat-card class="teaser-card" appearance="outlined">
         <img class="teaser-img"
-             src="images/startseite/logos/öko-logo.jpg"
+             src="images/stammkühe/stammkühe-auf-weide.jpg"
              alt="Highland Cattle auf der grünen Weide – Bio-Betrieb"
              loading="lazy" />
         <mat-card-header>
@@ -151,6 +177,30 @@
   </div>
 </section>
 
+<!-- Stammbaum-Highlight -->
+<section class="section section-white pedigree-highlight">
+  <div class="container pedigree-highlight-layout">
+    <div class="pedigree-highlight-copy">
+      <span class="eyebrow">Abstammung entdecken</span>
+      <h2>Jede Linie erzählt eine Geschichte</h2>
+      <p>
+        Erkunden Sie die Abstammung unserer Highlander interaktiv. Folgen Sie Vater- und Mutterlinien,
+        entdecken Sie bekannte Tiere und öffnen Sie direkt die passenden Tierprofile.
+      </p>
+      <a mat-raised-button routerLink="/stammbaum" class="cta-button">
+        <mat-icon>account_tree</mat-icon> Interaktiven Stammbaum öffnen
+      </a>
+    </div>
+    <div class="pedigree-visual" aria-hidden="true">
+      <span class="pedigree-node pedigree-root">Ausgewähltes Tier</span>
+      <span class="pedigree-branch branch-left"></span>
+      <span class="pedigree-branch branch-right"></span>
+      <span class="pedigree-node pedigree-parent parent-left">Vaterlinie</span>
+      <span class="pedigree-node pedigree-parent parent-right">Mutterlinie</span>
+    </div>
+  </div>
+</section>
+
 <!-- Call-to-Action -->
 <section class="section section-white cta-section">
   <div class="container text-center">
@@ -164,4 +214,3 @@
     </a>
   </div>
 </section>
-

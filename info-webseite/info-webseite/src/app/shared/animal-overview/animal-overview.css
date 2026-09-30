@@ -32,8 +32,9 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-radius: var(--border-radius) !important;
+  border-radius: var(--border-radius-lg) !important;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .animal-card:hover {
@@ -63,6 +64,11 @@
   height: 240px;
   object-fit: cover;
   border-bottom: 1px solid var(--color-cream-dark);
+}
+
+.animal-card mat-card-title {
+  font-size: 1.08rem;
+  line-height: 1.35;
 }
 
 .animal-card mat-card-header {
@@ -111,14 +117,104 @@
 /* ----- Filterleiste (nur Mutterkühe) ----- */
 .overview-toolbar {
   display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 12px;
+  border: 1px solid var(--surface-card-border);
+  border-radius: var(--border-radius-lg);
+  background: var(--surface-soft, #f4f8f2);
+}
+
+.animal-search {
+  flex: 1 1 280px;
+  min-width: 240px;
+  margin-bottom: -1.25em;
+}
+
+.animal-count {
+  white-space: nowrap;
+  color: var(--color-text-light);
+  font-size: .85rem;
+}
+
+.sort-select {
+  flex: 0 1 210px;
+  min-width: 170px;
+  margin-bottom: -1.25em;
+}
+
+.filter-toggle {
+  flex: 0 0 auto;
+}
+
+.overview-toolbar .filter-toggle {
+  margin-left: auto;
+}
+
+/*
+ * Keep the toolbar compact while preserving comfortable touch targets.
+ */
+@media (max-width: 760px) {
+  .overview-toolbar {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .animal-search {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .animal-count {
+    align-self: center;
+    margin-right: auto;
+  }
+
+  .overview-toolbar .filter-toggle {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .sort-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .filter-toggle {
+    width: 100%;
+  }
+
+  .filter-toggle mat-button-toggle {
+    flex: 1;
+  }
+}
+
+/* ----- Filterleiste (nur Mutterkühe) ----- */
+.overview-toolbar--legacy {
+  display: flex;
   justify-content: flex-end;
   align-items: center;
   margin: 0 0 16px;
 }
 
-.filter-toggle {
-  background: var(--color-cream-light);
-  border-radius: 999px;
+:host-context([data-theme="dark"]) .overview-toolbar {
+  background: var(--surface-soft);
+}
+
+:host-context([data-theme="dark"]) .animal-search,
+:host-context([data-theme="dark"]) .sort-select {
+  --mdc-outlined-text-field-container-color: var(--surface-card);
+  --mdc-outlined-text-field-input-text-color: var(--color-text);
+  --mdc-outlined-text-field-label-text-color: var(--color-text-light);
+  --mdc-outlined-text-field-hover-label-text-color: var(--color-text);
+  --mdc-outlined-text-field-focus-label-text-color: var(--color-primary);
+  --mdc-outlined-text-field-outline-color: var(--surface-card-border);
+  --mdc-outlined-text-field-hover-outline-color: var(--color-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
+  --mat-select-trigger-text-color: var(--color-text);
+  --mat-select-enabled-arrow-color: var(--color-text-light);
 }
 
 /* ----- Inaktive Mutterkühe ----- */

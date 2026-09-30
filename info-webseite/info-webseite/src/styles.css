@@ -18,6 +18,9 @@
   --color-text: #0e0e0e;
   --color-text-light: #191818;
   --color-white: #ffffff;
+  --color-surface-soft: #f4f8f2;
+  --color-surface-muted: #edf2ed;
+  --color-focus: #0b63ce;
 
   /* Toolbar – helle Schrift auf dunklem Grün */
   --toolbar-bg: #1b5e20;
@@ -49,6 +52,10 @@
   --section-padding: 64px 24px;
   --section-padding-mobile: 40px 16px;
   --border-radius: 12px;
+  --border-radius-lg: 20px;
+  --shadow-sm: 0 4px 14px rgba(36, 60, 42, .08);
+  --shadow-md: 0 12px 32px rgba(36, 60, 42, .12);
+  --transition-fast: 180ms ease;
 }
 
 /* ----- Dark Mode ----- */
@@ -65,6 +72,9 @@
   --color-text: #e0e0e0;
   --color-text-light: #fffcfc;
   --color-white: #121212;
+  --color-surface-soft: #1d2a20;
+  --color-surface-muted: #253128;
+  --color-focus: #8fc8ff;
 
   /* Toolbar im Dark Mode – dezentes Dunkelgrün */
   --toolbar-bg: #1a3a1a;
@@ -101,8 +111,126 @@ h1 { font-size: 2.5rem; font-weight: 700; }
 h2 { font-size: 2rem; font-weight: 700; }
 h3 { font-size: 1.5rem; font-weight: 400; }
 
+body {
+  margin: 0;
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
 p, li, span, label {
   font-family: var(--font-body);
+  color: var(--color-text-light);
+  line-height: 1.7;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 2000;
+  transform: translateY(-150%);
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--color-primary-dark);
+  color: #fff !important;
+  font-weight: 700;
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  max-width: 720px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.section-heading p {
+  margin: 10px auto 0;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
+
+/* ----- Globale Transitions ----- */
+/*
+ * Animations are intentionally limited to interactive surfaces. Applying
+ * transitions to every element makes page changes feel sluggish.
+ */
+button,
+a,
+.mat-mdc-card,
+img {
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+/* ----- Global page surfaces ----- */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 82px 24px 60px;
+}
+
+.page-hero::after {
+  position: absolute;
+  right: -90px;
+  bottom: -150px;
+  width: 320px;
+  height: 320px;
+  border: 1px solid rgba(46, 125, 50, .12);
+  border-radius: 50%;
+  content: '';
+}
+
+.page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 58px 16px 42px;
+  }
   color: var(--color-text-light);
   line-height: 1.7;
 }
@@ -170,13 +298,6 @@ a:hover {
   .section {
     padding: var(--section-padding-mobile);
   }
-}
-
-/* ----- Globale Transitions für Theme-Wechsel ----- */
-*,
-*::before,
-*::after {
-  transition: background-color 0.3s ease, color 0.15s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* ----- Dark Mode: Globale Overrides ----- */
@@ -395,4 +516,3 @@ main [data-no-zoom-container="true"] img {
 [data-theme="dark"] .image-zoom-dialog-panel .mat-mdc-dialog-surface {
   background: #111;
 }
-

@@ -84,10 +84,15 @@
 
       <!-- Tiername als Hero-Text -->
       <div class="hero-text">
+        <span class="eyebrow">{{ categoryLabel() }}</span>
         <h1>{{ animal.name }}</h1>
         @if (animal.status) {
           <p class="animal-status">{{ animal.status }}</p>
         }
+        <a mat-stroked-button routerLink="/stammbaum" class="tree-link">
+          <mat-icon>account_tree</mat-icon>
+          Im Stammbaum ansehen
+        </a>
       </div>
     </div>
   </section>

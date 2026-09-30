@@ -20,8 +20,24 @@
 <!-- Animal Cards Grid -->
 <section class="section section-white">
   <div class="container">
-    @if (showStatusFilter()) {
-      <div class="overview-toolbar">
+    <div class="overview-toolbar">
+      <mat-form-field appearance="outline" class="animal-search">
+        <mat-label>{{ categoryLabel() }} durchsuchen</mat-label>
+        <input matInput #animalSearch type="search" [value]="searchTerm()"
+          (input)="setSearchTerm(animalSearch.value)"
+          [placeholder]="'Name oder ID eingeben'">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <span class="animal-count">{{ filteredAnimals().length }} Tiere</span>
+      <mat-form-field appearance="outline" class="sort-select">
+        <mat-label>Sortieren</mat-label>
+        <mat-select [value]="sortMode()"
+          (selectionChange)="setSortMode($event.value === 'birth' ? 'birth' : 'name')">
+          <mat-option value="name">Nach Name</mat-option>
+          <mat-option value="birth">Nach Geburtsdatum</mat-option>
+        </mat-select>
+      </mat-form-field>
+      @if (showStatusFilter()) {
         <mat-button-toggle-group
           class="filter-toggle"
           [value]="statusFilter()"
@@ -30,8 +46,8 @@
           <mat-button-toggle value="active">Aktive Mutterkühe</mat-button-toggle>
           <mat-button-toggle value="all">Alle</mat-button-toggle>
         </mat-button-toggle-group>
-      </div>
-    }
+      }
+    </div>
 
     @if (filteredAnimals().length === 0) {
       <div class="empty-state text-center">
@@ -190,4 +206,3 @@
     }
   </div>
 </section>
-
