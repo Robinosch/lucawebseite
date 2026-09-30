@@ -59,17 +59,16 @@
   flex-wrap: wrap;
 }
 
-/* PREMIUM BEIGE FÜR DEN HAUPT-BUTTON */
 .hero-btn-primary {
-  background-color: #e7dfd5 !important; /* Angenehmes Natur-Beige statt reinem Weiß */
-  color: #141b17 !important; /* Passendes dunkles Waldgrün für die Schrift */
+  background-color: #ffffff !important;
+  color: #1b5e20 !important;
   font-weight: 500;
 }
 
-/* Dark Mode */
+/* Dark Mode: Hero-Button muss klar lesbar bleiben */
 :host-context([data-theme="dark"]) .hero-btn-primary {
-  background-color: #e7dfd5 !important;
-  color: #141b17 !important;
+  background-color: #ffffff !important;
+  color: #1b5e20 !important;
 }
 
 /* EDLER DESIGN-UPDATE: Transparenter Outline-Button für Kontakt */
@@ -97,27 +96,17 @@
   padding: 80px 0;
 }
 
-/* Anpassung der Überschrift im dunklen Bereich – Jetzt fehlerfrei in edlem Natur-Beige */
 .section-dark-premium h2 {
-  color: #e7dfd5 !important; /* Das schicke, warme Sand-Beige aus dem Entwurf */
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  letter-spacing: -0.02em;
+  color: #ffffff !important;
+  font-size: 2.25rem;
+  margin-bottom: 24px;
 }
 
-/* Weicherer Textkontrast für den Fließtext */
 .premium-text {
-  color: #d6d3d1 !important; /* Ein weiches Steingrau/Creme – extrem angenehm zu lesen */
+  color: #d6d3d1 !important; /* Weiches Steingrau/Creme für entspanntes Lesen */
   font-size: 1.1rem;
   line-height: 1.75;
   margin-bottom: 16px;
-}
-
-/* Kleine "Mehr erfahren"-Links unter dem Text ebenfalls im edlen Beige */
-.section-dark-premium a[mat-button] {
-  color: #e7dfd5 !important;
 }
 
 .intro-section {
@@ -125,6 +114,14 @@
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
+}
+
+.intro-text h2 {
+  margin-bottom: 16px;
+}
+
+.intro-text p {
+  margin-bottom: 12px;
 }
 
 .intro-img {
