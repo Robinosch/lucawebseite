@@ -14,11 +14,13 @@
         <mat-form-field appearance="outline" class="control-field">
           <mat-label>Tier auswaehlen</mat-label>
           <mat-select [ngModel]="selectedId()" (ngModelChange)="onAnimalChange($event)">
-            @for (animal of highlightedAnimals(); track animal.id) {
+            @for (animal of visibleAnimals(); track animal.id) {
               <mat-option [value]="animal.id">{{ animal.id }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
+
+
 
         <mat-form-field appearance="outline" class="control-field depth-field">
           <mat-label>Maximale Tiefe</mat-label>
@@ -28,7 +30,20 @@
             }
           </mat-select>
         </mat-form-field>
+        <label class="search-field">
+          <mat-label class="search-label">Tier suchen</mat-label>
+          <span class="search-input-wrapper">
 
+            <mat-icon>search</mat-icon>
+            <input #searchInput type="search" [value]="searchTerm()" (input)="onSearchChange(searchInput.value)"
+                   placeholder="Name oder ID eingeben" aria-label="Tier suchen">
+            @if (searchTerm()) {
+              <button type="button" class="clear-search" (click)="onSearchChange('')" aria-label="Suche leeren">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </span>
+        </label>
         <div class="zoom-controls">
           <button mat-stroked-button type="button" (click)="zoomOut()">
             <mat-icon>zoom_out</mat-icon>
@@ -65,9 +80,51 @@
       <mat-card class="status-card status-card-error">{{ error() }}</mat-card>
     }
 
-    <mat-card appearance="outlined" class="tree-card">
-      <div #treeContainer class="tree-container"></div>
-    </mat-card>
+    <div class="tree-layout">
+      <mat-card appearance="outlined" class="tree-card">
+        <div class="tree-toolbar">
+          <span class="tree-hint"><mat-icon>touch_app</mat-icon> Knoten anklicken, um Details zu sehen</span>
+          <span class="tree-hint"><mat-icon>open_with</mat-icon> Ziehen und zoomen zum Erkunden</span>
+        </div>
+        <div #treeContainer class="tree-container"></div>
+      </mat-card>
+
+      @if (detailEntry(); as detail) {
+        <mat-card appearance="outlined" class="details-card">
+          <button type="button" class="close-details" (click)="closeDetails()" aria-label="Details schliessen">
+            <mat-icon>close</mat-icon>
+          </button>
+          <div class="details-image">
+            @if (getAnimalImageForName(detail.id); as imageSrc) {
+              <img [src]="imageSrc" [alt]="'Bild von ' + detail.id">
+            } @else {
+              <span>{{ detail.id.slice(0, 1).toUpperCase() }}</span>
+              <small>Kein Bild vorhanden</small>
+            }
+          </div>
+          <div class="details-content">
+            <span class="details-eyebrow">{{ detail.highlight ? 'Tier aus dem Bestand' : 'Abstammungsdaten' }}</span>
+            <h2>{{ detail.id }}</h2>
+            @if (detail.info) {
+              <p>{{ detail.info }}</p>
+            } @else {
+              <p class="muted-text">Für dieses Tier sind keine weiteren Informationen hinterlegt.</p>
+            }
+            <div class="details-actions">
+              <button mat-stroked-button type="button" (click)="showAsRoot(detail.id)">
+                <mat-icon>account_tree</mat-icon>
+                Als Zentrum anzeigen
+              </button>
+              @if (detail.path || getAnimalRouteForName(detail.id)) {
+                <button mat-raised-button color="primary" type="button" (click)="navigateToAnimal()">
+                  <mat-icon>open_in_new</mat-icon>
+                  Tierprofil öffnen
+                </button>
+              }
+            </div>
+          </div>
+        </mat-card>
+      }
+    </div>
   </div>
 </section>
-

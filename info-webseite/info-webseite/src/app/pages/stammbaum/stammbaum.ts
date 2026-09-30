@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -39,14 +39,28 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
   private readonly animalService = inject(AnimalService);
   private readonly router = inject(Router);
   private readonly subscriptions = new Subscription();
-  private readonly animalMetaByKey = this.createAnimalMetaLookup();
-
   @ViewChild('treeContainer') treeContainer?: ElementRef<HTMLDivElement>;
 
   readonly entries = signal<PedigreeEntry[]>([]);
   readonly highlightedAnimals = signal<PedigreeEntry[]>([]);
   readonly selectedId = signal<string>('');
   readonly maxDepth = signal<number>(4);
+  readonly searchTerm = signal<string>('');
+  readonly showOnlyWithImages = signal<boolean>(false);
+  readonly detailId = signal<string>('');
+  private readonly animalMetaByKey = computed(() => this.createAnimalMetaLookup());
+  readonly visibleAnimals = computed(() => {
+    const term = this.normalizeNameKey(this.searchTerm());
+    return this.highlightedAnimals().filter(entry => {
+      const matchesSearch = !term || this.normalizeNameKey(entry.id).includes(term);
+      const matchesImage = !this.showOnlyWithImages() || Boolean(this.getAnimalImageForName(entry.id));
+      return matchesSearch && matchesImage;
+    });
+  });
+  readonly detailEntry = computed(() => {
+    const id = this.detailId();
+    return this.entries().find(entry => entry.id === id);
+  });
 
   readonly loading = signal<boolean>(true);
   readonly error = signal<string>('');
@@ -78,6 +92,38 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
     const clampedDepth = Math.max(2, Math.min(8, depth));
     this.maxDepth.set(clampedDepth);
     this.renderTree();
+  }
+
+  onSearchChange(value: string): void {
+    this.searchTerm.set(value);
+  }
+
+  onImageFilterChange(value: boolean): void {
+    this.showOnlyWithImages.set(value);
+  }
+
+  openDetails(id: string): void {
+    if (this.entries().some(entry => entry.id === id)) {
+      this.detailId.set(id);
+    }
+  }
+
+  showAsRoot(id: string): void {
+    this.selectedId.set(id);
+    this.detailId.set(id);
+    this.renderTree();
+  }
+
+  navigateToAnimal(): void {
+    const entry = this.detailEntry();
+    const path = entry?.path ?? (entry ? this.getAnimalRouteForName(entry.id) : undefined);
+    if (path) {
+      this.router.navigateByUrl(path);
+    }
+  }
+
+  closeDetails(): void {
+    this.detailId.set('');
   }
 
   zoomIn(): void {
@@ -130,8 +176,10 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
 
         if (highlighted.length > 0) {
           this.selectedId.set(highlighted[0].id);
+          this.detailId.set(highlighted[0].id);
         } else if (entries.length > 0) {
           this.selectedId.set(entries[0].id);
+          this.detailId.set(entries[0].id);
         }
 
         this.loading.set(false);
@@ -231,25 +279,13 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
       .join('g')
       .attr('class', 'tree-node')
       .attr('transform', node => `translate(${node.x},${node.y})`)
-      .style('cursor', node => {
-        if (node.data.highlight && !!node.data.routePath) {
-          return 'pointer';
-        }
-
-        return dataById.has(node.data.id) ? 'pointer' : 'default';
-      })
+      .style('cursor', node => dataById.has(node.data.id) ? 'pointer' : 'default')
       .on('click', (_event, node) => {
-        if (node.data.highlight && node.data.routePath) {
-          this.router.navigateByUrl(node.data.routePath);
-          return;
-        }
-
         if (!dataById.has(node.data.id)) {
           return;
         }
 
-        this.selectedId.set(node.data.id);
-        this.renderTree();
+        this.openDetails(node.data.id);
       });
 
     // Native SVG-Tooltip mit vollständigem Namen/Infos.
@@ -291,8 +327,25 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
       .attr('href', node => node.data.imageSrc ?? '')
       .attr('preserveAspectRatio', 'xMidYMid slice');
 
+    const nodesWithoutImage = nodes.filter(node => !node.data.imageSrc);
+    nodesWithoutImage.append('circle')
+      .attr('class', 'node-placeholder')
+      .attr('cx', -nodeWidth / 2 + 30)
+      .attr('cy', 0)
+      .attr('r', 21)
+      .attr('fill', node => node.data.highlight ? '#d4ead8' : '#e8ecec')
+      .attr('stroke', node => node.data.highlight ? palette.nodeHighlightStroke : palette.nodeStroke)
+      .attr('stroke-width', 1.2);
+
+    nodesWithoutImage.append('text')
+      .attr('class', 'node-placeholder-text')
+      .attr('text-anchor', 'middle')
+      .attr('x', -nodeWidth / 2 + 30)
+      .attr('y', 5)
+      .text(node => this.getInitials(node.data.id));
+
     const getTextX = (node: d3.HierarchyNode<PedigreeNode>): number => (
-      node.data.imageSrc ? -54 : -nodeWidth / 2 + 12
+      node.data.imageSrc ? -54 : -nodeWidth / 2 + 60
     );
 
     nodes.append('text')
@@ -324,6 +377,11 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
       });
 
     this.resetView();
+  }
+
+  private getInitials(value: string): string {
+    const words = value.trim().split(/\s+/).filter(Boolean);
+    return words.slice(0, 2).map(word => word.charAt(0).toUpperCase()).join('') || '?';
   }
 
   private buildNode(
@@ -427,12 +485,12 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
     return images.find(image => image.isPrimary && !!image.src) ?? images.find(image => !!image.src);
   }
 
-  private getAnimalImageForName(name: string): string | undefined {
-    return this.animalMetaByKey.get(this.normalizeNameKey(name))?.imageSrc;
+  getAnimalImageForName(name: string): string | undefined {
+    return this.animalMetaByKey().get(this.normalizeNameKey(name))?.imageSrc;
   }
 
-  private getAnimalRouteForName(name: string): string | undefined {
-    return this.animalMetaByKey.get(this.normalizeNameKey(name))?.routePath;
+  getAnimalRouteForName(name: string): string | undefined {
+    return this.animalMetaByKey().get(this.normalizeNameKey(name))?.routePath;
   }
 
   private normalizeNameKey(value: string): string {
@@ -445,4 +503,3 @@ export class Stammbaum implements AfterViewInit, OnDestroy {
       .trim();
   }
 }
-
