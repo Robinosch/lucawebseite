@@ -6,6 +6,12 @@
   height: 100%;
 }
 
+.desktop-nav .mdc-button__label,
+.nav-dropdown-trigger .mdc-button__label,
+.desktop-nav .mat-icon {
+  color: var(--toolbar-text) !important;
+}
+
 /* ----- Toolbar ----- */
 .app-toolbar {
   background-color: var(--toolbar-bg) !important;
@@ -18,11 +24,17 @@
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
 }
 
+.mobile-sidenav .mat-mdc-list-item,
+.mobile-sidenav .mat-mdc-list-item .mdc-list-item__primary-text,
+.mobile-sidenav .mat-mdc-list-item .mat-icon {
+  color: var(--sidenav-text) !important;
+}
+
 .toolbar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--toolbar-text);
+  color: var(--toolbar-text) !important;
   text-decoration: none;
   font-family: var(--font-heading);
   font-size: 1.2rem;
@@ -59,7 +71,7 @@
 }
 
 .desktop-nav a {
-  color: var(--toolbar-text-muted) !important;
+  color: var(--toolbar-text) !important;
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -95,7 +107,7 @@
 
 /* ----- Desktop Dropdown Navigation ----- */
 .nav-dropdown-trigger {
-  color: var(--toolbar-text-muted) !important;
+  color: var(--toolbar-text) !important;
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: 0.02em;

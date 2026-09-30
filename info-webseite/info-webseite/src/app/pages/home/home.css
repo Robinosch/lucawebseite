@@ -245,7 +245,7 @@
   border-radius: var(--border-radius-lg);
   background:
     radial-gradient(circle at 50% 0%, rgba(165, 214, 167, .4), transparent 55%),
-    var(--surface-soft, #f4f8f2);
+    var(--color-surface-soft);
 }
 
 .pedigree-node {

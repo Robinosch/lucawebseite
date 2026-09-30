@@ -7,7 +7,7 @@
 
 /* =====================================================
    Custom Theme für „Highlander vom Weetfeld"
-   Naturtöne: Grün als Primärfarbe, Braun als Tertiär
+   Harmonische Naturpalette: Grün als Primärfarbe, warmer Erdton als Akzent
    Light + Dark Mode Unterstützung
    ===================================================== */
 
@@ -19,13 +19,23 @@ html {
     (
       color: (
         primary: mat.$green-palette,
-        tertiary: mat.$orange-palette,
+        tertiary: mat.$green-palette,
         theme-type: light,
       ),
       typography: Roboto,
       density: 0,
     )
   );
+
+  --mat-sys-primary: #356b3d;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #dcebdc;
+  --mat-sys-on-primary-container: #214b2b;
+  --mat-sys-tertiary: #765746;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-on-surface: #243027;
+  --mat-sys-outline: #d8e0d7;
 }
 
 // Dark Theme – überschreibt Material-Variablen wenn data-theme="dark" gesetzt
@@ -34,13 +44,23 @@ html[data-theme="dark"] {
     (
       color: (
         primary: mat.$green-palette,
-        tertiary: mat.$orange-palette,
+        tertiary: mat.$green-palette,
         theme-type: dark,
       ),
       typography: Roboto,
       density: 0,
     )
   );
+
+  --mat-sys-primary: #8fca94;
+  --mat-sys-on-primary: #15301c;
+  --mat-sys-primary-container: #294532;
+  --mat-sys-on-primary-container: #edf4ed;
+  --mat-sys-tertiary: #c79b78;
+  --mat-sys-on-tertiary: #2c1b12;
+  --mat-sys-surface: #121a15;
+  --mat-sys-on-surface: #edf4ed;
+  --mat-sys-outline: #3b4d40;
 }
 
 body {

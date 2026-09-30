@@ -143,13 +143,13 @@
 }
 
 .legend-dot-highlight {
-  background: #e7f4ea;
-  border: 2px solid #2e7d32;
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-primary);
 }
 
 .legend-dot-external {
-  background: #f5f5f5;
-  border: 2px solid #a9a9a9;
+  background: var(--surface-card);
+  border: 2px solid var(--surface-card-border);
 }
 
 .tree-card {
@@ -196,7 +196,7 @@
   border: 1px solid var(--surface-card-border);
   background:
     radial-gradient(circle at 20% 0%, rgba(220, 240, 224, .5), transparent 34%),
-    linear-gradient(180deg, #fcfffb 0%, #f6f7f8 100%);
+    linear-gradient(180deg, var(--color-surface-soft) 0%, var(--color-surface-muted) 100%);
 }
 
 .details-card {
@@ -320,7 +320,7 @@
 :host ::ng-deep .node-relation {
   font-size: 11px;
   font-weight: 500;
-  fill: #2e7d32;
+  fill: var(--color-primary);
 }
 
 :host ::ng-deep .node-info {
@@ -438,4 +438,3 @@
     flex-direction: column;
   }
 }
-
