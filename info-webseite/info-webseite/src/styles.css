@@ -231,10 +231,18 @@ img {
   .page-hero {
     padding: 58px 16px 42px;
   }
-  color: var(--color-text-light);
-  line-height: 1.7;
+}
+/* --- Scroll Reveal Animation --- */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
 a {
   color: var(--color-primary);
   text-decoration: none;

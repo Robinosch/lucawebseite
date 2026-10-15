@@ -1,33 +1,33 @@
 <!-- ===== FLEISCH – Übersichtsseite (Landing-Page) ===== -->
 
-<!-- Hero-Bereich -->
 <section class="page-hero section-cream">
   <div class="container text-center">
-    <img class="meat-hero-img"
-         src="images/fleisch/fleischbild.jpg"
-         alt="Vakuumverpacktes Highland-Cattle-Fleisch, professionell etikettiert"
-         loading="eager" />
+    <span class="eyebrow">Direktvermarktung ab Hof</span>
     <h1>Fleisch & Direktvermarktung</h1>
     <p class="page-subtitle">
       Hochwertiges Highland-Cattle-Fleisch aus eigener Bio-Zucht –
       direkt vom Erzeuger an Sie. Der Betrieb „Highlander vom Weetfeld" vermarktet
-      das Fleisch seiner Hochlandrinder direkt ab Hof. Die Direktvermarktung
-      ermöglicht es, höchste Qualitätsstandards einzuhalten und eine lückenlose
-      Herkunftssicherung zu gewährleisten.
+      das Fleisch seiner Hochlandrinder direkt ab Hof in höchster Bio-Qualität.
     </p>
   </div>
 </section>
 
 <!-- 3 Kacheln -->
 <section class="section section-white">
-  <div class="container">
+  <div class="container" appScrollReveal>
     <div class="meat-cards-grid">
       <!-- Fleischqualität -->
-      <mat-card class="meat-card" appearance="outlined">
-        <img class="card-img"
-             src="images/fleisch/fleischbild.jpg"
-             alt="Highland-Cattle-Fleisch – feine Marmorierung"
-             loading="lazy" />
+      <mat-card class="meat-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="card-img-wrap">
+          <img class="card-img real-card-img"
+               src="images/fleisch/fleischbild.jpg"
+               alt="Highland-Cattle-Fleisch – feine Marmorierung"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="card-icon">restaurant</mat-icon>
           <mat-card-title>Fleischqualität</mat-card-title>
@@ -48,11 +48,17 @@
       </mat-card>
 
       <!-- Verarbeitung -->
-      <mat-card class="meat-card" appearance="outlined">
-        <img class="card-img"
-             src="images/fleisch/fleischbild.jpg"
-             alt="Vakuumverpackte Fleischpakete"
-             loading="lazy" />
+      <mat-card class="meat-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="card-img-wrap">
+          <img class="card-img real-card-img"
+               src="images/fleisch/fleischbild.jpg"
+               alt="Vakuumverpackte Fleischpakete"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="card-icon">inventory_2</mat-icon>
           <mat-card-title>Verarbeitung</mat-card-title>
@@ -72,11 +78,17 @@
       </mat-card>
 
       <!-- Interesse / Anfrage -->
-      <mat-card class="meat-card" appearance="outlined">
-        <img class="card-img"
-             src="images/fleisch/fleischbild.jpg"
-             alt="Highland-Cattle-Fleisch – bestellen"
-             loading="lazy" />
+      <mat-card class="meat-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="card-img-wrap">
+          <img class="card-img real-card-img"
+               src="images/fleisch/fleischbild.jpg"
+               alt="Highland-Cattle-Fleisch – bestellen"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="card-icon">shopping_cart</mat-icon>
           <mat-card-title>Interesse?</mat-card-title>
@@ -97,4 +109,3 @@
     </div>
   </div>
 </section>
-

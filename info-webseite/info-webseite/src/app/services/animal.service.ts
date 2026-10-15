@@ -4,34 +4,25 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { Animal, AnimalCategory, AnimalCategoryInfo, AnimalImage, AnimalRaw } from '../models/animal.model';
 
-/**
- * AnimalService – Statischer Datendienst für alle Tierdaten der Zucht „Highlander vom Weetfeld".
- *
- * Bildpfade verweisen auf /images/... (public-Verzeichnis).
- * Bildgrößen-Konvention:
- * - picture-200 → Thumbnail / klein (~200px)
- * - picture-1600 → Mittel (~1600px)
- * - picture-2600 → Groß / Hero (~2600px)
- */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AnimalService {
-   private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-   private readonly dataPaths = {
-     categories: '/data/animals/categories.json',
-     stammkuehe: '/data/animals/stammkuehe.json',
-     mutterkuehe: '/data/animals/mutterkuehe.json',
-     zuchtbullen: '/data/animals/zuchtbullen.json',
-     kaelber: '/data/animals/kaelber.json',
-     faersen: '/data/animals/faersen.json',
-     jungbullen: '/data/animals/jungbullen.json',
-     imageIndex: '/data/animals/image-index.json'
-   };
+  private readonly dataPaths = {
+    categories: '/data/animals/categories.json',
+    stammkuehe: '/data/animals/stammkuehe.json',
+    mutterkuehe: '/data/animals/mutterkuehe.json',
+    zuchtbullen: '/data/animals/zuchtbullen.json',
+    kaelber: '/data/animals/kaelber.json',
+    faersen: '/data/animals/faersen.json',
+    jungbullen: '/data/animals/jungbullen.json',
+    imageIndex: '/data/animals/image-index.json'
+  };
 
-   private readonly fallbackImageIndex: Record<string, string[]> = {};
+  private readonly fallbackImageIndex: Record<string, string[]> = {};
 
-   private readonly externalData = toSignal(
-     forkJoin({
+  private readonly externalData = toSignal(
+    forkJoin({
       categories: this.http.get<AnimalCategoryInfo[]>(this.dataPaths.categories),
       stammkuehe: this.http.get<AnimalRaw[]>(this.dataPaths.stammkuehe),
       mutterkuehe: this.http.get<AnimalRaw[]>(this.dataPaths.mutterkuehe),
@@ -40,43 +31,47 @@ export class AnimalService {
       faersen: this.http.get<AnimalRaw[]>(this.dataPaths.faersen),
       jungbullen: this.http.get<AnimalRaw[]>(this.dataPaths.jungbullen),
       imageIndex: this.http.get<Record<string, string[]>>(this.dataPaths.imageIndex)
-     }).pipe(
+    }).pipe(
       map(({ categories, stammkuehe, mutterkuehe, zuchtbullen, kaelber, faersen, jungbullen, imageIndex }) => ({
         categories,
         imageIndex,
         animals: [...stammkuehe, ...mutterkuehe, ...zuchtbullen, ...kaelber, ...faersen, ...jungbullen]
       })),
-       catchError(() => of(null))
-     ),
-     { initialValue: null }
-   );
+      catchError(() => of(null))
+    ),
+    { initialValue: null }
+  );
 
-   private readonly data = computed(() => {
-     const external = this.externalData();
+  private readonly data = computed(() => {
+    const external = this.externalData();
     const imageIndex = external?.imageIndex ?? this.fallbackImageIndex;
     const rawAnimals = external?.animals ?? [];
-     return {
+    return {
       categories: external?.categories ?? [],
       animals: rawAnimals.map(animal => this.hydrateAnimal(animal, imageIndex))
-     };
-   });
+    };
+  });
 
   readonly categories = computed(() => this.data().categories);
-
-  // ===== Öffentliche Methoden =====
+  readonly allAnimals = computed(() => this.data().animals);
 
   getAnimalsByCategory(category: AnimalCategory): Animal[] {
     return this.data().animals.filter(animal => animal.category === category);
   }
 
   getAnimalById(category: AnimalCategory, id: string): Animal | undefined {
-    return this.getAnimalsByCategory(category).find(a => a.id === id);
+    const target = id.toLowerCase();
+    return this.getAnimalsByCategory(category).find(a => a.id.toLowerCase() === target);
   }
 
   getCategoryLabel(category: AnimalCategory): string {
     const fallbackLabels: Record<AnimalCategory, string> = {
-      stammkuehe: 'Stammkühe', mutterkuehe: 'Mutterkühe', zuchtbullen: 'Zuchtbullen',
-      kaelber: 'Kälber', faersen: 'Färsen', jungbullen: 'Jungbullen'
+      stammkuehe: 'Stammkühe',
+      mutterkuehe: 'Mutterkühe',
+      zuchtbullen: 'Zuchtbullen',
+      kaelber: 'Kälber',
+      faersen: 'Färsen',
+      jungbullen: 'Jungbullen'
     };
     return this.data().categories.find(c => c.slug === category)?.label || fallbackLabels[category] || category;
   }
@@ -95,40 +90,81 @@ export class AnimalService {
 
   getCategoryRoute(category: AnimalCategory): string {
     const routes: Record<AnimalCategory, string> = {
-      stammkuehe: '/unsere-highlander/stammkuehe', mutterkuehe: '/unsere-highlander/mutterkuehe',
-      zuchtbullen: '/unsere-highlander/zuchtbullen', kaelber: '/unsere-highlander/kaelber',
-      faersen: '/unsere-highlander/jungtiere/faersen', jungbullen: '/unsere-highlander/jungtiere/jungbullen'
+      stammkuehe: '/unsere-highlander/stammkuehe',
+      mutterkuehe: '/unsere-highlander/mutterkuehe',
+      zuchtbullen: '/unsere-highlander/zuchtbullen',
+      kaelber: '/unsere-highlander/kaelber',
+      faersen: '/unsere-highlander/jungtiere/faersen',
+      jungbullen: '/unsere-highlander/jungtiere/jungbullen'
     };
     return routes[category] || '/unsere-highlander';
   }
 
   getAdjacentAnimals(category: AnimalCategory, id: string): { prev?: Animal; next?: Animal } {
-      const animals = this.getAnimalsByCategory(category);
-      const index = animals.findIndex(a => a.id === id);
-      return {
-        prev: index > 0 ? animals[index - 1] : undefined,
-        next: index < animals.length - 1 ? animals[index + 1] : undefined
-      };
-    }
+    const animals = this.getAnimalsByCategory(category);
+    const index = animals.findIndex(a => a.id.toLowerCase() === id.toLowerCase());
+    return {
+      prev: index > 0 ? animals[index - 1] : undefined,
+      next: index >= 0 && index < animals.length - 1 ? animals[index + 1] : undefined
+    };
+  }
 
   private hydrateAnimal(animal: AnimalRaw, imageIndex: Record<string, string[]>): Animal {
-    const imagesDir = this.normalizeDir(animal.images);
-    const offspringDir = this.normalizeDir(animal.offspringImages);
+    const imagesDir = this.resolveIndexKey(animal.images, imageIndex);
+    const offspringDir = this.resolveIndexKey(animal.offspringImages, imageIndex);
 
     const { images, lineageImageSrc } = this.buildAnimalImages(imagesDir, imageIndex);
     const offspringImages = this.buildImageList(offspringDir, imageIndex);
 
     return {
       ...animal,
+      name: this.fixEncoding(animal.name) ?? animal.name,
+      origin: this.fixEncoding(animal.origin),
+      status: this.fixEncoding(animal.status),
+      description: this.fixEncoding(animal.description) ?? '',
+      offspring: this.fixEncoding(animal.offspring),
       images,
       lineageImageSrc,
       offspringImages: offspringImages.length > 0 ? offspringImages : undefined
-    } as Animal;
+    };
   }
 
-  private normalizeDir(dir?: string): string | null {
+  /**
+   * Normalisiert Windows-Backslashes (\\ -> /) und gleicht Groß-/Kleinschreibung
+   * mit den Schlüsseln in image-index.json ab.
+   */
+  private resolveIndexKey(dir: string | undefined, imageIndex: Record<string, string[]>): string | null {
     if (!dir) return null;
-    return dir.startsWith('/') ? dir : `/${dir}`;
+    const normalized = dir.replace(/\\/g, '/').replace(/\/+/g, '/');
+    const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+
+    if (imageIndex[withLeadingSlash]) {
+      return withLeadingSlash;
+    }
+
+    const lowerTarget = withLeadingSlash.toLowerCase();
+    const matchedKey = Object.keys(imageIndex).find(k => k.toLowerCase() === lowerTarget);
+    return matchedKey ?? withLeadingSlash;
+  }
+
+  /**
+   * Repariert doppelt UTF-8-kodierte Umlaute und Sonderzeichen aus den JSON-Dateien.
+   */
+  private fixEncoding(value?: string): string | undefined {
+    if (!value) return value;
+    return value
+      .replace(/Ã¤/g, 'ä')
+      .replace(/Ã¶/g, 'ö')
+      .replace(/Ã¼/g, 'ü')
+      .replace(/Ã„/g, 'Ä')
+      .replace(/Ã–/g, 'Ö')
+      .replace(/Ãœ/g, 'Ü')
+      .replace(/ÃŸ/g, 'ß')
+      .replace(/â€“/g, '–')
+      .replace(/â€”/g, '—')
+      .replace(/â€ž/g, '„')
+      .replace(/â€œ/g, '“')
+      .replace(/â€™/g, '’');
   }
 
   private buildAnimalImages(imagesDir: string | null, imageIndex: Record<string, string[]>): {
@@ -195,4 +231,4 @@ export class AnimalService {
   private isLineageTable(file: string): boolean {
     return file.toLowerCase().includes('abstammungstabelle');
   }
- }
+}

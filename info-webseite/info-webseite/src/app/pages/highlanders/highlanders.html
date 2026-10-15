@@ -1,8 +1,8 @@
 <!-- ===== UNSERE HIGHLANDER ===== -->
 
-<!-- Seiten-Header -->
 <section class="page-hero section-cream">
   <div class="container text-center">
+    <span class="eyebrow">Rasse & Zucht</span>
     <h1>Unsere Highlander</h1>
     <p class="page-subtitle">
       Typvolle, ausdrucksstarke Highland Cattle mit freundlichem Wesen und beeindruckender Ausstrahlung.
@@ -12,7 +12,7 @@
 
 <!-- Interaktiver Stammbaum (Verweis) -->
 <section class="section section-cream pedigree-teaser">
-  <div class="container">
+  <div class="container" appScrollReveal>
     <mat-card class="pedigree-teaser-card" appearance="outlined">
       <mat-card-header>
         <mat-icon mat-card-avatar class="category-icon">account_tree</mat-icon>
@@ -21,13 +21,13 @@
       <mat-card-content>
         <p>
           Verfolgen Sie die Abstammung unserer Tiere mit einer interaktiven Ansicht inkl.
-          Zoom, Auswahl und Darstellung von Vater- und Mutterlinie.
+          Zoom, Live-Suche und Darstellung von Vater- und Mutterlinie.
         </p>
       </mat-card-content>
       <mat-card-actions>
         <a mat-raised-button routerLink="/stammbaum" class="category-button">
           <mat-icon>open_in_new</mat-icon>
-          Stammbaum oeffnen
+          Stammbaum öffnen
         </a>
       </mat-card-actions>
     </mat-card>
@@ -36,16 +36,17 @@
 
 <!-- Zuchtziele -->
 <section class="section section-white">
-  <div class="container">
-    <h2>Unsere Zuchtziele</h2>
-    <p>
-      Bei der Zucht unserer Highland Cattle legen wir besonderen Wert auf die Kombination aus
-      einem ansprechenden Erscheinungsbild und einem guten, ruhigen Charakter. Unsere Zuchtziele
-      umfassen folgende Eigenschaften:
-    </p>
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Unser Zuchtideal</span>
+      <h2>Unsere Zuchtziele</h2>
+      <p>Bei der Zucht unserer Highland Cattle legen wir besonderen Wert auf Charakter, Gesundheit und Rassetyp.</p>
+    </div>
 
     <div class="goals-grid">
-      <mat-card appearance="outlined" class="goal-card">
+      <mat-card appearance="outlined" class="goal-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="goal-icon">favorite</mat-icon>
           <mat-card-title>Freundliches Wesen</mat-card-title>
@@ -58,7 +59,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="goal-card">
+      <mat-card appearance="outlined" class="goal-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="goal-icon">balance</mat-icon>
           <mat-card-title>Ausgeglichener Charakter</mat-card-title>
@@ -71,7 +74,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="goal-card">
+      <mat-card appearance="outlined" class="goal-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="goal-icon">fitness_center</mat-icon>
           <mat-card-title>Korrekte Körperkonstitution</mat-card-title>
@@ -84,7 +89,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="goal-card">
+      <mat-card appearance="outlined" class="goal-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="goal-icon">auto_awesome</mat-icon>
           <mat-card-title>Beeindruckende Ausstrahlung</mat-card-title>
@@ -102,57 +109,62 @@
 
 <!-- Abstammung & Gesundheit -->
 <section class="section section-cream">
-  <div class="container">
-    <div class="quality-grid">
-      <div class="quality-text">
-        <h2>Abstammung & Gesundheit</h2>
-        <p>
-          Alle unsere Tiere verfügen über nachweisbare, hochwertige Abstammungen.
-          Ein vollständiger Gesundheitsstatus liegt für jedes Tier vor. Damit gewährleisten
-          wir Transparenz und Qualität in unserer Zucht.
-        </p>
-        <mat-chip-set>
-          <mat-chip highlighted>
-            <mat-icon matChipAvatar>verified</mat-icon>
-            Nachweisbare Abstammung
-          </mat-chip>
-          <mat-chip highlighted>
-            <mat-icon matChipAvatar>health_and_safety</mat-icon>
-            Vollständiger Gesundheitsstatus
-          </mat-chip>
-          <mat-chip highlighted>
-            <mat-icon matChipAvatar>eco</mat-icon>
-            Bio-zertifiziert (DE-ÖKO-005)
-          </mat-chip>
-        </mat-chip-set>
-      </div>
-      <div class="quality-image">
-        <img class="quality-img"
-             src="images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg"
-             alt="Nahaufnahme einer Highland-Cattle-Stammkuh – Anthea Fox of Blocken"
-             loading="lazy" />
-      </div>
+  <div class="container quality-grid" appScrollReveal>
+    <div class="quality-text">
+      <h2>Abstammung & Gesundheit</h2>
+      <p>
+        Alle unsere Tiere verfügen über nachweisbare, hochwertige Abstammungen.
+        Ein vollständiger Gesundheitsstatus liegt für jedes Tier vor. Damit gewährleisten
+        wir Transparenz und Qualität in unserer Zucht.
+      </p>
+      <mat-chip-set>
+        <mat-chip highlighted>
+          <mat-icon matChipAvatar>verified</mat-icon>
+          Nachweisbare Abstammung
+        </mat-chip>
+        <mat-chip highlighted>
+          <mat-icon matChipAvatar>health_and_safety</mat-icon>
+          Vollständiger Gesundheitsstatus
+        </mat-chip>
+        <mat-chip highlighted>
+          <mat-icon matChipAvatar>eco</mat-icon>
+          Bio-zertifiziert (DE-ÖKO-005)
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+    <div class="quality-image">
+      <img class="quality-img"
+           src="images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg"
+           alt="Nahaufnahme einer Highland-Cattle-Stammkuh – Anthea Fox of Blocken"
+           loading="lazy" />
     </div>
   </div>
 </section>
 
-<!-- Unsere Tiere (Kategorie-Kacheln mit Links zu Unterseiten) -->
+<!-- Unsere Tiere (Kategorie-Kacheln) -->
 <section class="section section-white">
-  <div class="container">
-    <h2 class="text-center">Unsere Tiere im Überblick</h2>
-    <p class="text-center page-subtitle">
-      Lernen Sie unsere Highlander kennen – von den Stammkühen über die
-      Zuchtbullen und Mutterkühe bis zu den Kälbern und Jungtieren.
-    </p>
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Herdenübersicht</span>
+      <h2>Unsere Tiere im Überblick</h2>
+      <p>Lernen Sie unsere Highlander kennen – von Stammkühen und Zuchtbullen bis zu Kälbern und Jungtieren.</p>
+    </div>
 
     <div class="category-grid">
-      @for (cat of categories(); track cat.slug) {
-        <mat-card class="category-card" appearance="outlined">
+      @for (cat of categories(); track cat.slug; let i = $index) {
+        <mat-card class="category-card tilt-card stagger-card"
+                  appearance="outlined"
+                  [style.animation-delay.ms]="i * 60"
+                  (mousemove)="onCardMouseMove($event)"
+                  (mouseleave)="onCardMouseLeave($event)">
+          <div class="card-spotlight"></div>
           @if (cat.imageSrc) {
-            <img class="category-card-img"
-                 [src]="cat.imageSrc"
-                 [alt]="cat.label"
-                 loading="lazy" />
+            <div class="category-img-wrap">
+              <img class="category-card-img"
+                   [src]="cat.imageSrc"
+                   [alt]="cat.label"
+                   loading="lazy" />
+            </div>
           } @else {
             <div class="image-placeholder card-img">
               {{ cat.imagePlaceholder }}
@@ -175,4 +187,3 @@
     </div>
   </div>
 </section>
-

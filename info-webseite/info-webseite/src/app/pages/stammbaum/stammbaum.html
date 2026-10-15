@@ -1,8 +1,10 @@
 <section class="page-hero section-cream">
   <div class="container text-center">
-    <h1>Stammbaum unserer Highlander</h1>
+    <span class="eyebrow">Herdbuch & Blutlinien</span>
+    <h1>Interaktiver Zucht-Stammbaum</h1>
     <p class="page-subtitle">
-      Entdecken Sie die Abstammung unserer Highlander mit Bildvorschau, Zoom und direkter Navigation durch Vater- und Mutterlinie.
+      Erkunden Sie Vorfahren, Zuchtbullen, Stammkühe und Nachkommen unserer Highlander in Echtzeit –
+      inklusive Blutlinien-Highlighting, Bildvorschau und direkter Navigation durch die Generationen.
     </p>
   </div>
 </section>
@@ -10,115 +12,271 @@
 <section class="section section-white">
   <div class="container">
     <mat-card appearance="outlined" class="controls-card">
+      <!-- Obere Steuerleiste -->
       <div class="controls-grid">
+        <!-- Tier-Auswahl -->
         <mat-form-field appearance="outline" class="control-field">
-          <mat-label>Tier auswaehlen</mat-label>
+          <mat-label>Fokus-Tier im Zentrum</mat-label>
           <mat-select [ngModel]="selectedId()" (ngModelChange)="onAnimalChange($event)">
-            @for (animal of visibleAnimals(); track animal.id) {
-              <mat-option [value]="animal.id">{{ animal.id }}</mat-option>
-            }
+            <mat-optgroup label="Highlander vom Weetfeld (Bestand)">
+              @for (animal of highlightedAnimals(); track animal.id) {
+                <mat-option [value]="animal.id">
+                  {{ animal.id }}
+                  @if (getOffspringFor(animal.id).length > 0) {
+                    ({{ getOffspringFor(animal.id).length }} Nachk.)
+                  }
+                </mat-option>
+              }
+            </mat-optgroup>
+            <mat-optgroup label="Externe Vorfahren & Zuchtlinien">
+              @for (animal of externalAnimals(); track animal.id) {
+                <mat-option [value]="animal.id">{{ animal.id }}</mat-option>
+              }
+            </mat-optgroup>
           </mat-select>
         </mat-form-field>
 
+        <!-- Ansichtsmodus -->
+        <mat-form-field appearance="outline" class="control-field">
+          <mat-label>Ansichts-Modus</mat-label>
+          <mat-select [ngModel]="viewMode()" (ngModelChange)="onViewModeChange($event)">
+            <mat-option value="both">Komplett (Vorfahren & Nachkommen)</mat-option>
+            <mat-option value="ancestors">Ahnentafel (Vater- & Mutterlinie)</mat-option>
+            <mat-option value="descendants">Zuchtlinie (Alle Nachkommen)</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-
+        <!-- Generationstiefe -->
         <mat-form-field appearance="outline" class="control-field depth-field">
-          <mat-label>Maximale Tiefe</mat-label>
+          <mat-label>Tiefe</mat-label>
           <mat-select [ngModel]="maxDepth()" (ngModelChange)="onDepthChange($event)">
             @for (depth of [2, 3, 4, 5, 6]; track depth) {
               <mat-option [value]="depth">{{ depth }} Generationen</mat-option>
             }
           </mat-select>
         </mat-form-field>
-        <label class="search-field">
-          <mat-label class="search-label">Tier suchen</mat-label>
-          <span class="search-input-wrapper">
 
+        <!-- Volltextsuche über alle Tiere -->
+        <div class="search-field">
+          <span class="search-label">Tier im Stammbaum suchen</span>
+          <div class="search-input-wrapper">
             <mat-icon>search</mat-icon>
-            <input #searchInput type="search" [value]="searchTerm()" (input)="onSearchChange(searchInput.value)"
-                   placeholder="Name oder ID eingeben" aria-label="Tier suchen">
+            <input
+              #searchInput
+              type="search"
+              [value]="searchTerm()"
+              (input)="onSearchChange(searchInput.value)"
+              placeholder="z. B. Max, Gilka, Narnia..."
+              aria-label="Tier im Stammbaum suchen"
+            />
             @if (searchTerm()) {
               <button type="button" class="clear-search" (click)="onSearchChange('')" aria-label="Suche leeren">
                 <mat-icon>close</mat-icon>
               </button>
             }
-          </span>
-        </label>
+          </div>
+
+          @if (searchMatches().length > 0) {
+            <div class="search-results-dropdown">
+              @for (match of searchMatches(); track match.id) {
+                <button type="button" class="search-result-item" (click)="selectSearchResult(match.id)">
+                  <span class="search-result-name">{{ match.id }}</span>
+                  <span class="search-result-badge" [class.is-herd]="match.highlight">
+                    {{ match.highlight ? 'Weetfeld' : 'Ahnenlinie' }}
+                  </span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Schnellwahl & Aktionsleiste -->
+      <div class="quick-bar">
+        <div class="quick-Founders">
+          <span class="quick-label">Stammlinien-Schnellwahl:</span>
+          @for (founder of keyFounders; track founder.id) {
+            <button
+              type="button"
+              class="founder-chip"
+              [class.active]="selectedId() === founder.id"
+              (click)="selectFounder(founder.id)"
+            >
+              <mat-icon>{{ founder.icon }}</mat-icon>
+              {{ founder.label }}
+            </button>
+          }
+        </div>
+
         <div class="zoom-controls">
-          <button mat-stroked-button type="button" (click)="zoomOut()">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="toggleOrientation()"
+            [title]="'Layout drehen'"
+          >
+            <mat-icon>{{ isHorizontal() ? 'swap_vert' : 'swap_horiz' }}</mat-icon>
+            {{ isHorizontal() ? 'Vertikal' : 'Horizontal' }}
+          </button>
+          <button mat-stroked-button type="button" (click)="zoomOut()" aria-label="Verkleinern">
             <mat-icon>zoom_out</mat-icon>
-            Verkleinern
           </button>
-          <button mat-stroked-button type="button" (click)="zoomIn()">
+          <button mat-stroked-button type="button" (click)="zoomIn()" aria-label="Vergrößern">
             <mat-icon>zoom_in</mat-icon>
-            Vergroessern
           </button>
-          <button mat-raised-button type="button" color="primary" (click)="resetView()">
-            <mat-icon>center_focus_strong</mat-icon>
-            Zentrieren
+          <button mat-raised-button type="button" color="primary" (click)="zoomToFit()">
+            <mat-icon>fit_screen</mat-icon>
+            Einpassen
           </button>
         </div>
       </div>
 
+      <!-- Farb-Legende -->
       <div class="legend-row">
         <span class="legend-item">
-          <span class="legend-dot legend-dot-highlight"></span>
-          Tiere aus dem Bestand / vom Weetfeld
+          <span class="legend-dot legend-dot-root"></span>
+          Ausgewähltes Fokus-Tier
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-sire"></span>
+          Vaterlinie (♂ Bulle)
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-dam"></span>
+          Mutterlinie (♀ Kuh)
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-offspring"></span>
+          Nachkommen (Eigene Zucht)
         </span>
         <span class="legend-item">
           <span class="legend-dot legend-dot-external"></span>
-          Externe Linien
+          Externe Vorfahren
         </span>
       </div>
     </mat-card>
 
     @if (loading()) {
-      <mat-card class="status-card">Daten werden geladen ...</mat-card>
+      <mat-card class="status-card">Stammbaum-Daten werden geladen ...</mat-card>
     }
 
     @if (error()) {
       <mat-card class="status-card status-card-error">{{ error() }}</mat-card>
     }
 
-    <div class="tree-layout">
+    <div class="tree-layout" [class.has-details]="!!detailEntry()">
+      <!-- Interaktives SVG-Canvas -->
       <mat-card appearance="outlined" class="tree-card">
         <div class="tree-toolbar">
-          <span class="tree-hint"><mat-icon>touch_app</mat-icon> Knoten anklicken, um Details zu sehen</span>
-          <span class="tree-hint"><mat-icon>open_with</mat-icon> Ziehen und zoomen zum Erkunden</span>
+          <span class="tree-hint">
+            <mat-icon>mouse</mat-icon>
+            <strong>Hover:</strong> Blutlinie hervorheben &nbsp;|&nbsp;
+            <strong>Klick:</strong> Steckbrief &nbsp;|&nbsp;
+            <strong>Doppelklick:</strong> Tier ins Zentrum setzen
+          </span>
+          <span class="tree-stats">
+            {{ visibleNodeCount() }} Knoten sichtbar
+          </span>
         </div>
         <div #treeContainer class="tree-container"></div>
       </mat-card>
 
+      <!-- Seitlicher Steckbrief-Drawer -->
       @if (detailEntry(); as detail) {
         <mat-card appearance="outlined" class="details-card">
-          <button type="button" class="close-details" (click)="closeDetails()" aria-label="Details schliessen">
+          <button type="button" class="close-details" (click)="closeDetails()" aria-label="Details schließen">
             <mat-icon>close</mat-icon>
           </button>
+
           <div class="details-image">
             @if (getAnimalImageForName(detail.id); as imageSrc) {
-              <img [src]="imageSrc" [alt]="'Bild von ' + detail.id">
+              <img [src]="imageSrc" [alt]="'Bild von ' + detail.id" />
             } @else {
-              <span>{{ detail.id.slice(0, 1).toUpperCase() }}</span>
-              <small>Kein Bild vorhanden</small>
+              <div class="details-avatar-fallback">
+                <span>{{ getInitials(detail.id) }}</span>
+                <small>{{ detail.highlight ? 'Highlander vom Weetfeld' : 'Historische Ahnenlinie' }}</small>
+              </div>
             }
           </div>
+
           <div class="details-content">
-            <span class="details-eyebrow">{{ detail.highlight ? 'Tier aus dem Bestand' : 'Abstammungsdaten' }}</span>
+            <div class="details-badges">
+              <span class="details-eyebrow" [class.is-external]="!detail.highlight">
+                {{ detailAnimalMeta()?.categoryLabel || (detail.highlight ? 'Bestand vom Weetfeld' : 'Externe Ahnenlinie') }}
+              </span>
+              @if (detailAnimalMeta()?.birthDate && detailAnimalMeta()?.birthDate !== '-') {
+                <span class="details-birth-chip">geb. {{ detailAnimalMeta()?.birthDate }}</span>
+              }
+            </div>
+
             <h2>{{ detail.id }}</h2>
-            @if (detail.info) {
-              <p>{{ detail.info }}</p>
-            } @else {
-              <p class="muted-text">Für dieses Tier sind keine weiteren Informationen hinterlegt.</p>
+
+            @if (detailAnimalMeta()?.status) {
+              <p class="details-status">{{ detailAnimalMeta()?.status }}</p>
             }
+
+            @if (detail.info && detail.info !== '-') {
+              <div class="details-grading-box">
+                <mat-icon>verified</mat-icon>
+                <div>
+                  <strong>Bewertung & Farbschlag</strong>
+                  <span>{{ detail.info }}</span>
+                </div>
+              </div>
+            }
+
+            @if (detailAnimalMeta()?.description && detailAnimalMeta()?.description !== '-') {
+              <p class="details-description">{{ detailAnimalMeta()?.description }}</p>
+            }
+
+            <!-- Direkte Abstammung (Klickbar) -->
+            <div class="family-section">
+              <h4>Elterntiere</h4>
+              <div class="family-links">
+                @if (detail.sire) {
+                  <button type="button" class="family-chip sire-chip" (click)="showAsRoot(detail.sire)">
+                    <span class="chip-role">♂ Vater</span>
+                    <strong>{{ detail.sire }}</strong>
+                  </button>
+                }
+                @if (detail.dam) {
+                  <button type="button" class="family-chip dam-chip" (click)="showAsRoot(detail.dam)">
+                    <span class="chip-role">♀ Mutter</span>
+                    <strong>{{ detail.dam }}</strong>
+                  </button>
+                }
+                @if (!detail.sire && !detail.dam) {
+                  <span class="muted-text">Keine weiteren Vorfahren in der Datenbank verzeichnet.</span>
+                }
+              </div>
+            </div>
+
+            <!-- Direkte Nachkommen im Bestand (Klickbar) -->
+            @if (detailOffspring().length > 0) {
+              <div class="family-section">
+                <h4>Dokumentierte Nachkommen ({{ detailOffspring().length }})</h4>
+                <div class="offspring-chips">
+                  @for (child of detailOffspring(); track child.id) {
+                    <button type="button" class="offspring-chip" (click)="showAsRoot(child.id)">
+                      <mat-icon>subdirectory_arrow_right</mat-icon>
+                      {{ child.id }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
             <div class="details-actions">
-              <button mat-stroked-button type="button" (click)="showAsRoot(detail.id)">
-                <mat-icon>account_tree</mat-icon>
-                Als Zentrum anzeigen
-              </button>
+              @if (selectedId() !== detail.id) {
+                <button mat-stroked-button type="button" (click)="showAsRoot(detail.id)">
+                  <mat-icon>center_focus_strong</mat-icon>
+                  Stammbaum auf dieses Tier zentrieren
+                </button>
+              }
               @if (detail.path || getAnimalRouteForName(detail.id)) {
                 <button mat-raised-button color="primary" type="button" (click)="navigateToAnimal()">
                   <mat-icon>open_in_new</mat-icon>
-                  Tierprofil öffnen
+                  Vollständiges Tierprofil öffnen
                 </button>
               }
             </div>

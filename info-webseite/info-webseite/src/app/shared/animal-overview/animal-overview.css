@@ -10,7 +10,6 @@
   font-size: 1.1rem;
 }
 
-/* ----- Zurück-Navigation ----- */
 .back-nav {
   padding: 16px 24px 0;
 }
@@ -27,22 +26,43 @@
   gap: 24px;
 }
 
+/* ----- Staggered Entrance Animation ----- */
+.stagger-card {
+  animation: card-rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes card-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ----- Animal Card ----- */
 .animal-card {
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   border-radius: var(--border-radius-lg) !important;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
 
 .animal-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
 }
 
-/* Bild-Platzhalter in der Card */
+.card-img-container {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-cream-dark);
+}
+
 .img-placeholder,
 .card-img-placeholder {
   background-color: var(--color-cream-dark);
@@ -55,19 +75,36 @@
   font-size: 0.85rem;
   text-align: center;
   padding: 24px;
-  min-height: 220px;
+  min-height: 240px;
 }
 
-/* Echte Bilder in Cards */
 .real-card-img {
   width: 100%;
   height: 240px;
   object-fit: cover;
-  border-bottom: 1px solid var(--color-cream-dark);
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animal-card:hover .real-card-img {
+  transform: scale(1.06);
+}
+
+.card-birth-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: rgba(20, 38, 24, 0.78);
+  backdrop-filter: blur(4px);
+  color: #fff !important;
+  font-size: 0.76rem;
+  font-weight: 600;
 }
 
 .animal-card mat-card-title {
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   line-height: 1.35;
 }
 
@@ -81,18 +118,27 @@
 }
 
 .animal-short-desc {
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.94rem;
+  line-height: 1.55;
   margin-top: 8px;
 }
 
-.animal-card mat-card-actions {
-  padding: 8px 16px 16px;
+.card-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 16px 16px !important;
 }
 
 .detail-button {
   background-color: var(--color-primary) !important;
   color: var(--btn-text-on-primary) !important;
+  flex: 1;
+}
+
+.pedigree-quick-btn {
+  border-color: var(--surface-card-border) !important;
+  color: var(--color-primary) !important;
 }
 
 /* ----- Leerer Zustand ----- */
@@ -114,7 +160,7 @@
   color: var(--btn-text-on-primary) !important;
 }
 
-/* ----- Filterleiste (nur Mutterkühe) ----- */
+/* ----- Filterleiste ----- */
 .overview-toolbar {
   display: flex;
   align-items: center;
@@ -135,7 +181,7 @@
 .animal-count {
   white-space: nowrap;
   color: var(--color-text-light);
-  font-size: .85rem;
+  font-size: 0.85rem;
 }
 
 .sort-select {
@@ -146,15 +192,27 @@
 
 .filter-toggle {
   flex: 0 0 auto;
-}
-
-.overview-toolbar .filter-toggle {
   margin-left: auto;
 }
 
-/*
- * Keep the toolbar compact while preserving comfortable touch targets.
- */
+:host-context([data-theme="dark"]) .overview-toolbar {
+  background: var(--surface-soft);
+}
+
+.inactive-section {
+  margin: 32px 0 16px;
+}
+
+.inactive-grid {
+  opacity: 0.88;
+}
+
+@media (max-width: 1024px) {
+  .animals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 760px) {
   .overview-toolbar {
     align-items: stretch;
@@ -166,91 +224,8 @@
     min-width: 0;
   }
 
-  .animal-count {
-    align-self: center;
-    margin-right: auto;
-  }
-
   .overview-toolbar .filter-toggle {
     margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .sort-select {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .filter-toggle {
-    width: 100%;
-  }
-
-  .filter-toggle mat-button-toggle {
-    flex: 1;
-  }
-}
-
-/* ----- Filterleiste (nur Mutterkühe) ----- */
-.overview-toolbar--legacy {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 0 0 16px;
-}
-
-:host-context([data-theme="dark"]) .overview-toolbar {
-  background: var(--surface-soft);
-}
-
-:host-context([data-theme="dark"]) .animal-search,
-:host-context([data-theme="dark"]) .sort-select {
-  --mdc-outlined-text-field-container-color: var(--surface-card);
-  --mdc-outlined-text-field-input-text-color: var(--color-text);
-  --mdc-outlined-text-field-label-text-color: var(--color-text-light);
-  --mdc-outlined-text-field-hover-label-text-color: var(--color-text);
-  --mdc-outlined-text-field-focus-label-text-color: var(--color-primary);
-  --mdc-outlined-text-field-outline-color: var(--surface-card-border);
-  --mdc-outlined-text-field-hover-outline-color: var(--color-primary);
-  --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
-  --mat-select-trigger-text-color: var(--color-text);
-  --mat-select-enabled-arrow-color: var(--color-text-light);
-}
-
-/* ----- Inaktive Mutterkühe ----- */
-.inactive-section {
-  margin: 32px 0 16px;
-}
-
-.inactive-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 16px 0 12px;
-  color: var(--color-accent-dark);
-}
-
-.inactive-heading mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.inactive-grid {
-  opacity: 0.85;
-}
-
-.inactive-card {
-  border-color: var(--color-cream-dark);
-}
-
-.inactive-card .detail-button {
-}
-
-/* ----- Responsive ----- */
-@media (max-width: 1024px) {
-  .animals-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -261,9 +236,5 @@
 
   .page-hero {
     padding: 40px 16px 32px;
-  }
-
-  .overview-toolbar {
-    justify-content: center;
   }
 }

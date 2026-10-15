@@ -148,3 +148,28 @@
     padding: 40px 16px 32px;
   }
 }
+.tilt-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease-out, box-shadow 0.28s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow: 0 18px 38px rgba(33, 75, 43, 0.18);
+}
+.card-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    360px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(143, 202, 148, 0.18),
+    transparent 60%
+  );
+}
+.tilt-card:hover .card-spotlight {
+  opacity: 1;
+}

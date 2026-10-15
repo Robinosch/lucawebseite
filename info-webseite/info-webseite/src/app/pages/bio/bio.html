@@ -1,8 +1,8 @@
 <!-- ===== BIO-BETRIEB & HALTUNG ===== -->
 
-<!-- Seiten-Header -->
 <section class="page-hero section-cream">
   <div class="container text-center">
+    <span class="eyebrow">Ökologische Landwirtschaft</span>
     <h1>Bio-Betrieb & Haltung</h1>
     <p class="page-subtitle">
       Zertifizierte Bio-Landwirtschaft mit artgerechter Haltung – für das Wohl unserer Tiere und die Qualität unserer Produkte.
@@ -12,8 +12,9 @@
 
 <!-- Öko-Zertifizierung -->
 <section class="section section-white">
-  <div class="container bio-intro-grid">
+  <div class="container bio-intro-grid" appScrollReveal>
     <div class="bio-text">
+      <span class="eyebrow">Geprüfte Qualität</span>
       <h2>Zertifizierter Bio-Betrieb</h2>
       <p>
         Unsere Zuchtstätte „Highlander vom Weetfeld" ist als <strong>Bio-Betrieb zertifiziert</strong>.
@@ -53,14 +54,17 @@
 
 <!-- Haltungsbedingungen -->
 <section class="section section-cream">
-  <div class="container">
-    <h2 class="text-center">Artgerechte Haltung</h2>
-    <p class="text-center page-subtitle">
-      Unsere Highland Cattle leben so natürlich wie möglich – das ist unser Anspruch.
-    </p>
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Artgerecht & Naturnah</span>
+      <h2>Unsere Haltungsprinzipien</h2>
+      <p>Unsere Highland Cattle leben das ganze Jahr über im Freien – so wie es ihrer Natur entspricht.</p>
+    </div>
 
     <div class="holding-grid">
-      <mat-card appearance="outlined" class="holding-card">
+      <mat-card appearance="outlined" class="holding-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="holding-icon">grass</mat-icon>
           <mat-card-title>Ganzjährige Weidehaltung</mat-card-title>
@@ -74,7 +78,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="holding-card">
+      <mat-card appearance="outlined" class="holding-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="holding-icon">spa</mat-icon>
           <mat-card-title>Natürliche Fütterung</mat-card-title>
@@ -88,7 +94,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="holding-card">
+      <mat-card appearance="outlined" class="holding-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="holding-icon">groups</mat-icon>
           <mat-card-title>Herdenleben</mat-card-title>
@@ -102,7 +110,9 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined" class="holding-card">
+      <mat-card appearance="outlined" class="holding-card tilt-card"
+                (mousemove)="onCardMouseMove($event)" (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="holding-icon">health_and_safety</mat-icon>
           <mat-card-title>Gesundheitsvorsorge</mat-card-title>
@@ -121,7 +131,7 @@
 
 <!-- Bilderbereich -->
 <section class="section section-white">
-  <div class="container">
+  <div class="container" appScrollReveal>
     <h2 class="text-center">Eindrücke vom Hof</h2>
     <div class="farm-gallery">
       <img class="farm-img large"
@@ -136,11 +146,6 @@
            src="images/mutterkühe/nikaja-vom-weetfeld/picture-2600.jpg"
            alt="Mutterkuh Nikaja vom Weetfeld"
            loading="lazy" />
-      <img class="farm-img"
-           src="images/stammkühe/niseag-fox-of-blocken/nachwuchs/picture-1600.jpg"
-           alt="Kalb von Stammkuh Niseag auf der grünen Wiese"
-           loading="lazy" />
     </div>
   </div>
 </section>
-

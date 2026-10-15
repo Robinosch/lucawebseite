@@ -1,56 +1,94 @@
 <!-- ===== STARTSEITE – Highlander vom Weetfeld ===== -->
 
-<!-- Hero-Bereich -->
+<!-- Hero-Bereich mit sofort sichtbaren Animationen -->
 <section class="hero-section">
-  <img class="hero-bg-img"
+  <img class="hero-bg-img no-zoom"
        src="images/startseite/beispiel-kuh-2k.JPG"
        alt="Highland-Cattle-Herde auf der Weide in Hamm-Weetfeld"
        loading="eager" />
+
+  <!-- Schwebende Licht-/Naturpartikel (sofort sichtbar) -->
+  <div class="hero-particles" aria-hidden="true">
+    <span class="particle p1"></span>
+    <span class="particle p2"></span>
+    <span class="particle p3"></span>
+    <span class="particle p4"></span>
+    <span class="particle p5"></span>
+    <span class="particle p6"></span>
+  </div>
+
   <div class="hero-overlay">
     <div class="container hero-content">
-      <img class="hero-logo"
+      <!-- Animierter Live-Badge -->
+      <div class="hero-live-pill hero-anim-1">
+        <span class="live-dot"></span>
+        <span>Bio-Zuchtbetrieb in Hamm-Weetfeld · DE-ÖKO-005</span>
+      </div>
+
+      <img class="hero-logo no-zoom hero-anim-2"
            src="images/startseite/logos/Logo-Haupt.jpg"
            alt="Logo – Highlander vom Weetfeld" />
-      <h1>Highlander vom Weetfeld</h1>
-      <p class="hero-subtitle">Schottische Hochlandrinder aus Hamm-Weetfeld – seit 1998 mit Herz und Leidenschaft gezüchtet.</p>
-      <div class="hero-actions">
+
+      <h1 class="hero-anim-3">
+        Highlander <span class="hero-title-accent">vom Weetfeld</span>
+      </h1>
+
+      <p class="hero-subtitle hero-anim-4">
+        Schottische Hochlandrinder aus Hamm-Weetfeld – seit 1998 mit Ruhe, Herzblut und
+        100 % naturnaher Weidehaltung gezüchtet.
+      </p>
+
+      <div class="hero-actions hero-anim-5">
         <a mat-raised-button routerLink="/unsere-highlander" class="hero-btn-primary">
           <mat-icon>pets</mat-icon> Unsere Highlander entdecken
         </a>
-        <a mat-stroked-button routerLink="/besuch" class="hero-btn-secondary">
-          <mat-icon>place</mat-icon> Hofbesuch planen
+        <a mat-stroked-button routerLink="/stammbaum" class="hero-btn-secondary">
+          <mat-icon>account_tree</mat-icon> Interaktiver Stammbaum
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Vertrauensmerkmale -->
+<!-- Animierte Live-Zähler (Trust-Strip) -->
 <section class="trust-strip" aria-label="Unsere wichtigsten Merkmale">
   <div class="container trust-grid">
     <div class="trust-item">
-      <mat-icon>calendar_month</mat-icon>
-      <div><strong>Seit 1998</strong><span>Erfahrung in der Zucht</span></div>
+      <div class="trust-icon-box"><mat-icon>calendar_month</mat-icon></div>
+      <div class="trust-copy">
+        <strong class="counter-value">Seit {{ countYear() }}</strong>
+        <span>Erfahrung in der Herdbuchzucht</span>
+      </div>
     </div>
     <div class="trust-item">
-      <mat-icon>eco</mat-icon>
-      <div><strong>Bio-zertifiziert</strong><span>DE-ÖKO-005</span></div>
+      <div class="trust-icon-box"><mat-icon>eco</mat-icon></div>
+      <div class="trust-copy">
+        <strong class="counter-value">{{ countBio() }} % Bio</strong>
+        <span>Zertifiziert (DE-ÖKO-005)</span>
+      </div>
     </div>
     <div class="trust-item">
-      <mat-icon>favorite</mat-icon>
-      <div><strong>Mit Herz</strong><span>Artgerechte Haltung</span></div>
+      <div class="trust-icon-box"><mat-icon>wb_sunny</mat-icon></div>
+      <div class="trust-copy">
+        <strong class="counter-value">{{ countDays() }} Tage</strong>
+        <span>Ganzjährige Freilandhaltung</span>
+      </div>
     </div>
     <div class="trust-item">
-      <mat-icon>location_on</mat-icon>
-      <div><strong>Hamm-Weetfeld</strong><span>Direkt vom Hof</span></div>
+      <div class="trust-icon-box"><mat-icon>account_tree</mat-icon></div>
+      <div class="trust-copy">
+        <strong class="counter-value">{{ countLineage() }}+ Ahnen</strong>
+        <span>Im interaktiven Stammbaum</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Kurzvorstellung -->
-<section class="section section-white">
-  <div class="container intro-section">
+<!-- Kurzvorstellung mit schwebendem Bio-Siegel -->
+<section id="hof-intro" class="section section-white">
+  <div class="container intro-section" appScrollReveal>
     <div class="intro-text">
+      <span class="eyebrow">Tradition & Leidenschaft</span>
       <h2>Willkommen auf unserem Hof</h2>
       <p>
         Seit 1998 züchten wir auf unserem Hof in Hamm-Weetfeld schottische Hochlandrinder – die faszinierenden
@@ -62,35 +100,48 @@
         vertrauensvoll und sicher im Umgang. Wir sind als <strong>Bio-Betrieb zertifiziert (DE-ÖKO-005)</strong>
         und legen größten Wert auf artgerechte Haltung.
       </p>
-      <a mat-button routerLink="/bio-betrieb" color="primary">
+      <a mat-button routerLink="/bio-betrieb" color="primary" class="intro-link-btn">
         Mehr zum Bio-Betrieb <mat-icon>arrow_forward</mat-icon>
       </a>
     </div>
-    <div class="intro-image">
+    <div class="intro-image-stage">
       <img class="intro-img"
            src="images/startseite/bild-von-uns-mit-kühen.jpg"
            alt="Familie Gebel mit ihren Highlandern auf der Weide"
            loading="lazy" />
+      <div class="floating-badge">
+        <mat-icon>favorite</mat-icon>
+        <div>
+          <strong>Handzahm & vertraut</strong>
+          <span>Täglicher Kontakt auf der Weide</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Teaser-Karten -->
+<!-- Teaser-Karten mit 3D-Tilt & Spotlight-Effekt -->
 <section class="section section-cream">
-  <div class="container">
+  <div class="container" appScrollReveal>
     <div class="section-heading">
       <span class="eyebrow">Unser Hof auf einen Blick</span>
       <h2>Was uns ausmacht</h2>
-      <p>Tradition, Transparenz und eine enge Verbindung zu unseren Tieren.</p>
+      <p>Bewegen Sie den Mauszeiger über die Karten, um unsere Bereiche zu entdecken.</p>
     </div>
     <div class="teaser-grid">
 
       <!-- Karte: Unsere Highlander -->
-      <mat-card class="teaser-card" appearance="outlined">
-        <img class="teaser-img"
-             src="images/stammkühe/stammkühe-auf-weide.jpg"
-             alt="Highland Cattle auf der Weide – Stammkühe"
-             loading="lazy" />
+      <mat-card class="teaser-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="teaser-img-wrap">
+          <img class="teaser-img"
+               src="images/stammkühe/stammkühe-auf-weide.jpg"
+               alt="Highland Cattle auf der Weide – Stammkühe"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="teaser-icon">pets</mat-icon>
           <mat-card-title>Unsere Highlander</mat-card-title>
@@ -103,16 +154,22 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <a mat-button routerLink="/unsere-highlander" color="primary">Mehr erfahren</a>
+          <a mat-button routerLink="/unsere-highlander" color="primary">Herde ansehen <mat-icon>arrow_forward</mat-icon></a>
         </mat-card-actions>
       </mat-card>
 
       <!-- Karte: Bio-Betrieb -->
-      <mat-card class="teaser-card" appearance="outlined">
-        <img class="teaser-img"
-             src="images/stammkühe/stammkühe-auf-weide.jpg"
-             alt="Highland Cattle auf der grünen Weide – Bio-Betrieb"
-             loading="lazy" />
+      <mat-card class="teaser-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="teaser-img-wrap">
+          <img class="teaser-img"
+               src="images/mutterkühe/narnia-vom-weetfeld/picture-2600.jpg"
+               alt="Highland Cattle auf der grünen Weide – Bio-Betrieb"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="teaser-icon">eco</mat-icon>
           <mat-card-title>Bio-Betrieb</mat-card-title>
@@ -125,16 +182,22 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <a mat-button routerLink="/bio-betrieb" color="primary">Mehr erfahren</a>
+          <a mat-button routerLink="/bio-betrieb" color="primary">Bio-Haltung <mat-icon>arrow_forward</mat-icon></a>
         </mat-card-actions>
       </mat-card>
 
       <!-- Karte: Fleisch & Verkauf -->
-      <mat-card class="teaser-card" appearance="outlined">
-        <img class="teaser-img"
-             src="images/fleisch/fleischbild.jpg"
-             alt="Vakuumverpacktes Highland-Cattle-Fleisch vom Bio-Hof"
-             loading="lazy" />
+      <mat-card class="teaser-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="teaser-img-wrap">
+          <img class="teaser-img"
+               src="images/fleisch/fleischbild.jpg"
+               alt="Vakuumverpacktes Highland-Cattle-Fleisch vom Bio-Hof"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="teaser-icon">storefront</mat-icon>
           <mat-card-title>Fleisch & Verkauf</mat-card-title>
@@ -147,16 +210,22 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <a mat-button routerLink="/fleisch" color="primary">Mehr erfahren</a>
+          <a mat-button routerLink="/fleisch" color="primary">Direktvermarktung <mat-icon>arrow_forward</mat-icon></a>
         </mat-card-actions>
       </mat-card>
 
       <!-- Karte: Besuch & Beratung -->
-      <mat-card class="teaser-card" appearance="outlined">
-        <img class="teaser-img"
-             src="images/startseite/beispiel-kuh.jpg"
-             alt="Highland Cattle hautnah erleben – Besuch auf dem Hof"
-             loading="lazy" />
+      <mat-card class="teaser-card tilt-card"
+                appearance="outlined"
+                (mousemove)="onCardMouseMove($event)"
+                (mouseleave)="onCardMouseLeave($event)">
+        <div class="card-spotlight"></div>
+        <div class="teaser-img-wrap">
+          <img class="teaser-img"
+               src="images/startseite/beispiel-kuh.jpg"
+               alt="Highland Cattle hautnah erleben – Besuch auf dem Hof"
+               loading="lazy" />
+        </div>
         <mat-card-header>
           <mat-icon mat-card-avatar class="teaser-icon">place</mat-icon>
           <mat-card-title>Besuch & Beratung</mat-card-title>
@@ -169,7 +238,7 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <a mat-button routerLink="/besuch" color="primary">Besuch planen</a>
+          <a mat-button routerLink="/besuch" color="primary">Besuch planen <mat-icon>arrow_forward</mat-icon></a>
         </mat-card-actions>
       </mat-card>
 
@@ -177,33 +246,122 @@
   </div>
 </section>
 
-<!-- Stammbaum-Highlight -->
-<section class="section section-white pedigree-highlight">
-  <div class="container pedigree-highlight-layout">
+<!-- NEU: Interaktiver Generationen-Slider (Vorher/Nachher Bildvergleich) -->
+<section class="section section-white">
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Interaktiver Einblick</span>
+      <h2>Vom neugierigen Kalb zur stolzen Stammkuh</h2>
+      <p>Bewegen Sie den Schieberegler nach links und rechts, um unsere ausgewachsenen Stammkühe und den jungen Nachwuchs auf der Weide zu vergleichen.</p>
+    </div>
+
+    <div class="comparison-slider-wrap no-zoom-container" data-no-zoom-container="true">
+      <!-- Rechtes/Unteres Bild: Kälber & Nachwuchs -->
+      <img class="comparison-img no-zoom"
+           src="images/stammkühe/gilka-von-der-rehhecke/nachwuchs/picture-1600.jpg"
+           alt="Junge Highland-Cattle-Kälber auf der Weide"
+           draggable="false" />
+      <span class="comparison-label label-right">Jungtiere & Kälber</span>
+
+      <!-- Linkes/Oberes Bild (geclippt): Stammkühe -->
+      <div class="comparison-overlay" [style.clip-path]="'inset(0 ' + (100 - sliderPosition()) + '% 0 0)'">
+        <img class="comparison-img no-zoom"
+             src="images/stammkühe/anthea-fox-of-blocken/picture-2600.jpg"
+             alt="Ausgewachsene Stammkuh Anthea Fox of Blocken"
+             draggable="false" />
+        <span class="comparison-label label-left">Ausgewachsene Stammkuh</span>
+      </div>
+
+      <!-- Trennlinie & Griff -->
+      <div class="comparison-divider" [style.left.%]="sliderPosition()">
+        <div class="comparison-handle">
+          <mat-icon>chevron_left</mat-icon>
+          <mat-icon>chevron_right</mat-icon>
+        </div>
+      </div>
+
+      <input type="range"
+             min="5"
+             max="95"
+             [value]="sliderPosition()"
+             (input)="onSliderInput($event)"
+             class="comparison-range-input"
+             aria-label="Bildvergleich zwischen Stammkuh und Kalb verschieben" />
+    </div>
+  </div>
+</section>
+
+<!-- Interaktives Stammbaum-Highlight mit Live-Linien-Umschalter -->
+<section class="section section-cream pedigree-highlight">
+  <div class="container pedigree-highlight-layout" appScrollReveal>
     <div class="pedigree-highlight-copy">
-      <span class="eyebrow">Abstammung entdecken</span>
+      <span class="eyebrow">Abstammung live ausprobieren</span>
       <h2>Jede Linie erzählt eine Geschichte</h2>
       <p>
-        Erkunden Sie die Abstammung unserer Highlander interaktiv. Folgen Sie Vater- und Mutterlinien,
-        entdecken Sie bekannte Tiere und öffnen Sie direkt die passenden Tierprofile.
+        Testen Sie schon hier unsere Zuchtlinien: Klicken Sie auf eine der drei Linien,
+        um die Eltern-Verknüpfung live umzuschalten – oder klicken Sie direkt auf ein Tier,
+        um den großen interaktiven Stammbaum zu öffnen.
       </p>
-      <a mat-raised-button routerLink="/stammbaum" class="cta-button">
-        <mat-icon>account_tree</mat-icon> Interaktiven Stammbaum öffnen
+
+      <!-- Live-Umschalter für die Vorschau -->
+      <div class="preview-switcher">
+        @for (preset of previewPresets; track preset.id; let idx = $index) {
+          <button type="button"
+                  class="preset-pill"
+                  [class.active]="activePresetIndex() === idx"
+                  (click)="selectPreset(idx)">
+            <mat-icon>account_tree</mat-icon>
+            {{ preset.badge }}: {{ preset.name.split(' ')[0] }}
+          </button>
+        }
+      </div>
+
+      <a mat-raised-button
+         routerLink="/stammbaum"
+         [queryParams]="{ animal: activePreset.name }"
+         class="cta-button">
+        <mat-icon>open_in_new</mat-icon> {{ activePreset.name }} im Stammbaum öffnen
       </a>
     </div>
-    <div class="pedigree-visual" aria-hidden="true">
-      <span class="pedigree-node pedigree-root">Ausgewähltes Tier</span>
-      <span class="pedigree-branch branch-left"></span>
-      <span class="pedigree-branch branch-right"></span>
-      <span class="pedigree-node pedigree-parent parent-left">Vaterlinie</span>
-      <span class="pedigree-node pedigree-parent parent-right">Mutterlinie</span>
+
+    <div class="pedigree-visual" [class.pulse-switch]="isAnimatingPreset()">
+      <svg class="pedigree-preview-svg" viewBox="0 0 500 280" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <linearGradient id="sireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#356b3d" />
+            <stop offset="100%" stop-color="#2b6cb0" />
+          </linearGradient>
+          <linearGradient id="damGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#356b3d" />
+            <stop offset="100%" stop-color="#b83280" />
+          </linearGradient>
+        </defs>
+        <path class="preview-curve sire-curve" d="M 250 90 C 250 150, 125 145, 125 200" fill="none" stroke="url(#sireGrad)" stroke-width="3.5" />
+        <path class="preview-curve dam-curve" d="M 250 90 C 250 150, 375 145, 375 200" fill="none" stroke="url(#damGrad)" stroke-width="3.5" />
+      </svg>
+
+      <!-- Klickbare Vorschau-Knoten -->
+      <a routerLink="/stammbaum" [queryParams]="{ animal: activePreset.name }" class="pedigree-node pedigree-root">
+        <span class="node-badge">★ {{ activePreset.year }}</span>
+        <strong>{{ activePreset.name }}</strong>
+      </a>
+
+      <a routerLink="/stammbaum" [queryParams]="{ animal: activePreset.sire }" class="pedigree-node pedigree-parent parent-left">
+        <span class="node-badge sire-badge">♂ Vater (Zuchtbulle)</span>
+        <strong>{{ activePreset.sire }}</strong>
+      </a>
+
+      <a routerLink="/stammbaum" [queryParams]="{ animal: activePreset.dam }" class="pedigree-node pedigree-parent parent-right">
+        <span class="node-badge dam-badge">♀ Mutter (Stammkuh)</span>
+        <strong>{{ activePreset.dam }}</strong>
+      </a>
     </div>
   </div>
 </section>
 
 <!-- Call-to-Action -->
 <section class="section section-white cta-section">
-  <div class="container text-center">
+  <div class="container text-center" appScrollReveal>
     <h2>Interesse geweckt?</h2>
     <p>
       Ob Hofbesuch, Beratung zur Highlandzucht oder eine Anfrage zu unserem Fleisch –

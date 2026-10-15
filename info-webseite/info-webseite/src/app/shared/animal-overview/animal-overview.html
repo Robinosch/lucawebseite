@@ -3,6 +3,7 @@
 <!-- Seiten-Header -->
 <section class="page-hero section-cream">
   <div class="container text-center">
+    <span class="eyebrow">Highlander vom Weetfeld</span>
     <h1>{{ categoryLabel() }}</h1>
     <p class="page-subtitle">{{ categoryDescription() }}</p>
   </div>
@@ -24,15 +25,15 @@
       <mat-form-field appearance="outline" class="animal-search">
         <mat-label>{{ categoryLabel() }} durchsuchen</mat-label>
         <input matInput #animalSearch type="search" [value]="searchTerm()"
-          (input)="setSearchTerm(animalSearch.value)"
-          [placeholder]="'Name oder ID eingeben'">
+               (input)="setSearchTerm(animalSearch.value)"
+               [placeholder]="'Name oder ID eingeben'">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       <span class="animal-count">{{ filteredAnimals().length }} Tiere</span>
       <mat-form-field appearance="outline" class="sort-select">
         <mat-label>Sortieren</mat-label>
         <mat-select [value]="sortMode()"
-          (selectionChange)="setSortMode($event.value === 'birth' ? 'birth' : 'name')">
+                    (selectionChange)="setSortMode($event.value === 'birth' ? 'birth' : 'name')">
           <mat-option value="name">Nach Name</mat-option>
           <mat-option value="birth">Nach Geburtsdatum</mat-option>
         </mat-select>
@@ -69,25 +70,28 @@
     } @else {
       @if (showStatusFilter() && statusFilter() === 'all') {
         <div class="animals-grid">
-          @for (animal of activeMutterkuehe(); track animal.id) {
-            <mat-card class="animal-card" appearance="outlined">
-              <!-- Tierbild -->
-              @if (getPrimaryImageSrc(animal.images); as imgSrc) {
-                <img class="card-img real-card-img"
-                     [src]="imgSrc"
-                     [alt]="animal.name"
-                     loading="lazy" />
-              } @else {
-                <div class="img-placeholder card-img-placeholder">
-                  {{ getPrimaryImage(animal.images) }}
-                </div>
-              }
+          @for (animal of activeMutterkuehe(); track animal.id; let i = $index) {
+            <mat-card class="animal-card stagger-card"
+                      appearance="outlined"
+                      [style.animation-delay.ms]="i * 55">
+              <div class="card-img-container">
+                @if (getPrimaryImageSrc(animal.images); as imgSrc) {
+                  <img class="card-img real-card-img"
+                       [src]="imgSrc"
+                       [alt]="animal.name"
+                       loading="lazy" />
+                } @else {
+                  <div class="img-placeholder card-img-placeholder">
+                    {{ getPrimaryImage(animal.images) }}
+                  </div>
+                }
+                @if (animal.birthDate && animal.birthDate !== '-') {
+                  <span class="card-birth-badge">{{ getBirthYear(animal.birthDate) }}</span>
+                }
+              </div>
 
               <mat-card-header>
                 <mat-card-title>{{ animal.name }}</mat-card-title>
-                @if (animal.birthDate) {
-                  <mat-card-subtitle>{{ getBirthYear(animal.birthDate) }}</mat-card-subtitle>
-                }
                 @if (animal.status) {
                   <mat-card-subtitle>{{ animal.status }}</mat-card-subtitle>
                 }
@@ -96,15 +100,21 @@
               <mat-card-content>
                 <p class="animal-short-desc">
                   {{ animal.description.length > 150
-                      ? animal.description.substring(0, 150) + '…'
-                      : animal.description }}
+                  ? animal.description.substring(0, 150) + '…'
+                  : animal.description }}
                 </p>
               </mat-card-content>
 
-              <mat-card-actions>
+              <mat-card-actions class="card-actions-row">
                 <a mat-raised-button [routerLink]="resolvedBasePath() + '/' + animal.id"
                    class="detail-button">
-                  <mat-icon>visibility</mat-icon> Details ansehen
+                  <mat-icon>visibility</mat-icon> Details
+                </a>
+                <a mat-stroked-button
+                   routerLink="/stammbaum"
+                   [queryParams]="{ animal: animal.name }"
+                   class="pedigree-quick-btn">
+                  <mat-icon>account_tree</mat-icon> Stammbaum
                 </a>
               </mat-card-actions>
             </mat-card>
@@ -117,9 +127,64 @@
           </div>
 
           <div class="animals-grid inactive-grid">
-            @for (animal of inactiveMutterkuehe(); track animal.id) {
-              <mat-card class="animal-card inactive-card" appearance="outlined">
-                <!-- Tierbild -->
+            @for (animal of inactiveMutterkuehe(); track animal.id; let i = $index) {
+              <mat-card class="animal-card inactive-card stagger-card"
+                        appearance="outlined"
+                        [style.animation-delay.ms]="i * 55">
+                <div class="card-img-container">
+                  @if (getPrimaryImageSrc(animal.images); as imgSrc) {
+                    <img class="card-img real-card-img"
+                         [src]="imgSrc"
+                         [alt]="animal.name"
+                         loading="lazy" />
+                  } @else {
+                    <div class="img-placeholder card-img-placeholder">
+                      {{ getPrimaryImage(animal.images) }}
+                    </div>
+                  }
+                  @if (animal.birthDate && animal.birthDate !== '-') {
+                    <span class="card-birth-badge">{{ getBirthYear(animal.birthDate) }}</span>
+                  }
+                </div>
+
+                <mat-card-header>
+                  <mat-card-title>{{ animal.name }}</mat-card-title>
+                  @if (animal.status) {
+                    <mat-card-subtitle>{{ animal.status }}</mat-card-subtitle>
+                  }
+                </mat-card-header>
+
+                <mat-card-content>
+                  <p class="animal-short-desc">
+                    {{ animal.description.length > 150
+                    ? animal.description.substring(0, 150) + '…'
+                    : animal.description }}
+                  </p>
+                </mat-card-content>
+
+                <mat-card-actions class="card-actions-row">
+                  <a mat-raised-button [routerLink]="resolvedBasePath() + '/' + animal.id"
+                     class="detail-button">
+                    <mat-icon>visibility</mat-icon> Details
+                  </a>
+                  <a mat-stroked-button
+                     routerLink="/stammbaum"
+                     [queryParams]="{ animal: animal.name }"
+                     class="pedigree-quick-btn">
+                    <mat-icon>account_tree</mat-icon> Stammbaum
+                  </a>
+                </mat-card-actions>
+              </mat-card>
+            }
+          </div>
+        }
+      } @else {
+        <div class="animals-grid">
+          @for (animal of filteredAnimals(); track animal.id; let i = $index) {
+            <mat-card class="animal-card stagger-card"
+                      appearance="outlined"
+                      [style.animation-delay.ms]="i * 55">
+              <div class="card-img-container">
                 @if (getPrimaryImageSrc(animal.images); as imgSrc) {
                   <img class="card-img real-card-img"
                        [src]="imgSrc"
@@ -130,56 +195,13 @@
                     {{ getPrimaryImage(animal.images) }}
                   </div>
                 }
-
-                <mat-card-header>
-                  <mat-card-title>{{ animal.name }}</mat-card-title>
-                  @if (animal.birthDate) {
-                    <mat-card-subtitle>{{ getBirthYear(animal.birthDate) }}</mat-card-subtitle>
-                  }
-                  @if (animal.status) {
-                    <mat-card-subtitle>{{ animal.status }}</mat-card-subtitle>
-                  }
-                </mat-card-header>
-
-                <mat-card-content>
-                  <p class="animal-short-desc">
-                    {{ animal.description.length > 150
-                        ? animal.description.substring(0, 150) + '…'
-                        : animal.description }}
-                  </p>
-                </mat-card-content>
-
-                <mat-card-actions>
-                  <a mat-raised-button [routerLink]="resolvedBasePath() + '/' + animal.id"
-                     class="detail-button">
-                    <mat-icon>visibility</mat-icon> Details ansehen
-                  </a>
-                </mat-card-actions>
-              </mat-card>
-            }
-          </div>
-        }
-      } @else {
-        <div class="animals-grid">
-          @for (animal of filteredAnimals(); track animal.id) {
-            <mat-card class="animal-card" appearance="outlined">
-              <!-- Tierbild -->
-              @if (getPrimaryImageSrc(animal.images); as imgSrc) {
-                <img class="card-img real-card-img"
-                     [src]="imgSrc"
-                     [alt]="animal.name"
-                     loading="lazy" />
-              } @else {
-                <div class="img-placeholder card-img-placeholder">
-                  {{ getPrimaryImage(animal.images) }}
-                </div>
-              }
+                @if (animal.birthDate && animal.birthDate !== '-') {
+                  <span class="card-birth-badge">{{ getBirthYear(animal.birthDate) }}</span>
+                }
+              </div>
 
               <mat-card-header>
                 <mat-card-title>{{ animal.name }}</mat-card-title>
-                @if (animal.birthDate) {
-                  <mat-card-subtitle>{{ getBirthYear(animal.birthDate) }}</mat-card-subtitle>
-                }
                 @if (animal.status) {
                   <mat-card-subtitle>{{ animal.status }}</mat-card-subtitle>
                 }
@@ -188,15 +210,21 @@
               <mat-card-content>
                 <p class="animal-short-desc">
                   {{ animal.description.length > 150
-                      ? animal.description.substring(0, 150) + '…'
-                      : animal.description }}
+                  ? animal.description.substring(0, 150) + '…'
+                  : animal.description }}
                 </p>
               </mat-card-content>
 
-              <mat-card-actions>
+              <mat-card-actions class="card-actions-row">
                 <a mat-raised-button [routerLink]="resolvedBasePath() + '/' + animal.id"
                    class="detail-button">
-                  <mat-icon>visibility</mat-icon> Details ansehen
+                  <mat-icon>visibility</mat-icon> Details
+                </a>
+                <a mat-stroked-button
+                   routerLink="/stammbaum"
+                   [queryParams]="{ animal: animal.name }"
+                   class="pedigree-quick-btn">
+                  <mat-icon>account_tree</mat-icon> Stammbaum
                 </a>
               </mat-card-actions>
             </mat-card>

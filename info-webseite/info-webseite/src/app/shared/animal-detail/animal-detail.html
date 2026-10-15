@@ -89,7 +89,10 @@
         @if (animal.status) {
           <p class="animal-status">{{ animal.status }}</p>
         }
-        <a mat-stroked-button routerLink="/stammbaum" class="tree-link">
+        <a mat-stroked-button
+           routerLink="/stammbaum"
+           [queryParams]="{ animal: animal.name }"
+           class="tree-link">
           <mat-icon>account_tree</mat-icon>
           Im Stammbaum ansehen
         </a>

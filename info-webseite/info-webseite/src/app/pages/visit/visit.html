@@ -1,8 +1,8 @@
 <!-- ===== BESUCH & BERATUNG ===== -->
 
-<!-- Seiten-Header -->
 <section class="page-hero section-cream">
   <div class="container text-center">
+    <span class="eyebrow">Persönlicher Einblick</span>
     <h1>Besuch & Beratung</h1>
     <p class="page-subtitle">
       Lernen Sie unsere Highland Cattle persönlich kennen – wir freuen uns auf Ihren Besuch in Hamm-Weetfeld.
@@ -12,7 +12,7 @@
 
 <!-- Besuch -->
 <section class="section section-white">
-  <div class="container visit-grid">
+  <div class="container visit-grid" appScrollReveal>
     <div class="visit-text">
       <h2>Besuchen Sie unseren Hof</h2>
       <p>
@@ -63,9 +63,58 @@
   </div>
 </section>
 
-<!-- Beratungsangebot -->
+<!-- Interaktiver Hofbesuch-Ablaufplan (ohne falsche Komoot-Karte) -->
 <section class="section section-cream">
-  <div class="container">
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Was Sie bei uns erwartet</span>
+      <h2>So läuft ein Besuch bei uns ab</h2>
+      <p>Klicken Sie durch die 4 Stationen eines typischen Hof- und Weidebesuchs in Hamm-Weetfeld.</p>
+    </div>
+
+    <div class="stepper-tabs">
+      @for (step of steps; track step.number; let i = $index) {
+        <button type="button"
+                class="step-tab-btn"
+                [class.active]="activeStepIndex() === i"
+                (click)="selectStep(i)">
+          <span class="step-num">{{ step.number }}</span>
+          <span class="step-label">{{ step.title }}</span>
+        </button>
+      }
+    </div>
+
+    @if (activeStep; as step) {
+      <mat-card appearance="outlined" class="step-showcase-card">
+        <div class="step-showcase-grid">
+          <div class="step-showcase-image">
+            <img [src]="step.imageSrc" [alt]="step.title" loading="lazy" />
+            <span class="step-badge">Station {{ step.number }} von {{ steps.length }}</span>
+          </div>
+          <div class="step-showcase-content">
+            <div class="step-icon-row">
+              <mat-icon class="info-icon">{{ step.icon }}</mat-icon>
+              <span>{{ step.subtitle }}</span>
+            </div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+            <div class="step-highlights">
+              @for (item of step.highlights; track item) {
+                <span class="highlight-pill">
+                  <mat-icon>check_circle</mat-icon> {{ item }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    }
+  </div>
+</section>
+
+<!-- Beratungsangebot -->
+<section class="section section-white">
+  <div class="container" appScrollReveal>
     <h2 class="text-center">Beratung zu Highland Cattle</h2>
     <p class="text-center page-subtitle">
       Wir teilen unser Wissen und unsere Erfahrung gerne mit Ihnen.
@@ -118,8 +167,8 @@
 </section>
 
 <!-- CTA -->
-<section class="section section-white cta-visit">
-  <div class="container text-center">
+<section class="section section-cream cta-visit">
+  <div class="container text-center" appScrollReveal>
     <h2>Termin vereinbaren</h2>
     <p>
       Ob Hofbesuch oder Fachberatung – kontaktieren Sie uns und
@@ -130,4 +179,3 @@
     </a>
   </div>
 </section>
-

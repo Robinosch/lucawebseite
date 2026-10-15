@@ -10,7 +10,6 @@
   font-size: 1.1rem;
 }
 
-/* ----- Visit Grid ----- */
 .visit-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -26,16 +25,14 @@
   margin-bottom: 12px;
 }
 
-/* ----- Visit Hauptbild ----- */
 .visit-main-img {
   width: 100%;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   object-fit: cover;
   max-height: 450px;
 }
 
-/* ----- Info Cards ----- */
 .visit-info-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -53,12 +50,164 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
+  flex-shrink: 0;
 }
 
 .info-card,
 .advice-card {
   border-radius: var(--border-radius-lg) !important;
   box-shadow: var(--shadow-sm);
+}
+
+/* ----- Interaktiver Besuchs-Stepper ----- */
+.stepper-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.step-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--surface-card-border);
+  background: var(--surface-card);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.step-tab-btn:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.step-tab-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark) !important;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.step-tab-btn.active .step-num {
+  background: #ffffff;
+  color: var(--color-primary-dark) !important;
+}
+
+.step-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: inherit !important;
+  line-height: 1.3;
+}
+
+.step-showcase-card {
+  border-radius: var(--border-radius-lg) !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.step-showcase-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: stretch;
+}
+
+.step-showcase-image {
+  position: relative;
+  min-height: 320px;
+}
+
+.step-showcase-image img {
+  width: 100%;
+  height: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.step-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(18, 34, 22, 0.78);
+  backdrop-filter: blur(4px);
+  color: #ffffff !important;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.step-showcase-content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.step-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-primary);
+}
+
+.step-showcase-content h3 {
+  margin: 0 0 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.step-showcase-content p {
+  margin: 0 0 20px;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.step-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.highlight-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--surface-card-border);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.highlight-pill mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--color-primary);
 }
 
 /* ----- Advice Grid ----- */
@@ -70,11 +219,12 @@
 }
 
 .advice-card {
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .advice-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .advice-icon {
@@ -89,7 +239,6 @@
   font-size: 20px;
 }
 
-/* ----- CTA ----- */
 .cta-visit p {
   max-width: 600px;
   margin: 8px auto 24px;
@@ -102,15 +251,25 @@
   padding: 0 32px !important;
 }
 
-/* ----- Responsive ----- */
-@media (max-width: 768px) {
-  .visit-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+@media (max-width: 960px) {
+  .stepper-tabs {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .visit-info-cards {
+  .step-showcase-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .visit-grid,
+  .visit-info-cards,
+  .stepper-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .step-showcase-content {
+    padding: 20px;
   }
 
   .page-hero {

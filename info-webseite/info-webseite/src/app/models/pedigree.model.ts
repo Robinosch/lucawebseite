@@ -1,3 +1,6 @@
+export type PedigreeViewMode = 'ancestors' | 'descendants' | 'both';
+export type PedigreeRole = 'root' | 'sire' | 'dam' | 'offspring';
+
 export interface PedigreeRawEntry {
   id: string;
   sire?: string | null;
@@ -21,10 +24,17 @@ export interface PedigreeNode {
   key: string;
   id: string;
   relationLabel: string;
+  role: PedigreeRole;
+  direction: 'up' | 'down' | 'root';
   info?: string;
+  coatColor?: string;
+  grading?: string;
+  birthDate?: string;
+  categoryLabel?: string;
   imageSrc?: string;
   routePath?: string;
   highlight: boolean;
+  offspringCount: number;
+  hasHiddenChildren?: boolean;
   children?: PedigreeNode[];
 }
-

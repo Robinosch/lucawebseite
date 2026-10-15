@@ -3,16 +3,35 @@ import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ScrollRevealDirective } from '../../shared/scroll-reveal.directive';
 
-/**
- * Fleisch – Übersichtsseite (Landing-Page mit 3 Kacheln).
- * Route: /fleisch
- */
 @Component({
   selector: 'app-meat-overview',
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, ScrollRevealDirective],
   templateUrl: './meat-overview.html',
   styleUrl: './meat-overview.css'
 })
-export class MeatOverview {}
+export class MeatOverview {
+  onCardMouseMove(event: MouseEvent): void {
+    const card = event.currentTarget as HTMLElement;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
 
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+    card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
+  }
+
+  onCardMouseLeave(event: MouseEvent): void {
+    const card = event.currentTarget as HTMLElement;
+    if (!card) return;
+    card.style.transform = '';
+  }
+}
