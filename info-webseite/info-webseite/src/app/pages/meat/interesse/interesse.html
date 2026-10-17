@@ -1,12 +1,12 @@
-<!-- ===== INTERESSE / ANFRAGE – Detailseite ===== -->
+<!-- ===== FLEISCH RESERVIEREN / ANFRAGEN ===== -->
 
 <section class="page-hero section-cream">
   <div class="container text-center">
-    <h1>Interesse am Fleischkauf?</h1>
+    <span class="eyebrow">Direktvermarktung · DE-ÖKO-005</span>
+    <h1>Bio-Fleischpaket reservieren</h1>
     <p class="page-subtitle">
-      Hochwertiges Highland-Cattle-Fleisch aus Bio-Haltung – direkt vom Erzeuger.
-      Die Verfügbarkeit ist begrenzt, da die Tiere in kleinen Beständen gehalten
-      und nur in begrenzter Stückzahl pro Jahr vermarktet werden.
+      Wählen Sie Ihr gewünschtes Fleischpaket aus unserer eigenen Bio-Zucht und sichern Sie sich
+      unverbindlich Ihren Platz für den nächsten Schlachttermin.
     </p>
   </div>
 </section>
@@ -19,77 +19,241 @@
   </div>
 </section>
 
-<!-- So funktioniert es -->
+<!-- Schritt 1: Paket-Konfigurator -->
 <section class="section section-white">
-  <div class="container">
-    <h2 class="text-center">So läuft die Anfrage ab</h2>
+  <div class="container" appScrollReveal>
+    <div class="section-heading">
+      <span class="eyebrow">Schritt 1: Auswahl treffen</span>
+      <h2>Unsere Fleischpakete im Überblick</h2>
+      <p>Klicken Sie auf ein Paket, um es für Ihre Reservierung auszuwählen. Alle Teilstücke sind küchenfertig vakuumverpackt und beschriftet.</p>
+    </div>
+
+    <div class="package-grid">
+      @for (pkg of packages; track pkg.id) {
+        <mat-card appearance="outlined"
+                  class="package-card"
+                  [class.selected]="selectedPackageId() === pkg.id"
+                  (click)="selectPackage(pkg.id)">
+          <div class="package-badge-row">
+            <span class="package-badge">{{ pkg.badge }}</span>
+            <span class="package-weight">{{ pkg.weight }}</span>
+          </div>
+
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="package-icon">{{ pkg.icon }}</mat-icon>
+            <mat-card-title>{{ pkg.title }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="package-desc">{{ pkg.description }}</p>
+            <ul class="package-contents">
+              @for (item of pkg.contents; track item) {
+                <li><mat-icon>check_circle</mat-icon> {{ item }}</li>
+              }
+            </ul>
+          </mat-card-content>
+
+          <div class="package-select-footer">
+            <span class="select-indicator">
+              <mat-icon>{{ selectedPackageId() === pkg.id ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+              {{ selectedPackageId() === pkg.id ? 'Ausgewählt' : 'Paket wählen' }}
+            </span>
+          </div>
+        </mat-card>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Schritt 2: Reservierungsformular & Live-Zusammenfassung -->
+<section class="section section-cream">
+  <div class="container reservation-layout" appScrollReveal>
+
+    <!-- Linke Spalte: Formular -->
+    <div class="reservation-form-col">
+      <h2>Unverbindliche Reservierung absenden</h2>
+      <p class="form-intro">
+        Nach dem Absenden prüfen wir die Verfügbarkeit zum nächsten Termin und bestätigen Ihnen
+        die Reservierung persönlich per E-Mail.
+      </p>
+
+      @if (submitSuccess()) {
+        <mat-card appearance="outlined" class="success-card">
+          <mat-card-content>
+            <mat-icon class="success-icon">verified</mat-icon>
+            <span class="res-number-badge">Reservierungs-Nr.: {{ reservationId() }}</span>
+            <h3>Vielen Dank für Ihre Reservierungsanfrage!</h3>
+            <p>
+              Wir haben Ihre Vormerkung für <strong>{{ quantity() }}x {{ selectedPackage.title }}</strong>
+              erhalten und Ihnen eine Eingangsbestätigung per E-Mail geschickt.
+            </p>
+            <p>
+              Sobald wir Ihre Anfrage für den nächsten Schlachttermin eingeplant haben, erhalten Sie
+              unsere verbindliche Bestätigung.
+            </p>
+            <button mat-stroked-button type="button" (click)="resetReservation()">
+              Weitere Anfrage stellen
+            </button>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()" novalidate class="res-form">
+          <div class="form-row-2">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ihr vollständiger Name</mat-label>
+              <input matInput formControlName="name" placeholder="Max Mustermann" />
+              <mat-icon matSuffix>person</mat-icon>
+              @if (reservationForm.get('name')?.hasError('required') && reservationForm.get('name')?.touched) {
+                <mat-error>Bitte geben Sie Ihren Namen ein.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefonnummer (für Rückfragen)</mat-label>
+              <input matInput formControlName="phone" placeholder="0170 1234567" type="tel" />
+              <mat-icon matSuffix>phone</mat-icon>
+              @if (reservationForm.get('phone')?.hasError('required') && reservationForm.get('phone')?.touched) {
+                <mat-error>Bitte geben Sie eine Telefonnummer an.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-row-2">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ihre E-Mail-Adresse</mat-label>
+              <input matInput formControlName="email" placeholder="name@beispiel.de" type="email" />
+              <mat-icon matSuffix>email</mat-icon>
+              @if (reservationForm.get('email')?.hasError('email') && reservationForm.get('email')?.touched) {
+                <mat-error>Bitte geben Sie eine gültige E-Mail-Adresse ein.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Gewünschter Zeitraum</mat-label>
+              <mat-select formControlName="preferredBatch">
+                @for (batch of batchOptions; track batch) {
+                  <mat-option [value]="batch">{{ batch }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Besondere Wünsche / Bevorzugte Teilstücke (optional)</mat-label>
+            <textarea matInput formControlName="customWishes" rows="3"
+                      placeholder="z. B. Interesse an Rumpsteaks, Rouladen oder bestimmten Mengen..."></textarea>
+          </mat-form-field>
+
+          <div class="recaptcha-wrapper">
+            <div #recaptchaContainer></div>
+            @if (captchaError()) {
+              <p class="recaptcha-error">
+                <mat-icon>warning</mat-icon> Bitte bestätigen Sie, dass Sie kein Roboter sind.
+              </p>
+            }
+          </div>
+
+          <p class="privacy-note">
+            Mit dem Absenden fragen Sie unverbindlich an. Es findet noch keine Online-Zahlung statt.
+            Weitere Informationen finden Sie in unserer <a routerLink="/datenschutz">Datenschutzerklärung</a>.
+          </p>
+
+          <button mat-raised-button type="submit" class="cta-primary submit-res-btn" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              Reservierung wird übertragen...
+            } @else {
+              <ng-container>
+                <mat-icon>event_available</mat-icon>
+                Jetzt unverbindlich reservieren
+              </ng-container>
+            }
+          </button>
+        </form>
+      }
+    </div>
+
+    <!-- Rechte Spalte: Live-Warenkorb / Zusammenfassung -->
+    <aside class="reservation-summary-col">
+      <mat-card appearance="outlined" class="summary-card">
+        <div class="summary-header">
+          <mat-icon>receipt_long</mat-icon>
+          <h3>Ihre Auswahl</h3>
+        </div>
+
+        <div class="selected-pkg-box">
+          <span class="pkg-eyebrow">{{ selectedPackage.badge }}</span>
+          <h4>{{ selectedPackage.title }}</h4>
+          <span class="pkg-weight-pill">{{ selectedPackage.weight }}</span>
+        </div>
+
+        <div class="quantity-control-row">
+          <span>Anzahl Pakete:</span>
+          <div class="qty-stepper">
+            <button type="button" (click)="adjustQuantity(-1)" [disabled]="quantity() <= 1" aria-label="Menge verringern">−</button>
+            <strong>{{ quantity() }}</strong>
+            <button type="button" (click)="adjustQuantity(1)" [disabled]="quantity() >= 5" aria-label="Menge erhöhen">+</button>
+          </div>
+        </div>
+
+        <div class="summary-Checklist">
+          <div class="check-row">
+            <mat-icon>eco</mat-icon>
+            <span>100 % Bio-Zertifiziert (DE-ÖKO-005)</span>
+          </div>
+          <div class="check-row">
+            <mat-icon>ac_unit</mat-icon>
+            <span>Vakuumverpackt & küchenfertig etikettiert</span>
+          </div>
+          <div class="check-row">
+            <mat-icon>storefront</mat-icon>
+            <span>Abholung direkt ab Hof in Hamm-Weetfeld</span>
+          </div>
+          <div class="check-row">
+            <mat-icon>verified_user</mat-icon>
+            <span>Bezahlung erst bequem bei Abholung</span>
+          </div>
+        </div>
+      </mat-card>
+    </aside>
+
+  </div>
+</section>
+
+<!-- Ablauf-Schritte -->
+<section class="section section-white">
+  <div class="container" appScrollReveal>
+    <h2 class="text-center">So läuft Ihre Reservierung ab</h2>
     <div class="steps-grid">
       <mat-card appearance="outlined" class="step-card">
         <mat-card-header>
           <div mat-card-avatar class="step-number">1</div>
-          <mat-card-title>Kontakt aufnehmen</mat-card-title>
+          <mat-card-title>Online vormerken</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>
-            Kontaktieren Sie uns per Telefon oder über unser Kontaktformular.
-            Teilen Sie uns Ihr Interesse mit.
-          </p>
+          <p>Wählen Sie oben Ihr Wunschpaket aus. Sie erhalten sofort eine automatische Eingangsbestätigung per E-Mail.</p>
         </mat-card-content>
       </mat-card>
 
       <mat-card appearance="outlined" class="step-card">
         <mat-card-header>
           <div mat-card-avatar class="step-number">2</div>
-          <mat-card-title>Verfügbarkeit klären</mat-card-title>
+          <mat-card-title>Persönliche Bestätigung</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>
-            Gemeinsam besprechen wir die Verfügbarkeit, gewünschte Menge
-            und bevorzugte Teilstücke.
-          </p>
+          <p>Wir prüfen unser Kontingent für den nächsten Schlachttermin und bestätigen Ihnen Ihre Reservierung per E-Mail.</p>
         </mat-card-content>
       </mat-card>
 
       <mat-card appearance="outlined" class="step-card">
         <mat-card-header>
           <div mat-card-avatar class="step-number">3</div>
-          <mat-card-title>Abholung / Lieferung</mat-card-title>
+          <mat-card-title>Abholung ab Hof</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>
-            Nach Absprache erfolgt die Übergabe – entweder durch Abholung
-            am Hof oder nach individueller Liefervereinbarung.
-          </p>
+          <p>Nach der Fleischreifung und Vakuumverpackung holen Sie Ihr Paket zum vereinbarten Termin frisch bei uns am Hof ab.</p>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
 </section>
-
-<!-- Hinweis -->
-<section class="section section-cream">
-  <div class="container text-center">
-    <mat-icon class="info-icon">info</mat-icon>
-    <h3>Frühzeitig Interesse anmelden</h3>
-    <p class="info-text">
-      Da es sich um Direktvermarktung handelt, empfiehlt es sich, frühzeitig Interesse
-      anzumelden, da die Schlachttermine begrenzt sind. Wir informieren Sie gerne über
-      die nächsten verfügbaren Termine.
-    </p>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="section section-white cta-section">
-  <div class="container text-center">
-    <h2>Jetzt anfragen</h2>
-    <p>
-      Nutzen Sie unser Kontaktformular oder rufen Sie uns direkt an –
-      wir beraten Sie gerne persönlich.
-    </p>
-    <a mat-raised-button routerLink="/kontakt" class="cta-button cta-primary">
-      <mat-icon>mail</mat-icon> Zum Kontaktformular
-    </a>
-  </div>
-</section>
-
