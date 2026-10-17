@@ -38,11 +38,6 @@ declare const grecaptcha: any;
 export class Contact implements AfterViewInit {
   private readonly FORMSPREE_URL = 'https://formspree.io/f/meeravka';
 
-  /**
-   * WICHTIG: Hier deinen reCAPTCHA v2 Site-Key eintragen.
-   * Den Key findest du unter: https://www.google.com/recaptcha/admin
-   * (Typ: reCAPTCHA v2 – „Ich bin kein Roboter"-Checkbox)
-   */
   private readonly RECAPTCHA_SITE_KEY = '6LcvSYYsAAAAAA1v5JC6CO_eGX-Na5UI_2VmFt-z';
 
   readonly contactForm: FormGroup;
